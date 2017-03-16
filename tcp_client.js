@@ -12,7 +12,7 @@ client.connect('8124', 'localhost', function(){
 	console.log('conectado ao servidor');
 
     var fileStream = fs.createReadStream(FILEPATH);
-    fileStream.on('error', function(err){
+    fileStream.on('error', function(err) {
         console.log(err);
     });
 

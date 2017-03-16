@@ -9,9 +9,7 @@ var client = dgram.createSocket('udp4');
 var fileStream = fs.createReadStream(FILEPATH);
 
 fileStream.on('open',function() {
-    fileStream.pipe(client);
-
-    client.send(fileStream, PORT, HOST, function(err, bytes) {
+    client.send(fileStream.toString(), PORT, HOST, function(err, bytes) {
         if (err)
             console.log("erro ao enviar arquivo");
 
