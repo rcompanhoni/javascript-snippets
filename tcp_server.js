@@ -20,7 +20,7 @@ var server = net.createServer(function(conn) {
 	conn.on('close', function() {
 		const file = Buffer.concat(chunks);
 		const now = moment().format('DD-MM-YYYY h-mm-ss');
-		const path = FILEPATH + now + '.txt';
+		const path = FILEPATH + now + '_TCP.txt';
 
 		fs.writeFile(path, file, function(err) {
 			if (err)
