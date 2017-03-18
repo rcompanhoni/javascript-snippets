@@ -1,0 +1,16 @@
+{
+  "name": "tcp_udp_example",
+  "version": "1.0.0",
+  "description": "",
+  "main": "tcp_server.js",
+  "scripts": {
+    "test": "node tcp_server.js"
+  },
+  "author": "Rafael Companhoni",
+  "license": "ISC",
+  "devDependencies": {
+    "dgram": "^1.0.1",
+    "moment": "^2.17.1",
+    "net": "^1.0.2"
+  }
+}

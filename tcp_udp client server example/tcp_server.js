@@ -3,7 +3,8 @@ var fs = require('fs');
 var moment = require('moment')
 
 const PORT = 8124;
-const FILEPATH = './server_files/server_';
+const DIR = './server_files';
+const FILEPATH = DIR + '/server_';
 
 // cria servidor TCP e vincula eventos a conexão
 var server = net.createServer(function(conn) {
@@ -18,6 +19,10 @@ var server = net.createServer(function(conn) {
 	
 	// ao encerrar o envio cria o arquivo no servidor
 	conn.on('close', function() {
+		if (!fs.existsSync(DIR)) {
+			fs.mkdirSync(DIR);
+		}
+
 		const file = Buffer.concat(chunks);
 		const now = moment().format('DD-MM-YYYY h-mm-ss');
 		const path = FILEPATH + now + '_TCP.txt';
