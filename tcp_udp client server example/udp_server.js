@@ -5,10 +5,15 @@ var fs = require('fs');
 var server = dgram.createSocket("udp4");
 
 const PORT = 8124;
-const FILEPATH = './server_files/server_';
+const DIR = './server_files';
+const FILEPATH = DIR + '/server_';
 
 // disparado quando um pacote UDP chega neste servidor
 server.on("message", function (msg, rinfo) {
+    if (!fs.existsSync(DIR)) {
+        fs.mkdirSync(DIR);
+    }
+
     const now = moment().format('DD-MM-YYYY h-mm-ss');
     const path = FILEPATH + now + '_UDP.txt';
 
