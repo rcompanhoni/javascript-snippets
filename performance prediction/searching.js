@@ -1,5 +1,9 @@
 "use strict";
 
-module.exports = function () {
-   // TODO: linear and binary search
-}
+module.exports.linearSearch = function(array, value) {
+    return -1;
+};
+
+module.exports.binarySearch = function(input) {
+    return -1;
+};
