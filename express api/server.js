@@ -14,6 +14,7 @@ app.use(bodyParser.json());
 
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/adocoesDb');
+
 var Abrigo     = require('./models/abrigo'); 
 
 // ROUTES
@@ -23,13 +24,13 @@ var router = express.Router();
 
 // middleware to use for all requests
 router.use(function(req, res, next) {
-    console.log('Something is happening.');
+    console.log('Processando requisição');
     next(); 
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
 router.get('/', function(req, res) {
-    res.json({ message: 'hooray! welcome to our api!' });   
+    res.json({ message: 'API Adoções' });   
 });
 
 // ABRIGO
