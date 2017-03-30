@@ -1,20 +1,19 @@
 // BASE SETUP
 // =============================================================================
 
-// call the packages we need
-var express    = require('express');        // call express
-var app        = express();                 // define our app using express
+var express    = require('express');        
+var app        = express();                 
 var bodyParser = require('body-parser');
 
 // configure app to use bodyParser() -- this will let us get the data from a POST
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;        // set our port
+// MONGOOSE
+// ----------------------------------------------------
 
 var mongoose   = require('mongoose');
 mongoose.connect('mongodb://localhost:27017/adocoesDb');
-
 var Abrigo     = require('./models/abrigo'); 
 
 // ROUTES
@@ -25,7 +24,7 @@ var router = express.Router();
 // middleware to use for all requests
 router.use(function(req, res, next) {
     console.log('Something is happening.');
-    next(); // make sure we go to the next routes and don't stop here
+    next(); 
 });
 
 // test route to make sure everything is working (accessed at GET http://localhost:8080/api)
@@ -38,10 +37,12 @@ router.get('/', function(req, res) {
 router.route('/abrigos')
     .post(function(req, res) {
         
-        var abrigo = new Abrigo();      // create a new instance of the model
-        abrigo.nome = req.body.nome;    // set the name (comes from the request)
+        // create new instance with request data
+        var abrigo = new Abrigo();      
+        abrigo.nome = req.body.nome;
+        abrigo.areas = req.body.areas;    
+        abrigo.endereco = req.body.endereco;
 
-        // save the bear and check for errors
         abrigo.save(function(err) {
             if (err)
                 res.send(err);
@@ -72,7 +73,11 @@ router.route('/abrigos/:id_abrigo')
             if (err)
                 res.send(err);
 
-            abrigo.nome = req.body.nome;
+            // update instance with request data 
+            abrigo.nome = req.body.nome || abrigo.nome;
+            abrigo.areas = req.body.areas || abrigo.areas;    
+            abrigo.endereco = req.body.endereco || abrigo.endereco;
+
             abrigo.save(function(err) {
                 if (err)
                     res.send(err);
@@ -100,5 +105,6 @@ app.use('/api', router);
 // START THE SERVER
 // =============================================================================
 
+var port = process.env.PORT || 3000; 
 app.listen(port);
 console.log('Magic happens on port ' + port);
