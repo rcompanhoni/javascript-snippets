@@ -1,9 +1,21 @@
 var mongoose 	= require('mongoose');
 var Schema 		= mongoose.Schema;
 
-var AbrigoSchema = new Schema({
-	id: String,
-    nome: String
+var enderecoSchema = new Schema ({
+	rua: String,
+    numero: Number,
+    cep: Number,
+    telefone: [Number]
 });
 
-module.exports = mongoose.model('Abrigo', AbrigoSchema);
+var areaSchema = new Schema({
+	id_area: Number,
+	nome: String
+});
+
+var abrigoSchema = new Schema({
+    nome: String,
+	endereco: enderecoSchema
+});
+
+module.exports = mongoose.model('Abrigo', abrigoSchema);
