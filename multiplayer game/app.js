@@ -13,6 +13,7 @@ app.use('/client', express.static(__dirname + '/client'));
 
 /*** CLASSES AND GLOBAL PROPERTIES ***/
 
+var DEBUG = true; // flag for 'evalServer' messages
 var SOCKET_LIST = {};
 
 // base class for every entity on the game
@@ -168,7 +169,6 @@ Bullet.update = function () {
     return pack;
 }
 
-
 /*** SOCKET.IO ***/
 
 var io = require('socket.io')(serv, {});
@@ -184,7 +184,24 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function () {
         delete SOCKET_LIST[socket.id];
         Player.onDisconnect(socket);
-    })
+    });
+
+    // broadcast the chat message to all sockets
+    socket.on('sendMsgToServer', function (data) {
+        var playerName = ("" + socket.id).slice(2,7);
+
+        for(var i in SOCKET_LIST) {
+            SOCKET_LIST[i].emit('addToChat', playerName + ": " + data);
+        }
+    });
+
+    socket.on('evalServer', function (data) {
+        if (!DEBUG)
+            return;
+
+        var res = eval(data);
+        socket.emit('evalAnswer', res);
+    });
 });
 
 /*** GAME LOOP ***/
@@ -196,7 +213,7 @@ setInterval(function () {
         bullet: Bullet.update()
     }
 
-    // emits player position to all sockets
+    // broadcast player position to all sockets
     for (var i in SOCKET_LIST) {
         var socket = SOCKET_LIST[i];
         socket.emit('newPositions', pack);
