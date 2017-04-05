@@ -14,58 +14,75 @@ app.use('/client', express.static(__dirname + '/client'));
 /*** CLASSES AND GLOBAL PROPERTIES ***/
 
 var SOCKET_LIST = {};
-var PLAYER_LIST = {};
 
-var Player = function (id) {
+// base class for every entity on the game
+var Entity = function () {
     var self = {
         x: 250,
         y: 250,
-        id: id,
-        number: "" + Math.floor(10 * Math.random()),
-        maxSpd: 10,
+        spdX: 0,
+        spdY: 0,
+        id: ""
+    }
 
-        // keyboard interactivity properties
-        pressingRight: false,
-        pressingLeft: false,
-        pressingUp: false,
-        pressingDown: false,
+    self.update = function () {
+        self.updatePosition();
     }
 
     self.updatePosition = function () {
-        if (self.pressingRight)
-            self.x += self.maxSpd;
-
-        if (self.pressingLeft)
-            self.x -= self.maxSpd;
-
-        if (self.pressingUp)
-            self.y -= self.maxSpd;
-
-        if (self.pressingDown)
-            self.y += self.maxSpd;
+        self.x += self.spdX;
+        self.y += self.spdY;
     }
 
     return self;
+};
+
+// PLAYER
+var Player = function (id) {
+    var self = Entity();
+    self.id = id;
+    self.number = "" + Math.floor(10 * Math.random());
+    self.maxSpd = 10;
+
+    // keyboard interactivity properties
+    self.pressingRight = false;
+    self.pressingLeft = false;
+    self.pressingUp = false;
+    self.pressingDown = false;
+
+    // execute its own update and then invoke superclass update function
+    // modifies the speed and then updates the position accordingly
+    var super_update = self.update;
+    self.update = function () {
+        self.updateSpd();
+        super_update();
+    }
+
+    self.updateSpd = function () {
+        if (self.pressingRight)
+            self.spdX += self.maxSpd;
+        else if (self.pressingLeft)
+            self.spdX -= self.maxSpd;
+        else
+            self.spdX = 0;
+
+        if (self.pressingUp)
+            self.spdY -= self.maxSpd;
+        else if (self.pressingDown)
+            self.spdY += self.maxSpd;
+        else
+            self.spdY = 0;
+    }
+
+    Player.list [id] = self;
+    return self;
 }
 
-/*** SOCKET.IO ***/
+// static properties and functions of Player
+Player.list = {};
 
-var io = require('socket.io')(serv, {});
-
-io.sockets.on('connection', function (socket) {
-    // initialize a new socket
-    socket.id = Math.random();
-    SOCKET_LIST[socket.id] = socket;
-
-    // initialize the Player
+Player.onConnect = function (socket) {
     var player = Player(socket.id);
-    PLAYER_LIST[socket.id] = player;
-
-    // clear socket and associated player when disconnected
-    socket.on('disconnect', function () {
-        delete SOCKET_LIST[socket.id];
-        delete PLAYER_LIST[socket.id];
-    })
 
     // keyboard interactivity event from client
     socket.on('keypress', function (data) {
@@ -81,17 +98,19 @@ io.sockets.on('connection', function (socket) {
         else if (data.input === 'down')
             player.pressingDown = data.state;
     });
-});
+}
 
-/*** GAME LOOP ***/
+Player.onDisconnect = function (socket) {
+    delete Player.list[socket.id];
+}
 
-setInterval(function () {
+Player.update = function () {
     var pack = [];
 
     // updates players position
-    for (var i in PLAYER_LIST) {
-        var player = PLAYER_LIST[i];
-        player.updatePosition();
+    for (var i in Player.list) {
+        var player = Player.list[i];
+        player.update();
         pack.push({
             x: player.x,
             y: player.y,
@@ -99,7 +118,85 @@ setInterval(function () {
         })
     }
 
-    // emits new positions to all sockets
+    return pack;
+}
+
+// BULLET
+var Bullet = function(angle) {
+    var self = Entity();
+
+    self.id = Math.random();
+    self.spdX = Math.cos(angle/180*Math.PI) * 10;
+    self.spdY = Math.sin(angle/180*Math.PI) * 10;
+
+    self.timer = 0;
+    self.toRemove = false;
+    var super_update = self.update;
+    self.update = function () {
+        if (self.timer++ > 100) {
+            self.toRemove = true;
+        }
+
+        super_update();
+    }
+
+    Bullet.list[self.id] = self;
+    return self;
+}
+
+// BULLET (static)
+
+Bullet.list = {};
+
+Bullet.update = function () {
+    // generates random bullets
+    if (Math.random() < 0.1) {
+        Bullet(Math.random() * 360);
+    }
+
+    var pack = [];
+
+    for (var i in Bullet.list) {
+        var bullet = Bullet.list[i];
+        bullet.update();
+        pack.push({
+            x: bullet.x,
+            y: bullet.y
+        })
+    }
+
+    return pack;
+}
+
+
+/*** SOCKET.IO ***/
+
+var io = require('socket.io')(serv, {});
+
+io.sockets.on('connection', function (socket) {
+    // initialize a new socket
+    socket.id = Math.random();
+    SOCKET_LIST[socket.id] = socket;
+
+    Player.onConnect(socket);
+
+    // clear socket and associated player when disconnected
+    socket.on('disconnect', function () {
+        delete SOCKET_LIST[socket.id];
+        Player.onDisconnect(socket);
+    })
+});
+
+/*** GAME LOOP ***/
+
+setInterval(function () {
+    // pack contains arrays of data to inform the clients
+    var pack = {
+        player: Player.update(),
+        bullet: Bullet.update()
+    }
+
+    // emits player position to all sockets
     for (var i in SOCKET_LIST) {
         var socket = SOCKET_LIST[i];
         socket.emit('newPositions', pack);
