@@ -2,7 +2,8 @@ var express = require('express');
 var app = express();
 var serv = require('http').createServer(app);
 
-/*** ROUTES ***/
+// ROUTES
+//=============================================================================
 
 app.get('/', function (req, res) {
     res.sendFile(__dirname + '/client/index.html');
@@ -11,10 +12,34 @@ app.get('/', function (req, res) {
 app.use('/client', express.static(__dirname + '/client'));
 
 
-/*** CLASSES AND GLOBAL PROPERTIES ***/
+// GLOBAL
+//=============================================================================
 
 var DEBUG = true; // flag for 'evalServer' messages
 var SOCKET_LIST = {};
+
+// AUTHENTICATION
+//----------------------------------------------------
+
+var USERS = {
+    "rafael": "123",
+    "rafael2": "234",
+}
+
+var isValidPassword = function(data) {
+    return USERS[data.username] === data.password;
+}
+
+var isUsernameTaken = function(data) {
+    return USERS[data.username];
+}
+
+var addUser = function(data) {
+    USERS[data.username] = data.password;
+}
+
+// CLASSES
+//=============================================================================
 
 // base class for every entity on the game
 var Entity = function () {
@@ -39,6 +64,8 @@ var Entity = function () {
 };
 
 // PLAYER
+//----------------------------------------------------
+
 var Player = function (id) {
     var self = Entity();
     self.id = id;
@@ -79,7 +106,9 @@ var Player = function (id) {
     return self;
 }
 
-// static properties and functions of Player
+// PLAYER - STATIC
+//----------------------------------------------------
+
 Player.list = {};
 
 Player.onConnect = function (socket) {
@@ -123,6 +152,8 @@ Player.update = function () {
 }
 
 // BULLET
+//----------------------------------------------------
+
 var Bullet = function(angle) {
     var self = Entity();
 
@@ -145,7 +176,8 @@ var Bullet = function(angle) {
     return self;
 }
 
-// BULLET (static)
+// BULLET - STATIC
+//----------------------------------------------------
 
 Bullet.list = {};
 
@@ -169,7 +201,8 @@ Bullet.update = function () {
     return pack;
 }
 
-/*** SOCKET.IO ***/
+// SOCKET.IO
+//=============================================================================
 
 var io = require('socket.io')(serv, {});
 
@@ -178,7 +211,24 @@ io.sockets.on('connection', function (socket) {
     socket.id = Math.random();
     SOCKET_LIST[socket.id] = socket;
 
-    Player.onConnect(socket);
+    // creates the player when signed id successfully
+    socket.on('signIn', function(data) {
+        if (isValidPassword(data)) {
+            Player.onConnect(socket);
+            socket.emit('signInResponse', { success: true });
+        } else {
+            socket.emit('signInResponse', { success: false });
+        }
+    });
+
+    socket.on('signUp', function(data) {
+        if (isUsernameTaken(data)) {
+            socket.emit('signUpResponse', { success: false });
+        } else {
+            addUser(data);
+            socket.emit('signUpResponse', { success: true });
+        }
+    });
 
     // clear socket and associated player when disconnected
     socket.on('disconnect', function () {
@@ -195,6 +245,7 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
+    // CAUTION: evals expression from client chat -- must deactivate when on production
     socket.on('evalServer', function (data) {
         if (!DEBUG)
             return;
@@ -204,7 +255,8 @@ io.sockets.on('connection', function (socket) {
     });
 });
 
-/*** GAME LOOP ***/
+// GAME LOOP
+//=============================================================================
 
 setInterval(function () {
     // pack contains arrays of data to inform the clients
@@ -221,7 +273,8 @@ setInterval(function () {
 }, 1000 / 25);
 
 
-/*** SERVER ***/
+// SERVER
+//=============================================================================
 
 app.listen(3000, function () {
     console.log('app listening on port 2000');
