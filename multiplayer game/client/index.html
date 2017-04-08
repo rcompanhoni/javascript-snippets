@@ -35,15 +35,15 @@
     var signDivPassword = document.getElementById('signDiv-password');
 
     // send credentials to server to sign in (login)
-    signDivSignIn.onclick = function() {
-        socket.emit('signIn', { 
+    signDivSignIn.onclick = function () {
+        socket.emit('signIn', {
             username: signDivUsername.value,
-            password: signDivPassword.value 
+            password: signDivPassword.value
         })
     };
 
     // sign in response handler
-    socket.on('signInResponse', function(data) {
+    socket.on('signInResponse', function (data) {
         if (data.success) {
             signDiv.style.display = 'none';
             gameDiv.style.display = 'inline-block';
@@ -53,15 +53,15 @@
     });
 
     // send credentials to server to sign up
-    signDivSignUp.onclick = function() {
-        socket.emit('signUp', { 
+    signDivSignUp.onclick = function () {
+        socket.emit('signUp', {
             username: signDivUsername.value,
-            password: signDivPassword.value 
+            password: signDivPassword.value
         })
     };
 
-     // sign in response handler
-    socket.on('signUpResponse', function(data) {
+    // sign in response handler
+    socket.on('signUpResponse', function (data) {
         if (data.success) {
             alert('Sign up successful');
         } else {
@@ -79,8 +79,6 @@
     var ctx = document.getElementById("ctx").getContext("2d");
     ctx.font = "30px Arial";
 
-    
-
     // updates canvas with updated data from server
     socket.on('newPositions', function (data) {
         ctx.clearRect(0, 0, 500, 500);
@@ -96,38 +94,9 @@
         }
     });
 
-    // CHAT
+    // MOVEMENT
     //----------------------------------------------------
 
-    var chatText = document.getElementById('chat-text');
-    var chatInput = document.getElementById('chat-input');
-    var chatForm = document.getElementById('chat-form');
-
-    // updates chat
-    socket.on('addToChat', function (data) {
-        chatText.innerHTML += '<div>' + data + '</div>';
-    });
-
-    // logs evaluation message
-    socket.on('evalAnswer', function (data) {
-        console.log(data);
-    });
-
-    // sends chat message
-    chatForm.onsubmit = function (e) {
-        e.preventDefault();
-
-        // if starts with '/' it's a special command to the server
-        // everything after '/' will be evaluated -- e.g. "/Player.list, /Bullet.list"
-        if (chatInput.value[0] === '/')
-            socket.emit('evalServer', chatInput.value.slice(1));
-        else
-            socket.emit('sendMsgToServer', chatInput.value);
-
-        chatInput.value = '';
-    }
-
-    // send keyboard interactivity events
     document.onkeydown = function (event) {
         // d
         if (event.keyCode === 68)
@@ -162,6 +131,56 @@
         // w
         if (event.keyCode === 87)
             socket.emit('keypress', { input: 'up', state: false })
+    }
+
+    // ATTACK
+    //----------------------------------------------------
+
+    document.onmousedown = function(event) {
+        socket.emit('keypress', { input: 'attack', state: true })
+    }
+
+    document.onmouseup = function(event) {
+        socket.emit('keypress', { input: 'attack', state: false })
+    }
+
+    // send the bullet direction
+    document.onmousemove = function(event) {
+        var x = - 250 + event.clientX - 8;
+        var y = - 250 + event.clientY - 8;
+        var angle = Math.atan2(y,x) / Math.PI * 180;
+        socket.emit('keypress', { input: 'mouseAngle', state: angle })
+    }
+
+    // CHAT
+    //=============================================================================
+
+    var chatText = document.getElementById('chat-text');
+    var chatInput = document.getElementById('chat-input');
+    var chatForm = document.getElementById('chat-form');
+
+    // updates chat
+    socket.on('addToChat', function (data) {
+        chatText.innerHTML += '<div>' + data + '</div>';
+    });
+
+    // logs evaluation message
+    socket.on('evalAnswer', function (data) {
+        console.log(data);
+    });
+
+    // sends chat message
+    chatForm.onsubmit = function (e) {
+        e.preventDefault();
+
+        // if starts with '/' it's a special command to the server
+        // everything after '/' will be evaluated -- e.g. "/Player.list, /Bullet.list"
+        if (chatInput.value[0] === '/')
+            socket.emit('evalServer', chatInput.value.slice(1));
+        else
+            socket.emit('sendMsgToServer', chatInput.value);
+
+        chatInput.value = '';
     }
 
 </script>

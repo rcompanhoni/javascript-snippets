@@ -26,15 +26,15 @@ var USERS = {
     "rafael2": "234",
 }
 
-var isValidPassword = function(data) {
+var isValidPassword = function (data) {
     return USERS[data.username] === data.password;
 }
 
-var isUsernameTaken = function(data) {
+var isUsernameTaken = function (data) {
     return USERS[data.username];
 }
 
-var addUser = function(data) {
+var addUser = function (data) {
     USERS[data.username] = data.password;
 }
 
@@ -60,6 +60,11 @@ var Entity = function () {
         self.y += self.spdY;
     }
 
+    // distance from a given entity
+    self.getDistance = function(entity) {
+        return Math.sqrt(Math.pow(self.x - entity.x, 2) + Math.pow(self.y - entity.y, 2));
+    }
+
     return self;
 };
 
@@ -72,11 +77,15 @@ var Player = function (id) {
     self.number = "" + Math.floor(10 * Math.random());
     self.maxSpd = 10;
 
-    // keyboard interactivity properties
+    // keyboard -- movement
     self.pressingRight = false;
     self.pressingLeft = false;
     self.pressingUp = false;
     self.pressingDown = false;
+
+    // keyboard -- action
+    self.pressingAttack = false;
+    self.mouseAngle = 0;
 
     // execute its own update and then invoke superclass update function
     // modifies the speed and then updates the position accordingly
@@ -84,6 +93,22 @@ var Player = function (id) {
     self.update = function () {
         self.updateSpd();
         super_update();
+
+        // generates random bullets at the players position
+        if (self.pressingAttack) {
+            // TODO - extra, special spread of bullets 
+            for (var i = -3; i < 3; i++)
+                self.shootBullet(i * 10 + self.mouseAngle);
+
+            // single shot
+            //self.shootBullet(self.mouseAngle);
+        }
+    }
+
+    self.shootBullet = function (angle) {
+        var bullet = Bullet(self.id, angle);
+        bullet.x = self.x;
+        bullet.y = self.y;
     }
 
     self.updateSpd = function () {
@@ -102,7 +127,7 @@ var Player = function (id) {
             self.spdY = 0;
     }
 
-    Player.list [id] = self;
+    Player.list[id] = self;
     return self;
 }
 
@@ -127,6 +152,12 @@ Player.onConnect = function (socket) {
 
         else if (data.input === 'down')
             player.pressingDown = data.state;
+
+        else if (data.input === 'attack')
+            player.pressingAttack = data.state;
+
+        else if (data.input === 'mouseAngle')
+            player.mouseAngle = data.state;
     });
 }
 
@@ -154,15 +185,16 @@ Player.update = function () {
 // BULLET
 //----------------------------------------------------
 
-var Bullet = function(angle) {
+var Bullet = function (parent, angle) {
     var self = Entity();
 
     self.id = Math.random();
-    self.spdX = Math.cos(angle/180*Math.PI) * 10;
-    self.spdY = Math.sin(angle/180*Math.PI) * 10;
-
+    self.parent = parent;
+    self.spdX = Math.cos(angle / 180 * Math.PI) * 10;
+    self.spdY = Math.sin(angle / 180 * Math.PI) * 10;
     self.timer = 0;
     self.toRemove = false;
+
     var super_update = self.update;
     self.update = function () {
         if (self.timer++ > 100) {
@@ -170,6 +202,15 @@ var Bullet = function(angle) {
         }
 
         super_update();
+
+        // checks if bullet collided another player
+        for (var i in Player.list) {
+            var p = Player.list[i];
+            if (self.getDistance(p) < 32 && self.parent !== p.id) {
+                // TODO - handle collision 
+                self.toRemove = true;
+            }
+        }
     }
 
     Bullet.list[self.id] = self;
@@ -182,20 +223,20 @@ var Bullet = function(angle) {
 Bullet.list = {};
 
 Bullet.update = function () {
-    // generates random bullets
-    if (Math.random() < 0.1) {
-        Bullet(Math.random() * 360);
-    }
-
     var pack = [];
 
     for (var i in Bullet.list) {
         var bullet = Bullet.list[i];
         bullet.update();
-        pack.push({
-            x: bullet.x,
-            y: bullet.y
-        })
+
+        if (bullet.toRemove) {
+            delete Bullet.list[i];
+        } else {
+            pack.push({
+                x: bullet.x,
+                y: bullet.y
+            })
+        }
     }
 
     return pack;
@@ -212,7 +253,7 @@ io.sockets.on('connection', function (socket) {
     SOCKET_LIST[socket.id] = socket;
 
     // creates the player when signed id successfully
-    socket.on('signIn', function(data) {
+    socket.on('signIn', function (data) {
         if (isValidPassword(data)) {
             Player.onConnect(socket);
             socket.emit('signInResponse', { success: true });
@@ -221,7 +262,7 @@ io.sockets.on('connection', function (socket) {
         }
     });
 
-    socket.on('signUp', function(data) {
+    socket.on('signUp', function (data) {
         if (isUsernameTaken(data)) {
             socket.emit('signUpResponse', { success: false });
         } else {
@@ -238,9 +279,9 @@ io.sockets.on('connection', function (socket) {
 
     // broadcast the chat message to all sockets
     socket.on('sendMsgToServer', function (data) {
-        var playerName = ("" + socket.id).slice(2,7);
+        var playerName = ("" + socket.id).slice(2, 7);
 
-        for(var i in SOCKET_LIST) {
+        for (var i in SOCKET_LIST) {
             SOCKET_LIST[i].emit('addToChat', playerName + ": " + data);
         }
     });
