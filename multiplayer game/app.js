@@ -14,7 +14,6 @@ app.get('/', function (req, res) {
 
 app.use('/client', express.static(__dirname + '/client'));
 
-
 // GLOBAL
 //=============================================================================
 
@@ -23,11 +22,6 @@ var SOCKET_LIST = {};
 
 // AUTHENTICATION
 //----------------------------------------------------
-
-var USERS = {
-    "rafael": "123",
-    "rafael2": "234",
-}
 
 var isValidPassword = function (data, callback) {
     db.account.find({ username: data.username, password: data.password }, function (err, result) {
@@ -39,7 +33,7 @@ var isValidPassword = function (data, callback) {
 }
 
 var isUsernameTaken = function (data, callback) {
-     db.account.find({ username: data.username }, function (err, result) {
+    db.account.find({ username: data.username }, function (err, result) {
         if (result.length > 0)
             callback(true)
         else
@@ -142,7 +136,15 @@ var Player = function (id) {
             self.spdY = 0;
     }
 
+    // adds itself to the static list and initial package array (to update the clients)
     Player.list[id] = self;
+    initPack.player.push({
+        id: self.id,
+        x: self.x,
+        y: self.y,
+        number: self.number
+    });
+
     return self;
 }
 
@@ -154,7 +156,7 @@ Player.list = {};
 Player.onConnect = function (socket) {
     var player = Player(socket.id);
 
-    // keyboard interactivity event from client
+    // keyboard interactivity event handler
     socket.on('keypress', function (data) {
         if (data.input === 'left')
             player.pressingLeft = data.state;
@@ -178,6 +180,7 @@ Player.onConnect = function (socket) {
 
 Player.onDisconnect = function (socket) {
     delete Player.list[socket.id];
+    removePack.player.push(socket.id);
 }
 
 Player.update = function () {
@@ -188,9 +191,9 @@ Player.update = function () {
         var player = Player.list[i];
         player.update();
         pack.push({
+            id: player.id,
             x: player.x,
-            y: player.y,
-            number: player.number
+            y: player.y
         })
     }
 
@@ -228,7 +231,14 @@ var Bullet = function (parent, angle) {
         }
     }
 
+    // adds itself to the static list and initial package array (to update the clients)
     Bullet.list[self.id] = self;
+    initPack.bullet.push({
+        id: self.id,
+        x: self.x,
+        y: self.y
+    });
+
     return self;
 }
 
@@ -245,9 +255,13 @@ Bullet.update = function () {
         bullet.update();
 
         if (bullet.toRemove) {
+            // delete static list and adds it to removed pack (for updating clients)
             delete Bullet.list[i];
+            removePack.bullet.push(bullet.id);
+
         } else {
             pack.push({
+                id: bullet.id,
                 x: bullet.x,
                 y: bullet.y
             })
@@ -269,10 +283,10 @@ io.sockets.on('connection', function (socket) {
 
     // creates the player when signed id successfully
     socket.on('signIn', function (data) {
-        isValidPassword(data, function(result) {
+        isValidPassword(data, function (result) {
             if (result) {
                 Player.onConnect(socket);
-                socket.emit('signInResponse', { success: true });    
+                socket.emit('signInResponse', { success: true });
             } else {
                 socket.emit('signInResponse', { success: false });
             }
@@ -280,11 +294,11 @@ io.sockets.on('connection', function (socket) {
     });
 
     socket.on('signUp', function (data) {
-        isUsernameTaken(data, function(result) {
+        isUsernameTaken(data, function (result) {
             if (result) {
-               socket.emit('signUpResponse', { success: false });
+                socket.emit('signUpResponse', { success: false });
             } else {
-                addUser(data, function(){ 
+                addUser(data, function () {
                     socket.emit('signUpResponse', { success: true });
                 })
             }
@@ -319,20 +333,33 @@ io.sockets.on('connection', function (socket) {
 // GAME LOOP
 //=============================================================================
 
+var initPack = { player: [], bullet: [] };
+var removePack = { player: [], bullet: [] };
+
+// send players/bullets three objects at every 1000/25 cycle: 
+//      initPack: contains data for initialize new players/bullets
+//      updatePack: contains data for updating existing players/bullets
+//      removePack: contains data for removing new players/bullets
 setInterval(function () {
-    // pack contains arrays of data to inform the clients
-    var pack = {
+    var updatePack = {
         player: Player.update(),
         bullet: Bullet.update()
     }
 
-    // broadcast player position to all sockets
+    // broadcast to all sockets
     for (var i in SOCKET_LIST) {
         var socket = SOCKET_LIST[i];
-        socket.emit('newPositions', pack);
+        socket.emit('init', initPack);
+        socket.emit('update', updatePack);
+        socket.emit('remove', removePack);
     }
-}, 1000 / 25);
 
+    // clear after init and remove are sent
+    initPack.player = [];
+    initPack.bullet = [];
+    removePack.player = [];
+    removePack.bullet = [];
+}, 1000 / 25);
 
 // SERVER
 //=============================================================================

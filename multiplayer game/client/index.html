@@ -72,27 +72,119 @@
     // GAME
     //=============================================================================
 
-    // CANVAS
+    // CLASSES
+    //----------------------------------------------------
+
+    // PLAYER
+    //----------------------------------------------------
+
+    var Player = function (initializationPackage) {
+        var self = {};
+        self.id = initializationPackage.id;
+        self.number = initializationPackage.number;
+        self.x = initializationPackage.x;
+        self.y = initializationPackage.y;
+
+        Player.list[self.id] = self;
+        return self;
+    }
+
+    // PLAYER - STATIC
+    //----------------------------------------------------
+
+    Player.list = {};
+
+    // BULLET
+    //----------------------------------------------------
+    var Bullet = function (initializationPackage) {
+        var self = {};
+        self.id = initializationPackage.id;
+        self.x = initializationPackage.x;
+        self.y = initializationPackage.y;
+
+        Bullet.list[self.id] = self;
+        return self;
+    }
+
+    // BULLET - STATIC
+    //----------------------------------------------------
+
+    Bullet.list = {};
+
+    // CANVAS/EVENTS
     //----------------------------------------------------
 
     // canvas drawing context
     var ctx = document.getElementById("ctx").getContext("2d");
     ctx.font = "30px Arial";
 
-    // updates canvas with updated data from server
-    socket.on('newPositions', function (data) {
+    // initialization: creates all players/bullets for the current session
+    socket.on('init', function (data) {
+        for (var i = 0; i < data.player.length; i++) {
+            new Player(data.player[i]);
+        }
+
+        for (var i = 0; i < data.bullet.length; i++) {
+            new Bullet(data.bullet[i]);
+        }
+    });
+
+    // update package: only updates the difference on players/bullets
+    socket.on('update', function (data) {
+        for (var i = 0; i < data.player.length; i++) {
+            var pack = data.player[i];
+            var player = Player.list[pack.id];
+
+            if (player) {
+                if (pack.x !== undefined)
+                    player.x = pack.x;
+
+                if (pack.y !== undefined)
+                    player.y = pack.y;
+            }
+        }
+
+        for (var i = 0; i < data.bullet.length; i++) {
+            var pack = data.bullet[i];
+            var bullet = Bullet.list[pack.id];
+
+            if (bullet) {
+                if (pack.x !== undefined)
+                    bullet.x = pack.x;
+
+                if (pack.y !== undefined)
+                    bullet.y = pack.y;
+            }
+        }
+    });
+
+    // remove package: id
+    socket.on('remove', function (data) {
+        for (var i = 0; i < data.player.length; i++) {
+            delete Player.list[data.player[i]];
+        }
+
+        for (var i = 0; i < data.bullet.length; i++) {
+            delete Bullet.list[data.bullet[i]];
+        }
+    });
+
+    // GAME LOOP
+    //=============================================================================
+
+    setInterval(function () {
         ctx.clearRect(0, 0, 500, 500);
 
         // draws players
-        for (var i = 0; i < data.player.length; i++) {
-            ctx.fillText(data.player[i].number, data.player[i].x, data.player[i].y);
+        for (var i in Player.list) {
+            ctx.fillText(Player.list[i].number, Player.list[i].x, Player.list[i].y);
         }
 
         // draws bullets as rectangles (left corner coordinates and size of rectangle)
-        for (var i = 0; i < data.bullet.length; i++) {
-            ctx.fillRect(data.bullet[i].x - 5, data.bullet[i].y - 5, 10, 10);
+        for (var i in Bullet.list) {
+            ctx.fillRect(Bullet.list[i].x - 5, Bullet.list[i].y - 5, 10, 10);
         }
-    });
+    }, 1000 / 25);
 
     // MOVEMENT
     //----------------------------------------------------
@@ -136,19 +228,19 @@
     // ATTACK
     //----------------------------------------------------
 
-    document.onmousedown = function(event) {
+    document.onmousedown = function (event) {
         socket.emit('keypress', { input: 'attack', state: true })
     }
 
-    document.onmouseup = function(event) {
+    document.onmouseup = function (event) {
         socket.emit('keypress', { input: 'attack', state: false })
     }
 
     // send the bullet direction
-    document.onmousemove = function(event) {
+    document.onmousemove = function (event) {
         var x = - 250 + event.clientX - 8;
         var y = - 250 + event.clientY - 8;
-        var angle = Math.atan2(y,x) / Math.PI * 180;
+        var angle = Math.atan2(y, x) / Math.PI * 180;
         socket.emit('keypress', { input: 'mouseAngle', state: angle })
     }
 
