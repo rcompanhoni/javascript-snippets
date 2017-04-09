@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var serv = require('http').createServer(app);
 
+var mongojs = require("mongojs");
+var db = mongojs('localhost:27017/myGame', ['account', 'progress']);
+
 // ROUTES
 //=============================================================================
 
@@ -26,16 +29,28 @@ var USERS = {
     "rafael2": "234",
 }
 
-var isValidPassword = function (data) {
-    return USERS[data.username] === data.password;
+var isValidPassword = function (data, callback) {
+    db.account.find({ username: data.username, password: data.password }, function (err, result) {
+        if (result.length > 0)
+            callback(true)
+        else
+            callback(false)
+    })
 }
 
-var isUsernameTaken = function (data) {
-    return USERS[data.username];
+var isUsernameTaken = function (data, callback) {
+     db.account.find({ username: data.username }, function (err, result) {
+        if (result.length > 0)
+            callback(true)
+        else
+            callback(false)
+    })
 }
 
-var addUser = function (data) {
-    USERS[data.username] = data.password;
+var addUser = function (data, callback) {
+    db.account.insert({ username: data.username, password: data.password }, function (err) {
+        callback(true)
+    })
 }
 
 // CLASSES
@@ -61,7 +76,7 @@ var Entity = function () {
     }
 
     // distance from a given entity
-    self.getDistance = function(entity) {
+    self.getDistance = function (entity) {
         return Math.sqrt(Math.pow(self.x - entity.x, 2) + Math.pow(self.y - entity.y, 2));
     }
 
@@ -254,21 +269,26 @@ io.sockets.on('connection', function (socket) {
 
     // creates the player when signed id successfully
     socket.on('signIn', function (data) {
-        if (isValidPassword(data)) {
-            Player.onConnect(socket);
-            socket.emit('signInResponse', { success: true });
-        } else {
-            socket.emit('signInResponse', { success: false });
-        }
+        isValidPassword(data, function(result) {
+            if (result) {
+                Player.onConnect(socket);
+                socket.emit('signInResponse', { success: true });    
+            } else {
+                socket.emit('signInResponse', { success: false });
+            }
+        })
     });
 
     socket.on('signUp', function (data) {
-        if (isUsernameTaken(data)) {
-            socket.emit('signUpResponse', { success: false });
-        } else {
-            addUser(data);
-            socket.emit('signUpResponse', { success: true });
-        }
+        isUsernameTaken(data, function(result) {
+            if (result) {
+               socket.emit('signUpResponse', { success: false });
+            } else {
+                addUser(data, function(){ 
+                    socket.emit('signUpResponse', { success: true });
+                })
+            }
+        })
     });
 
     // clear socket and associated player when disconnected
