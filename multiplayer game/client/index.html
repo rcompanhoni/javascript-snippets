@@ -72,9 +72,6 @@
     // GAME
     //=============================================================================
 
-    // CLASSES
-    //----------------------------------------------------
-
     // PLAYER
     //----------------------------------------------------
 
@@ -84,6 +81,22 @@
         self.number = initializationPackage.number;
         self.x = initializationPackage.x;
         self.y = initializationPackage.y;
+        
+        self.hp = initializationPackage.hp;
+        self.hpMax = initializationPackage.hpMax;
+        self.score = initializationPackage.score;
+
+        self.draw = function() {
+            // hp bar
+            var hpWidth = 30 * self.hp / self.hpMax;
+            ctx.fillRect(self.x - hpWidth/2, self.y - 40, hpWidth, 4);
+
+            // avatar
+            ctx.fillText(self.number, self.x, self.y);
+
+            // score
+            ctx.fillText(self.score, self.x, self.y - 60);
+        }
 
         Player.list[self.id] = self;
         return self;
@@ -102,6 +115,10 @@
         self.x = initializationPackage.x;
         self.y = initializationPackage.y;
 
+         self.draw = function() {
+            ctx.fillRect(self.x - 5, self.y - 5, 10, 10);
+        }
+
         Bullet.list[self.id] = self;
         return self;
     }
@@ -111,12 +128,8 @@
 
     Bullet.list = {};
 
-    // CANVAS/EVENTS
+    // GAME STATE
     //----------------------------------------------------
-
-    // canvas drawing context
-    var ctx = document.getElementById("ctx").getContext("2d");
-    ctx.font = "30px Arial";
 
     // initialization: creates all players/bullets for the current session
     socket.on('init', function (data) {
@@ -141,6 +154,12 @@
 
                 if (pack.y !== undefined)
                     player.y = pack.y;
+
+                 if (pack.hp !== undefined)
+                    player.hp = pack.hp;
+
+                 if (pack.score !== undefined)
+                    player.score = pack.score;
             }
         }
 
@@ -172,17 +191,21 @@
     // GAME LOOP
     //=============================================================================
 
+    // canvas drawing context
+    var ctx = document.getElementById("ctx").getContext("2d");
+    ctx.font = "30px Arial";
+
     setInterval(function () {
         ctx.clearRect(0, 0, 500, 500);
 
         // draws players
         for (var i in Player.list) {
-            ctx.fillText(Player.list[i].number, Player.list[i].x, Player.list[i].y);
+            Player.list[i].draw();
         }
 
         // draws bullets as rectangles (left corner coordinates and size of rectangle)
         for (var i in Bullet.list) {
-            ctx.fillRect(Bullet.list[i].x - 5, Bullet.list[i].y - 5, 10, 10);
+            Bullet.list[i].draw();
         }
     }, 1000 / 25);
 

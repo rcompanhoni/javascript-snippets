@@ -85,6 +85,9 @@ var Player = function (id) {
     self.id = id;
     self.number = "" + Math.floor(10 * Math.random());
     self.maxSpd = 10;
+    self.hp = 10;
+    self.hpMax = 10;
+    self.score = 0;
 
     // keyboard -- movement
     self.pressingRight = false;
@@ -99,6 +102,7 @@ var Player = function (id) {
     // execute its own update and then invoke superclass update function
     // modifies the speed and then updates the position accordingly
     var super_update = self.update;
+
     self.update = function () {
         self.updateSpd();
         super_update();
@@ -106,11 +110,11 @@ var Player = function (id) {
         // generates random bullets at the players position
         if (self.pressingAttack) {
             // TODO - extra, special spread of bullets 
-            for (var i = -3; i < 3; i++)
-                self.shootBullet(i * 10 + self.mouseAngle);
+            // for (var i = -3; i < 3; i++)
+            //     self.shootBullet(i * 10 + self.mouseAngle);
 
             // single shot
-            //self.shootBullet(self.mouseAngle);
+            self.shootBullet(self.mouseAngle);
         }
     }
 
@@ -136,14 +140,31 @@ var Player = function (id) {
             self.spdY = 0;
     }
 
+    self.getInitPack = function () {
+        return {
+            id: self.id,
+            x: self.x,
+            y: self.y,
+            number: self.number,
+            hp: self.hp,
+            hpMax: self.hpMax,
+            score: self.score
+        };
+    }
+
+    self.getUpdatePack = function () {
+        return {
+            id: self.id,
+            x: self.x,
+            y: self.y,
+            hp: self.hp,
+            score: self.score
+        };
+    }
+
     // adds itself to the static list and initial package array (to update the clients)
     Player.list[id] = self;
-    initPack.player.push({
-        id: self.id,
-        x: self.x,
-        y: self.y,
-        number: self.number
-    });
+    initPack.player.push(self.getInitPack());
 
     return self;
 }
@@ -176,6 +197,21 @@ Player.onConnect = function (socket) {
         else if (data.input === 'mouseAngle')
             player.mouseAngle = data.state;
     });
+
+    // broadcast an init pack when a new player is created
+    socket.emit('init', {
+        player: Player.getAllInitPack(),
+        bullet: Bullet.getAllInitPack()
+    })
+}
+
+Player.getAllInitPack = function () {
+    var players = [];
+    for (var i in Player.list) {
+        players.push(Player.list[i].getInitPack());
+    }
+
+    return players;
 }
 
 Player.onDisconnect = function (socket) {
@@ -190,11 +226,7 @@ Player.update = function () {
     for (var i in Player.list) {
         var player = Player.list[i];
         player.update();
-        pack.push({
-            id: player.id,
-            x: player.x,
-            y: player.y
-        })
+        pack.push(player.getUpdatePack());
     }
 
     return pack;
@@ -214,6 +246,7 @@ var Bullet = function (parent, angle) {
     self.toRemove = false;
 
     var super_update = self.update;
+
     self.update = function () {
         if (self.timer++ > 100) {
             self.toRemove = true;
@@ -223,21 +256,46 @@ var Bullet = function (parent, angle) {
 
         // checks if bullet collided another player
         for (var i in Player.list) {
-            var p = Player.list[i];
-            if (self.getDistance(p) < 32 && self.parent !== p.id) {
-                // TODO - handle collision 
+            var player = Player.list[i];
+            if (self.getDistance(player) < 32 && self.parent !== player.id) {
+                // damage inflicted on player -- if died, respawn and increase shooter score
+                player.hp -= 1;
+                if (player.hp <= 0) {
+                    player.hp = player.hpMax;
+                    player.x = Math.random() * 500;
+                    player.y = Math.random() * 500;
+
+                    // increase shooter score
+                    var shooter = Player.list[self.parent];
+                    if (shooter) {
+                        shooter.score += 1;
+                    }
+                }
+
                 self.toRemove = true;
             }
         }
     }
 
+    self.getInitPack = function () {
+        return {
+            id: self.id,
+            x: self.x,
+            y: self.y
+        };
+    }
+
+    self.getUpdatePack = function () {
+        return {
+            id: self.id,
+            x: self.x,
+            y: self.y
+        };
+    }
+
     // adds itself to the static list and initial package array (to update the clients)
     Bullet.list[self.id] = self;
-    initPack.bullet.push({
-        id: self.id,
-        x: self.x,
-        y: self.y
-    });
+    initPack.bullet.push(self.getInitPack());
 
     return self;
 }
@@ -246,6 +304,15 @@ var Bullet = function (parent, angle) {
 //----------------------------------------------------
 
 Bullet.list = {};
+
+Bullet.getAllInitPack = function () {
+    var bullets = [];
+    for (var i in Bullet.list) {
+        bullets.push(Bullet.list[i].getInitPack());
+    }
+
+    return bullets;
+}
 
 Bullet.update = function () {
     var pack = [];
@@ -260,11 +327,7 @@ Bullet.update = function () {
             removePack.bullet.push(bullet.id);
 
         } else {
-            pack.push({
-                id: bullet.id,
-                x: bullet.x,
-                y: bullet.y
-            })
+            pack.push(bullet.getUpdatePack());
         }
     }
 
