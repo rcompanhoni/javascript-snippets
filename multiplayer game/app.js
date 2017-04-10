@@ -125,16 +125,16 @@ var Player = function (id) {
     }
 
     self.updateSpd = function () {
-        if (self.pressingRight)
+        if (self.pressingRight && self.spdX < self.maxSpd)
             self.spdX += self.maxSpd;
-        else if (self.pressingLeft)
+        else if (self.pressingLeft && self.spdX >= 0)
             self.spdX -= self.maxSpd;
         else
             self.spdX = 0;
 
-        if (self.pressingUp)
+        if (self.pressingUp && self.spdY >= 0)
             self.spdY -= self.maxSpd;
-        else if (self.pressingDown)
+        else if (self.pressingDown && self.spdY < self.maxSpd)
             self.spdY += self.maxSpd;
         else
             self.spdY = 0;
@@ -200,6 +200,7 @@ Player.onConnect = function (socket) {
 
     // broadcast an init pack when a new player is created
     socket.emit('init', {
+        selfId: socket.id,
         player: Player.getAllInitPack(),
         bullet: Bullet.getAllInitPack()
     })

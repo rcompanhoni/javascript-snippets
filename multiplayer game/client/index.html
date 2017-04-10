@@ -26,48 +26,26 @@
     // initializes connection with the server
     var socket = io();
 
-    // AUTHENTICATION
-    //=============================================================================
-    var signDiv = document.getElementById('signDiv');
-    var signDivUsername = document.getElementById('signDiv-username');
-    var signDivSignIn = document.getElementById('signDiv-signIn');
-    var signDivSignUp = document.getElementById('signDiv-signUp');
-    var signDivPassword = document.getElementById('signDiv-password');
+    // canvas drawing context
+    var ctx = document.getElementById("ctx").getContext("2d");
+    ctx.font = "30px Arial";
 
-    // send credentials to server to sign in (login)
-    signDivSignIn.onclick = function () {
-        socket.emit('signIn', {
-            username: signDivUsername.value,
-            password: signDivPassword.value
-        })
-    };
+    // world size
+    var WIDTH = 500;
+    var HEIGHT = 500;
 
-    // sign in response handler
-    socket.on('signInResponse', function (data) {
-        if (data.success) {
-            signDiv.style.display = 'none';
-            gameDiv.style.display = 'inline-block';
-        } else {
-            alert('Sign in unsuccessful');
-        }
-    });
+    // IMAGES
+    //----------------------------------------------------
 
-    // send credentials to server to sign up
-    signDivSignUp.onclick = function () {
-        socket.emit('signUp', {
-            username: signDivUsername.value,
-            password: signDivPassword.value
-        })
-    };
+    var Img = {};
+    Img.player = new Image();
+    Img.player.src = '/client/img/player.png';
 
-    // sign in response handler
-    socket.on('signUpResponse', function (data) {
-        if (data.success) {
-            alert('Sign up successful');
-        } else {
-            alert('Sign up unsuccessful');
-        }
-    });
+    Img.bullet = new Image();
+    Img.bullet.src = '/client/img/bullet.png';
+
+    Img.map = new Image();
+    Img.map.src = '/client/img/map.png';
 
     // GAME
     //=============================================================================
@@ -81,21 +59,30 @@
         self.number = initializationPackage.number;
         self.x = initializationPackage.x;
         self.y = initializationPackage.y;
-        
+
         self.hp = initializationPackage.hp;
         self.hpMax = initializationPackage.hpMax;
         self.score = initializationPackage.score;
 
-        self.draw = function() {
-            // hp bar
-            var hpWidth = 30 * self.hp / self.hpMax;
-            ctx.fillRect(self.x - hpWidth/2, self.y - 40, hpWidth, 4);
-
-            // avatar
-            ctx.fillText(self.number, self.x, self.y);
+        self.draw = function () {
+            var x = self.x - Player.list[selfId].x + WIDTH/2;
+            var y = self.y - Player.list[selfId].x + HEIGHT/2;
 
             // score
-            ctx.fillText(self.score, self.x, self.y - 60);
+            //ctx.fillText(self.score, self.x, self.y - 60);
+
+            // hp bar
+            var hpWidth = 30 * self.hp / self.hpMax;
+            ctx.fillStyle = 'red';
+            ctx.fillRect(x - hpWidth / 2, y - 40, hpWidth, 4);
+
+            // player
+            var width = Img.player.width * 2;
+            var height = Img.player.width * 2;
+
+
+            ctx.drawImage(Img.player, 0, 0, Img.player.width, Img.player.height,
+                x - width / 2, y - height / 2, width, height);
         }
 
         Player.list[self.id] = self;
@@ -115,8 +102,15 @@
         self.x = initializationPackage.x;
         self.y = initializationPackage.y;
 
-         self.draw = function() {
-            ctx.fillRect(self.x - 5, self.y - 5, 10, 10);
+        self.draw = function () {
+            var x = self.x - Player.list[selfId].x + WIDTH/2;
+            var y = self.y - Player.list[selfId].x + HEIGHT/2;
+
+            var width = Img.bullet.width / 2;
+            var height = Img.bullet.width / 2;
+
+            ctx.drawImage(Img.bullet, 0, 0, Img.bullet.width, Img.bullet.height,
+                x - width / 2, y - height / 2, width, height);
         }
 
         Bullet.list[self.id] = self;
@@ -130,9 +124,15 @@
 
     // GAME STATE
     //----------------------------------------------------
+    
+    var selfId = null;
 
     // initialization: creates all players/bullets for the current session
     socket.on('init', function (data) {
+        if (data.selfId) {
+            selfId = data.selfId;
+        }
+
         for (var i = 0; i < data.player.length; i++) {
             new Player(data.player[i]);
         }
@@ -155,10 +155,10 @@
                 if (pack.y !== undefined)
                     player.y = pack.y;
 
-                 if (pack.hp !== undefined)
+                if (pack.hp !== undefined)
                     player.hp = pack.hp;
 
-                 if (pack.score !== undefined)
+                if (pack.score !== undefined)
                     player.score = pack.score;
             }
         }
@@ -189,14 +189,17 @@
     });
 
     // GAME LOOP
-    //=============================================================================
-
-    // canvas drawing context
-    var ctx = document.getElementById("ctx").getContext("2d");
-    ctx.font = "30px Arial";
+    //=============================================================================    
 
     setInterval(function () {
+        // still on login screen
+        if (!selfId) {
+            return;
+        }
+
         ctx.clearRect(0, 0, 500, 500);
+        drawMap();
+        drawScore();
 
         // draws players
         for (var i in Player.list) {
@@ -208,6 +211,18 @@
             Bullet.list[i].draw();
         }
     }, 1000 / 25);
+
+    var drawMap = function() {
+        var x = WIDTH/2 - Player.list[selfId].x;
+        var y = HEIGHT/2 - Player.list[selfId].y;
+
+        ctx.drawImage(Img.map,x,y);
+    }
+
+    var drawScore = function() {
+        ctx.fillStyle = 'white';
+        ctx.fillText(Player.list[selfId].score, 0, 30);
+    }
 
     // MOVEMENT
     //----------------------------------------------------
@@ -297,5 +312,48 @@
 
         chatInput.value = '';
     }
+
+    // AUTHENTICATION
+    //=============================================================================
+    var signDiv = document.getElementById('signDiv');
+    var signDivUsername = document.getElementById('signDiv-username');
+    var signDivSignIn = document.getElementById('signDiv-signIn');
+    var signDivSignUp = document.getElementById('signDiv-signUp');
+    var signDivPassword = document.getElementById('signDiv-password');
+
+    // send credentials to server to sign in (login)
+    signDivSignIn.onclick = function () {
+        socket.emit('signIn', {
+            username: signDivUsername.value,
+            password: signDivPassword.value
+        })
+    };
+
+    // sign in response handler
+    socket.on('signInResponse', function (data) {
+        if (data.success) {
+            signDiv.style.display = 'none';
+            gameDiv.style.display = 'inline-block';
+        } else {
+            alert('Sign in unsuccessful');
+        }
+    });
+
+    // send credentials to server to sign up
+    signDivSignUp.onclick = function () {
+        socket.emit('signUp', {
+            username: signDivUsername.value,
+            password: signDivPassword.value
+        })
+    };
+
+    // sign in response handler
+    socket.on('signUpResponse', function (data) {
+        if (data.success) {
+            alert('Sign up successful');
+        } else {
+            alert('Sign up unsuccessful');
+        }
+    });
 
 </script>
