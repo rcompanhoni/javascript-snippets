@@ -2,8 +2,8 @@ var express = require('express');
 var app = express();
 var serv = require('http').createServer(app);
 
-var mongojs = require("mongojs");
-var db = mongojs('localhost:27017/myGame', ['account', 'progress']);
+// var mongojs = require("mongojs");
+// var db = mongojs('localhost:27017/myGame', ['account', 'progress']);
 
 // ROUTES
 //=============================================================================
@@ -24,27 +24,33 @@ var SOCKET_LIST = {};
 //----------------------------------------------------
 
 var isValidPassword = function (data, callback) {
-    db.account.find({ username: data.username, password: data.password }, function (err, result) {
-        if (result.length > 0)
-            callback(true)
-        else
-            callback(false)
-    })
+    return callback(true);
+
+    // db.account.find({ username: data.username, password: data.password }, function (err, result) {
+    //     if (result.length > 0)
+    //         callback(true)
+    //     else
+    //         callback(false)
+    // })
 }
 
 var isUsernameTaken = function (data, callback) {
-    db.account.find({ username: data.username }, function (err, result) {
-        if (result.length > 0)
-            callback(true)
-        else
-            callback(false)
-    })
+    return callback(false);
+
+    // db.account.find({ username: data.username }, function (err, result) {
+    //     if (result.length > 0)
+    //         callback(true)
+    //     else
+    //         callback(false)
+    // })
 }
 
 var addUser = function (data, callback) {
-    db.account.insert({ username: data.username, password: data.password }, function (err) {
-        callback(true)
-    })
+    return callback();
+
+    // db.account.insert({ username: data.username, password: data.password }, function (err) {
+    //     callback(true)
+    // })
 }
 
 // CLASSES
@@ -400,10 +406,7 @@ io.sockets.on('connection', function (socket) {
 var initPack = { player: [], bullet: [] };
 var removePack = { player: [], bullet: [] };
 
-// send players/bullets three objects at every 1000/25 cycle: 
-//      initPack: contains data for initialize new players/bullets
-//      updatePack: contains data for updating existing players/bullets
-//      removePack: contains data for removing new players/bullets
+// send players/bullets three objects at every 1000/25 cycle
 setInterval(function () {
     var updatePack = {
         player: Player.update(),
@@ -413,9 +416,9 @@ setInterval(function () {
     // broadcast to all sockets
     for (var i in SOCKET_LIST) {
         var socket = SOCKET_LIST[i];
-        socket.emit('init', initPack);
-        socket.emit('update', updatePack);
-        socket.emit('remove', removePack);
+        socket.emit('init', initPack);      // data for initialize new players/bullets
+        socket.emit('update', updatePack);  // data for updating existing players/bullets
+        socket.emit('remove', removePack);  // data for removing players/bullets
     }
 
     // clear after init and remove are sent
@@ -428,8 +431,4 @@ setInterval(function () {
 // SERVER
 //=============================================================================
 
-app.listen(3000, function () {
-    console.log('app listening on port 2000');
-});
-
-serv.listen(2000);
+serv.listen(process.env.PORT || 2000);
