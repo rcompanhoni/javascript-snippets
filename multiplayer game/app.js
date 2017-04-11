@@ -57,13 +57,14 @@ var addUser = function (data, callback) {
 //=============================================================================
 
 // base class for every entity on the game
-var Entity = function () {
+var Entity = function (param) {
     var self = {
-        x: 250,
-        y: 250,
-        spdX: 0,
-        spdY: 0,
-        id: ""
+        x: param.x || 250,
+        y: param.y || 250,
+        spdX: param.spdX || 0,
+        spdY: param.spdY || 0,
+        id: param.id || "",
+        map: param.map || 'forest'
     }
 
     self.update = function () {
@@ -86,9 +87,8 @@ var Entity = function () {
 // PLAYER
 //----------------------------------------------------
 
-var Player = function (id) {
-    var self = Entity();
-    self.id = id;
+var Player = function (param) {
+    var self = Entity(param);
     self.number = "" + Math.floor(10 * Math.random());
     self.maxSpd = 10;
     self.hp = 10;
@@ -125,9 +125,13 @@ var Player = function (id) {
     }
 
     self.shootBullet = function (angle) {
-        var bullet = Bullet(self.id, angle);
-        bullet.x = self.x;
-        bullet.y = self.y;
+        Bullet({
+            parent: self.id,
+            angle: angle,
+            x: self.x,
+            y: self.y,
+            map: self.map
+        });
     }
 
     self.updateSpd = function () {
@@ -154,7 +158,8 @@ var Player = function (id) {
             number: self.number,
             hp: self.hp,
             hpMax: self.hpMax,
-            score: self.score
+            score: self.score,
+            map: self.map
         };
     }
 
@@ -169,7 +174,7 @@ var Player = function (id) {
     }
 
     // adds itself to the static list and initial package array (to update the clients)
-    Player.list[id] = self;
+    Player.list[self.id] = self;
     initPack.player.push(self.getInitPack());
 
     return self;
@@ -181,7 +186,12 @@ var Player = function (id) {
 Player.list = {};
 
 Player.onConnect = function (socket) {
-    var player = Player(socket.id);
+    // random map
+    var map = Math.random() < 0.5 ? 'field' : 'forest';
+    var player = Player({
+        id: socket.id,
+        map: map
+    });
 
     // keyboard interactivity event handler
     socket.on('keypress', function (data) {
@@ -242,13 +252,15 @@ Player.update = function () {
 // BULLET
 //----------------------------------------------------
 
-var Bullet = function (parent, angle) {
-    var self = Entity();
+var Bullet = function (param) {
+    var self = Entity(param);
 
     self.id = Math.random();
-    self.parent = parent;
-    self.spdX = Math.cos(angle / 180 * Math.PI) * 10;
-    self.spdY = Math.sin(angle / 180 * Math.PI) * 10;
+    self.parent = param.parent;
+
+    self.angle = param.angle;
+    self.spdX = Math.cos(param.angle / 180 * Math.PI) * 10;
+    self.spdY = Math.sin(param.angle / 180 * Math.PI) * 10;
     self.timer = 0;
     self.toRemove = false;
 
@@ -261,18 +273,19 @@ var Bullet = function (parent, angle) {
 
         super_update();
 
-        // checks if bullet collided another player
+        // collision
         for (var i in Player.list) {
             var player = Player.list[i];
-            if (self.getDistance(player) < 32 && self.parent !== player.id) {
-                // damage inflicted on player -- if died, respawn and increase shooter score
+            if (self.map === player.map && self.getDistance(player) < 32 && self.parent !== player.id) {
+                // damage inflicted on player
                 player.hp -= 1;
+
+                //if died, respawn and increase shooter score
                 if (player.hp <= 0) {
                     player.hp = player.hpMax;
                     player.x = Math.random() * 500;
                     player.y = Math.random() * 500;
 
-                    // increase shooter score
                     var shooter = Player.list[self.parent];
                     if (shooter) {
                         shooter.score += 1;
@@ -288,7 +301,8 @@ var Bullet = function (parent, angle) {
         return {
             id: self.id,
             x: self.x,
-            y: self.y
+            y: self.y,
+            map: self.map
         };
     }
 
@@ -431,4 +445,6 @@ setInterval(function () {
 // SERVER
 //=============================================================================
 
-serv.listen(process.env.PORT || 2000);
+var port = process.env.PORT || 2000;
+serv.listen(port);
+console.log("App escutando na porta " + port);
