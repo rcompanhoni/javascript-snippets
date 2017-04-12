@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var serv = require('http').createServer(app);
 
+var profiler = require('v8-profiler');
+var fs = require('fs');
+
 // var mongojs = require("mongojs");
 // var db = mongojs('localhost:27017/myGame', ['account', 'progress']);
 
@@ -445,6 +448,27 @@ setInterval(function () {
 // SERVER
 //=============================================================================
 
+// PROFILER
+//----------------------------------------------------
+
+var startProfiling = function(duration) {
+    profiler.startProfiling('1', true);
+
+    setTimeout(function() {
+        var profile1 = profiler.stopProfiling('1');
+
+        profile1.export(function(error, result) {
+            fs.writeFile('./profile.cpuprofile', result);
+            profile1.delete();
+            console.log("Profile saved");
+        });
+    }, duration);
+}
+
+startProfiling(10000);
+
+// INITIALIZATION
+//----------------------------------------------------
 var port = process.env.PORT || 2000;
 serv.listen(port);
 console.log("App escutando na porta " + port);
