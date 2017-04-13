@@ -1,41 +1,59 @@
 // BASE SETUP
 // =============================================================================
 
-var express    = require('express');        
-var app        = express();                 
-var bodyParser = require('body-parser');
+var express         = require('express');        
+var app             = express();                 
+var session         = require('express-session');
+var mongoose        = require('mongoose');
+var flash           = require('connect-flash');
+var morgan          = require('morgan');
+var bodyParser      = require('body-parser');
+var cookieParser    = require('cookie-parser');
+var bodyParser      = require('body-parser');
+var passport        = require('passport');
 
-// allows using data from a POST
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
-
-// MONGOOSE
+// CONFIGURATION
 // ----------------------------------------------------
 
-var mongoose   = require('mongoose');
-mongoose.connect('mongodb://localhost:27017/expressExampleDb');
+var configDB        = require('./config/database');
+// require('./config/passport')(passport); // pass passport for configuration
+
+mongoose.connect(configDB.url); // object-document Mapper config
+
+app.use(morgan('dev'));         // logs every request to the console
+app.use(cookieParser());        // reads cookies (needed for auth)
+app.set('view engine', 'ejs');  // sets up ejs for templating
+
+// bodyParser -- enables getting information from html forms
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+
+// PASSPORT
+// ----------------------------------------------------
+
+app.use(session({                                               // persistent login sessions
+    secret: 'ilovescotchscotchyscotchscotch',                   // session secret
+    resave: true,
+    saveUninitialized: true
+}));
+
+app.use(flash());                                               // use connect-flash for flash messages stored in session
 
 // ROUTES
 // =============================================================================
 
-var router = express.Router();              
+require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-router.use(function(req, res, next) {
-    var fullUrl = req.method + " " + req.protocol + '://' + req.get('host') + req.originalUrl;
-    console.log(fullUrl);
-    next(); 
-});
-
-router.get('/', function(req, res) {
-    res.json({ message: 'API root' });   
-});
+// API CONTROLLERS
+// ----------------------------------------------------
 
 var resourceController = require('./controllers/resourceController');
 
 // REGISTER ROUTES
 // ----------------------------------------------------
 
-app.use('/api', router);
 app.use('/api', resourceController);
 
 // START THE SERVER
