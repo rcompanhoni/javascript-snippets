@@ -1,31 +1,32 @@
 // BASE SETUP
 // =============================================================================
 
-var express         = require('express');        
-var app             = express();                 
-var session         = require('express-session');
-var mongoose        = require('mongoose');
-var flash           = require('connect-flash');
-var morgan          = require('morgan');
-var bodyParser      = require('body-parser');
-var cookieParser    = require('cookie-parser');
-var bodyParser      = require('body-parser');
-var passport        = require('passport');
+var express = require('express');
+var app = express();
+var session = require('express-session');
+var mongoose = require('mongoose');
+var flash = require('connect-flash');
+var morgan = require('morgan');
+var bodyParser = require('body-parser');
+var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
+var passport = require('passport');
+var path = require("path");
 
 // CONFIGURATION
 // ----------------------------------------------------
 
-var configDB        = require('./config/database');
-// require('./config/passport')(passport); // pass passport for configuration
+var configDB = require('./config/database');
+mongoose.connect(configDB.url); 
 
-mongoose.connect(configDB.url); // object-document Mapper config
+// uses EJS as the view engine, and serves the views out of a views folder
+app.set("views", path.resolve(__dirname, "views"));
+app.set("view engine", "ejs");
 
-app.use(morgan('dev'));         // logs every request to the console
-app.use(cookieParser());        // reads cookies (needed for auth)
-app.set('view engine', 'ejs');  // sets up ejs for templating
+app.use(cookieParser());  // reads cookies (needed for auth)
+app.use(morgan('dev'));   // logs every request to the console
 
 // bodyParser -- enables getting information from html forms
-app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
@@ -33,32 +34,33 @@ app.use(bodyParser.urlencoded({
 // PASSPORT
 // ----------------------------------------------------
 
-app.use(session({                                               // persistent login sessions
-    secret: 'ilovescotchscotchyscotchscotch',                   // session secret
-    resave: true,
-    saveUninitialized: true
-}));
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); 
+app.use(passport.initialize());
+app.use(passport.session()); 
+app.use(flash()); 
 
-app.use(flash());                                               // use connect-flash for flash messages stored in session
+require('./config/passport')(passport); // adds authentication methods to passport object
 
 // ROUTES
 // =============================================================================
 
-require('./app/routes.js')(app, passport); // load our routes and pass in our app and fully configured passport
+require('./viewRoutes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
-// API CONTROLLERS
+// CONTROLLERS
 // ----------------------------------------------------
 
+var authenticationController = require('./controllers/authenticationController');
 var resourceController = require('./controllers/resourceController');
 
 // REGISTER ROUTES
 // ----------------------------------------------------
 
+app.use(authenticationController);
 app.use('/api', resourceController);
 
 // START THE SERVER
 // =============================================================================
 
-var port = process.env.PORT || 3000; 
+var port = process.env.PORT || 3000;
 app.listen(port);
 console.log('Listening on port ' + port);

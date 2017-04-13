@@ -12,8 +12,6 @@ module.exports = function(app, passport) {
     });
 
     app.get('/login', function(req, res) {
-
-        // render the page and pass in any flash data if it exists
         res.render('login.ejs', { message: req.flash('loginMessage') }); 
     });
 
@@ -26,10 +24,10 @@ module.exports = function(app, passport) {
         res.redirect('/');
     });
 
-    // middleware added to check if authenticated
+    // middleware added to check if authenticated -- if it is, then get the user out of the session and pass to template
     app.get('/profile', isLoggedIn, function(req, res) {
         res.render('profile.ejs', {
-            user : req.user // get the user out of session and pass to template
+            user : req.user
         });
     });
 };

@@ -1,49 +1,40 @@
-var bcrypt = require('bcrypt');
 var mongoose = require('mongoose');
-
-var SALT_FACTOR = 10;
+var bcrypt = require('bcrypt-nodejs');
 
 var userSchema = mongoose.Schema({
-	username: { type: String, required: true, unique: true },
-	password: { type: String, required: true },
-	createdAt: { type: Date, default: Date.now },
-	displayName: String,
-	bio: String
-});
-
-var noop = function() {};
-
-username.pre("save", function() {
-	var user = this;
-
-	if (!user.isModified("password") {
-		return done();
+	local: {
+		email: String,
+		password: String,
+	},
+	facebook: {
+		id: String,
+		token: String,
+		email: String,
+		name: String
+	},
+	twitter: {
+		id: String,
+		token: String,
+		displayName: String,
+		username: String
+	},
+	google: {
+		id: String,
+		token: String,
+		email: String,
+		name: String
 	}
-
-	bcrypt.genSalt(SALT_FACTOR, function(err, salt) {
-		if (err) {
-			return done(err);
-		}
-
-		bcrypt.hash(user.password, salt, noop, function(err, hashedPassword) {
-			if (err) {
-				return done(err);
-			}
-
-			user.password = hashedPassword;
-			done();
-		})
-	});
 });
 
-userSchema.methods.checkPassword = function(guess, done) {
-	bcrypt.compare(guess, this.password, function(err, isMatch) {
-		done(err, isMatch);
-	})
+// generating a hash
+userSchema.methods.generateHash = function (password) {
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
 };
 
-userSchema.methods.name = function() {
-	return this.displayName || this.username;
-}
+// checking if password is valid
+userSchema.methods.validPassword = function (password) {
+	return bcrypt.compareSync(password, this.local.password);
+};
 
-module.exports = mongoose.model("User", userSchema);
+// create the model for users and expose it to our app
+module.exports = mongoose.model('User', userSchema);
