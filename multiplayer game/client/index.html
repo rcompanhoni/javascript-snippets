@@ -25,6 +25,8 @@
             <div>Hello!</div>
         </div>
 
+        <div id="inventory"></div>
+
         <form id="chat-form">
             <input id="chat-input" type="text" style="width: 500px"></input>
         </form>
@@ -32,6 +34,7 @@
 </div>
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="/client/Inventory.js"></script>
 <script>
     // GLOBAL
     //=============================================================================
@@ -153,6 +156,16 @@
 
     Bullet.list = {};
 
+    // INVENTORY
+    //----------------------------------------------------
+
+    var inventory = new Inventory(null); // null param indicates to the object that is being used by the client-side
+    
+    socket.on('updateInventory', function(items) {
+        inventory.items = items;
+        inventory.refreshRender();
+    });
+
     // GAME STATE
     //----------------------------------------------------
 
@@ -233,7 +246,6 @@
     var changeMap = function() {
         socket.emit('changeMap');
     }
-
 
     // GAME LOOP
     //=============================================================================    
