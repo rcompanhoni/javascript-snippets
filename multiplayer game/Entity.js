@@ -37,29 +37,28 @@ Entity = function (param) {
 // ENTITY - STATIC
 //----------------------------------------------------
 
-Entity.getFrameUpdateData = function () {
-    var packs = {
-        initPack: {
-            player: initPack.player,
-            bullet: initPack.bullet
-        },
-        removePack: {
-            player: removePack.player,
-            bullet: removePack.bullet
-        },
-        updatePack: {
-            player: Player.update(),
-            bullet: Bullet.update()
-        }
-    };
+Entity.getFrameUpdateData = function(){
+	var pack = {
+		initPack:{
+			player:initPack.player,
+			bullet:initPack.bullet,
+		},
+		removePack:{
+			player:removePack.player,
+			bullet:removePack.bullet,
+		},
+		updatePack:{
+			player:Player.update(),
+			bullet:Bullet.update(),
+		}
+	};
+    
+	initPack.player = [];
+	initPack.bullet = [];
+	removePack.player = [];
+	removePack.bullet = [];
 
-    // clear for next iteration
-    packs.initPack.player = [];
-    packs.initPack.bullet = [];
-    packs.removePack.player = [];
-    packs.removePack.bullet = [];
-
-    return packs;
+	return pack;
 }
 
 // PLAYER
@@ -73,7 +72,7 @@ Player = function (param) {
     self.hp = 10;
     self.hpMax = 10;
     self.score = 0;
-    self.inventory = new Inventory(param.socket);
+    self.inventory = new Inventory(param.socket, true);
 
     // keyboard -- movement
     self.pressingRight = false;
@@ -105,6 +104,11 @@ Player = function (param) {
     }
 
     self.shootBullet = function (angle) {
+        // 10% chance the attack will add an potion to itself (and by doing so, triggering a 'supper attack')
+        if (Math.random() < 0.1) {
+            self.inventory.addItem("potion", 1);
+        }
+
         Bullet({
             parent: self.id,
             angle: angle,

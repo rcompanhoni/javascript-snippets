@@ -159,12 +159,12 @@
     // INVENTORY
     //----------------------------------------------------
 
-    var inventory = new Inventory(null); // null param indicates to the object that is being used by the client-side
+    var inventory = new Inventory(socket,false);
     
-    socket.on('updateInventory', function(items) {
-        inventory.items = items;
-        inventory.refreshRender();
-    });
+	socket.on('updateInventory',function(items){
+		inventory.items = items;
+		inventory.refreshRender();
+	});
 
     // GAME STATE
     //----------------------------------------------------
