@@ -225,9 +225,15 @@
     // IN GAME UI
     //----------------------------------------------------
 
+    // prevent right-click context menu
+    document.oncontextmenu = function(event) {
+        event.preventDefault();
+    }
+
     var changeMap = function() {
         socket.emit('changeMap');
     }
+
 
     // GAME LOOP
     //=============================================================================    
@@ -351,10 +357,17 @@
     chatForm.onsubmit = function (e) {
         e.preventDefault();
 
-        // if starts with '/' it's a special command to the server
-        // everything after '/' will be evaluated -- e.g. "/Player.list, /Bullet.list"
+        // if starts with '/' it's an eval command -- e.g. "/Player.list, /Bullet.list
         if (chatInput.value[0] === '/')
             socket.emit('evalServer', chatInput.value.slice(1));
+        
+        // private message to another player: @USERNAME,MESSAGE
+        if (chatInput.value[0] === '@')
+            socket.emit('sendPmToServer', {
+                username: chatInput.value.slice(1, chatInput.value.indexOf(',')),
+                message: chatInput.value.slice(chatInput.value.indexOf(',') + 1)
+            });
+            
         else
             socket.emit('sendMsgToServer', chatInput.value);
 

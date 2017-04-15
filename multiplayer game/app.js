@@ -92,6 +92,7 @@ var Entity = function (param) {
 
 var Player = function (param) {
     var self = Entity(param);
+    self.username = param.username;
     self.number = "" + Math.floor(10 * Math.random());
     self.maxSpd = 10;
     self.hp = 10;
@@ -189,11 +190,12 @@ var Player = function (param) {
 
 Player.list = {};
 
-Player.onConnect = function (socket) {
+Player.onConnect = function (socket, username) {
     // random map
     var map = Math.random() < 0.5 ? 'field' : 'forest';
     var player = Player({
         id: socket.id,
+        username: username,
         map: map
     });
 
@@ -232,7 +234,33 @@ Player.onConnect = function (socket) {
         selfId: socket.id,
         player: Player.getAllInitPack(),
         bullet: Bullet.getAllInitPack()
-    })
+    });
+
+    // broadcast a chat message to all sockets
+    socket.on('sendMsgToServer', function (data) {
+        for (var i in SOCKET_LIST) {
+            SOCKET_LIST[i].emit('addToChat', player.username + ": " + data);
+        }
+    });
+
+    // send private chat message
+    socket.on('sendPmToServer', function (data) {
+        var recipientSocket = null;
+
+        for (var i in Player.list) {
+            if (Player.list[i].username == data.username) {
+                recipientSocket = SOCKET_LIST[i];
+            }
+        }
+
+        // if recipient doesn't exists, notify the original sender -- otherwise sent to recipient
+        if (recipientSocket === null) {
+            socket.emit('addToChat', 'The player ' + data.username + ' is not online');
+        } else {
+            socket.emit('addToChat', 'To: ' + data.username + ": " + data.message);
+            recipientSocket.emit('addToChat', 'From: ' + player.username + ": " + data.message);
+        }
+    });
 }
 
 Player.getAllInitPack = function () {
@@ -382,7 +410,7 @@ io.sockets.on('connection', function (socket) {
     socket.on('signIn', function (data) {
         isValidPassword(data, function (result) {
             if (result) {
-                Player.onConnect(socket);
+                Player.onConnect(socket, data.username);
                 socket.emit('signInResponse', { success: true });
             } else {
                 socket.emit('signInResponse', { success: false });
@@ -406,15 +434,6 @@ io.sockets.on('connection', function (socket) {
     socket.on('disconnect', function () {
         delete SOCKET_LIST[socket.id];
         Player.onDisconnect(socket);
-    });
-
-    // broadcast the chat message to all sockets
-    socket.on('sendMsgToServer', function (data) {
-        var playerName = ("" + socket.id).slice(2, 7);
-
-        for (var i in SOCKET_LIST) {
-            SOCKET_LIST[i].emit('addToChat', playerName + ": " + data);
-        }
     });
 
     // CAUTION: evals expression from client chat -- must deactivate when on production
