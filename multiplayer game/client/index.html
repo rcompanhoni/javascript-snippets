@@ -25,6 +25,8 @@
             <div>Hello!</div>
         </div>
 
+        <div id="inventory"></div>
+
         <form id="chat-form">
             <input id="chat-input" type="text" style="width: 500px"></input>
         </form>
@@ -32,6 +34,7 @@
 </div>
 
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+<script src="/client/Inventory.js"></script>
 <script>
     // GLOBAL
     //=============================================================================
@@ -153,6 +156,16 @@
 
     Bullet.list = {};
 
+    // INVENTORY
+    //----------------------------------------------------
+
+    var inventory = new Inventory(socket,false);
+    
+	socket.on('updateInventory',function(items){
+		inventory.items = items;
+		inventory.refreshRender();
+	});
+
     // GAME STATE
     //----------------------------------------------------
 
@@ -224,6 +237,11 @@
 
     // IN GAME UI
     //----------------------------------------------------
+
+    // prevent right-click context menu
+    document.oncontextmenu = function(event) {
+        event.preventDefault();
+    }
 
     var changeMap = function() {
         socket.emit('changeMap');
@@ -351,10 +369,17 @@
     chatForm.onsubmit = function (e) {
         e.preventDefault();
 
-        // if starts with '/' it's a special command to the server
-        // everything after '/' will be evaluated -- e.g. "/Player.list, /Bullet.list"
+        // if starts with '/' it's an eval command -- e.g. "/Player.list, /Bullet.list
         if (chatInput.value[0] === '/')
             socket.emit('evalServer', chatInput.value.slice(1));
+        
+        // private message to another player: @USERNAME,MESSAGE
+        if (chatInput.value[0] === '@')
+            socket.emit('sendPmToServer', {
+                username: chatInput.value.slice(1, chatInput.value.indexOf(',')),
+                message: chatInput.value.slice(chatInput.value.indexOf(',') + 1)
+            });
+            
         else
             socket.emit('sendMsgToServer', chatInput.value);
 
