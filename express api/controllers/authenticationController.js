@@ -10,4 +10,11 @@ router.route('/signup')
         failureFlash : true             // allow flash messages
     }));
 
+router.route('/login')
+    .post(passport.authenticate('local-login', {
+        successRedirect : '/profile',   
+        failureRedirect : '/login',    
+        failureFlash : true             
+    }));
+
 module.exports = router;

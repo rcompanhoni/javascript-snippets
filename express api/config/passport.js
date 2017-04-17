@@ -23,7 +23,7 @@ module.exports = function (passport) {
     // LOCAL SIGNUP ============================================================
     // =========================================================================
     // checks if the informed data is valid and not already taken
-    
+
     passport.use('local-signup', new LocalStrategy(
         {
             usernameField: 'email',
@@ -35,7 +35,7 @@ module.exports = function (passport) {
             // asynchronous -- User.findOne wont fire unless data is sent back
             process.nextTick(function () {
                 User.findOne({ 'local.email': email }, function (err, user) {
-                    if (err) 
+                    if (err)
                         return done(err);
 
                     if (user) {
@@ -52,6 +52,32 @@ module.exports = function (passport) {
                         });
                     }
                 });
+            });
+        }));
+
+    // =========================================================================
+    // LOCAL LOGIN =============================================================
+    // =========================================================================
+    // checks if there's a user in db with the informed username password
+
+    passport.use('local-login', new LocalStrategy(
+        {
+            usernameField: 'email',
+            passwordField: 'password',
+            passReqToCallback: true 
+        },
+        function (req, email, password, done) { 
+            User.findOne({ 'local.email': email }, function (err, user) {
+                if (err)
+                    return done(err);
+
+                if (!user)
+                    return done(null, false, req.flash('loginMessage', 'No user found.')); 
+
+                if (!user.validPassword(password))
+                    return done(null, false, req.flash('loginMessage', 'Oops! Wrong password.')); 
+
+                return done(null, user);
             });
         }));
 };
