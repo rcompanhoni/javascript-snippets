@@ -10,4 +10,27 @@ router.route('/signup')
         failureFlash : true             // allow flash messages
     }));
 
+router.route('/login')
+    .post(passport.authenticate('local-login', {
+        successRedirect : '/profile',   
+        failureRedirect : '/login',    
+        failureFlash : true             
+    }));
+
+// =====================================
+// FACEBOOK ROUTES =====================
+// =====================================
+
+// route for facebook authentication and login
+router.route('/auth/facebook')
+    .get(passport.authenticate('facebook', { scope : 'email' }));
+
+
+// handle the callback after facebook has authenticated the user
+router.route('/auth/facebook/callback')
+    .get(passport.authenticate('facebook', {
+        successRedirect : '/profile',
+        failureRedirect : '/'
+    }))
+
 module.exports = router;

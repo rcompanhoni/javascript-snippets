@@ -17,7 +17,7 @@ var path = require("path");
 // ----------------------------------------------------
 
 var configDB = require('./config/database');
-mongoose.connect(configDB.url); 
+mongoose.connect(configDB.url);
 
 // uses EJS as the view engine, and serves the views out of a views folder
 app.set("views", path.resolve(__dirname, "views"));
@@ -25,24 +25,23 @@ app.set("view engine", "ejs");
 
 app.use(cookieParser());  // reads cookies (needed for auth)
 app.use(morgan('dev'));   // logs every request to the console
-
-// bodyParser -- enables getting information from html forms
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true })); // bodyParser -- enables getting information from html forms
 
 // PASSPORT
 // ----------------------------------------------------
 
-app.use(session({ secret: 'ilovescotchscotchyscotchscotch' })); 
+app.use(session({ secret: 'ilovescotchscotchyscotchscotch' }));
 app.use(passport.initialize());
-app.use(passport.session()); 
-app.use(flash()); 
+app.use(passport.session());
+app.use(flash());
 
 require('./config/passport')(passport); // adds authentication methods to passport object
 
-// ROUTES
+// CONTROLLERS
 // =============================================================================
+
+// CONTROLLERS
+// ----------------------------------------------------
 
 require('./viewRoutes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 
