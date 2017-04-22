@@ -1,7 +1,7 @@
 # node
 node_modules
 npm-debug.log
-profile.cpuprofile
+*.cpuprofile
 
 # Environment variables
 .env
