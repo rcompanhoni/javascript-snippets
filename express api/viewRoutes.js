@@ -8,7 +8,8 @@ function isLoggedIn(req, res, next) {
 
 module.exports = function(app, passport) {
     app.get('/', function(req, res) {
-        res.render('index.ejs'); 
+        var errorMessage = (req.session && req.session.flash)  ? req.session.flash.error[0] : null;
+        res.render('index.ejs', { message: errorMessage }); 
     });
 
     app.get('/login', function(req, res) {

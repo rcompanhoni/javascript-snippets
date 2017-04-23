@@ -30,7 +30,8 @@ router.route('/auth/facebook')
 router.route('/auth/facebook/callback')
     .get(passport.authenticate('facebook', {
         successRedirect : '/profile',
-        failureRedirect : '/'
+        failureRedirect : '/',
+        failureFlash : true
     }))
 
 module.exports = router;

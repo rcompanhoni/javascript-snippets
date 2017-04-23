@@ -19,6 +19,13 @@
         <div class="jumbotron text-center">
             <h1><span class="fa fa-lock"></span> Node Authentication</h1>
 
+            <!-- show any messages that come back with external OAuth server authentication -->
+            <% if (message) { %>
+                <div class="alert alert-danger">
+                    <%= message %>
+                </div>
+            <% } %>
+
             <p>Login or Register with:</p>
 
             <a href="/login" class="btn btn-default"><span class="fa fa-user"></span> Local Login</a>
