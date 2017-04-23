@@ -34,4 +34,19 @@ router.route('/auth/facebook/callback')
         failureFlash : true
     }))
 
+// =====================================
+// TWITTER ROUTES ======================
+// =====================================
+// For testing locally use 127.0.0.1 instead of 'localhost'
+
+router.route('/auth/twitter')
+    .get(passport.authenticate('twitter'));
+
+router.route('/auth/twitter/callback')
+    .get(passport.authenticate('twitter', {
+        successRedirect : '/profile',
+        failureRedirect : '/',
+        failureFlash : true
+    }))
+
 module.exports = router;

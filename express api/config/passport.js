@@ -1,9 +1,8 @@
 var LocalStrategy = require('passport-local').Strategy;
 var FacebookStrategy = require('passport-facebook').Strategy;
+var TwitterStrategy  = require('passport-twitter').Strategy;
 
 var User = require('../models/user');
-
-// load the auth variables
 var configAuth = require('./auth');
 
 module.exports = function (passport) {
@@ -13,7 +12,6 @@ module.exports = function (passport) {
     // =========================================================================
     // required for persistent login sessions
     // passport needs ability to serialize and unserialize users out of session
-
     passport.serializeUser(function (user, done) {
         done(null, user.id);
     });
@@ -23,12 +21,10 @@ module.exports = function (passport) {
             done(err, user);
         });
     });
-
     // =========================================================================
     // LOCAL SIGNUP ============================================================
     // =========================================================================
     // checks if the informed data is valid and not already taken
-
     passport.use('local-signup', new LocalStrategy(
         {
             usernameField: 'email',
@@ -64,7 +60,6 @@ module.exports = function (passport) {
     // LOCAL LOGIN =============================================================
     // =========================================================================
     // checks if there's a user in db with the informed username password
-
     passport.use('local-login', new LocalStrategy(
         {
             usernameField: 'email',
@@ -86,18 +81,16 @@ module.exports = function (passport) {
             });
         }));
 
-    //=========================================================================
+    //==========================================================================
     // FACEBOOK ================================================================
     // =========================================================================
+    // facebook will send back the token and profile
     passport.use(new FacebookStrategy({
-        // pull in our app id and secret from our auth.js file
         clientID: configAuth.facebookAuth.clientID,
         clientSecret: configAuth.facebookAuth.clientSecret,
         callbackURL: configAuth.facebookAuth.callbackURL,
         profileFields: ['id', 'displayName', 'name', 'emails']
     },
-
-        // facebook will send back the token and profile
         function (token, refreshToken, profile, done) {
             process.nextTick(function () {
                 User.findOne({ 'facebook.id': profile.id }, function (err, user) {
@@ -137,4 +130,38 @@ module.exports = function (passport) {
                 });
             });
         }));
+   
+
+    //==========================================================================
+    // TWITTER =================================================================
+    //==========================================================================
+    passport.use(new TwitterStrategy({
+        consumerKey: configAuth.twitterAuth.consumerKey,
+        consumerSecret: configAuth.twitterAuth.consumerSecret,
+        callbackURL: configAuth.twitterAuth.callbackURL
+    },
+    function (token, tokenSecret, profile, done) {
+        process.nextTick(function () {
+            User.findOne({ 'twitter.id': profile.id }, function (err, user) {
+                if (err)
+                    return done(err);
+
+                if (user) {
+                    return done(null, user);
+                } else {
+                    var newUser = new User();
+                    newUser.twitter.id = profile.id;
+                    newUser.twitter.token = token;
+                    newUser.twitter.username = profile.username;
+                    newUser.twitter.displayName = profile.displayName;
+
+                    newUser.save(function (err) {
+                        if (err)
+                            throw err;
+                        return done(null, newUser);
+                    });
+                }
+            });
+        });
+    }));
 };
