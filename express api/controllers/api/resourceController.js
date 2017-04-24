@@ -1,6 +1,6 @@
 var express = require('express');
 
-var Resource = require('../models/resource');
+var Resource = require('../../models/resource');
 
 var router = express.Router();
 
