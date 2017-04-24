@@ -49,4 +49,19 @@ router.route('/auth/twitter/callback')
         failureFlash : true
     }))
 
+// =====================================
+// GOOGLE ROUTES ======================
+// =====================================
+// For testing locally use 127.0.0.1 instead of 'localhost'
+
+router.route('/auth/google')
+    .get(passport.authenticate('google', { scope : ['profile', 'email'] }));
+
+router.route('/auth/google/callback')
+    .get(passport.authenticate('google', {
+        successRedirect : '/profile',
+        failureRedirect : '/',
+        failureFlash : true
+    }))
+
 module.exports = router;
