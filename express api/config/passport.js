@@ -34,7 +34,6 @@ module.exports = function (passport) {
         passReqToCallback: true // allows passing back the entire request to the callback
     },
     function (req, email, password, done) {
-        // asynchronous -- User.findOne wont fire unless data is sent back
         process.nextTick(function () {
             User.findOne({ 'local.email': email }, function (err, user) {
                 if (err)
@@ -43,14 +42,15 @@ module.exports = function (passport) {
                 if (user) {
                     return done(null, false, req.flash('signupMessage', 'That email is already taken.'));
                 } else {
-                    var newUser = new User();
-                    newUser.local.email = email;
-                    newUser.local.password = newUser.generateHash(password);
+                    var localUser = req.user || new User();
 
-                    newUser.save(function (err) {
+                    localUser.local.email = email;
+                    localUser.local.password = localUser.generateHash(password);
+
+                    localUser.save(function (err) {
                         if (err)
                             throw err;
-                        return done(null, newUser);
+                        return done(null, localUser);
                     });
                 }
             });
@@ -91,45 +91,64 @@ module.exports = function (passport) {
         clientID: configAuth.facebookAuth.clientID,
         clientSecret: configAuth.facebookAuth.clientSecret,
         callbackURL: configAuth.facebookAuth.callbackURL,
-        profileFields: ['id', 'displayName', 'name', 'emails']
+        profileFields: ['id', 'displayName', 'name', 'emails'],
+        passReqToCallback: true
     },
-    function (token, refreshToken, profile, done) {
+    function (req, token, refreshToken, profile, done) {
         process.nextTick(function () {
-            User.findOne({ 'facebook.id': profile.id }, function (err, user) {
+            if (!req.user) {
+                User.findOne({ 'facebook.id': profile.id }, function (err, user) {
 
-                // if there is an error, stop everything and return that
-                // ie an error connecting to the database
-                if (err)
-                    return done(err);
+                    // if there is an error, stop everything and return that
+                    // ie an error connecting to the database
+                    if (err)
+                        return done(err);
 
-                // if the user is found, then log them in
-                if (user) {
-                    return done(null, user); // user found, return that user
-                } else {
-                    var email = profile.email || (profile.emails && profile.emails[0].value);
-                    if (!email) {
-                        return done(null, false, { message: 'This user is missing a Facebook email.' });
+                    // if the user is found, then log them in
+                    if (user) {
+                        return done(null, user); // user found, return that user
+                    } else {
+                        var email = profile.email || (profile.emails && profile.emails[0].value);
+                        if (!email) {
+                            return done(null, false, { message: 'This user is missing a Facebook email.' });
+                        }
+
+                        // if there is no user found with that facebook id, create them
+                        var newUser = new User();
+
+                        // set all of the facebook information in our user model
+                        newUser.facebook.email = email;
+                        newUser.facebook.id = profile.id;
+                        newUser.facebook.token = token;
+                        newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
+
+                        // save our user to the database
+                        newUser.save(function (err) {
+                            if (err)
+                                throw err;
+
+                            // if successful, return the new user
+                            return done(null, newUser);
+                        });
                     }
+                });
+            } else {
+                //  pull the user out of the session and, since it's logged in, we have to link accounts
+                var user = req.user; 
 
-                    // if there is no user found with that facebook id, create them
-                    var newUser = new User();
+                // update user with Facebook credentials if they are currently logged in and stored in session
+                user.facebook.id = profile.id;
+                user.facebook.token = token;
+                user.facebook.name = profile.name.givenName + ' ' + profile.name.familyName;
+                user.facebook.email = profile.emails[0].value;
 
-                    // set all of the facebook information in our user model
-                    newUser.facebook.email = email;
-                    newUser.facebook.id = profile.id;
-                    newUser.facebook.token = token;
-                    newUser.facebook.name = profile.name.givenName + ' ' + profile.name.familyName; // look at the passport user profile to see how names are returned
-
-                    // save our user to the database
-                    newUser.save(function (err) {
-                        if (err)
-                            throw err;
-
-                        // if successful, return the new user
-                        return done(null, newUser);
-                    });
-                }
-            });
+                // save the user
+                user.save(function (err) {
+                    if (err)
+                        throw err;
+                    return done(null, user);
+                });
+            }
         });
     }));
 
@@ -139,30 +158,45 @@ module.exports = function (passport) {
     passport.use(new TwitterStrategy({
         consumerKey: configAuth.twitterAuth.consumerKey,
         consumerSecret: configAuth.twitterAuth.consumerSecret,
-        callbackURL: configAuth.twitterAuth.callbackURL
-    }, 
-    function (token, tokenSecret, profile, done) {
+        callbackURL: configAuth.twitterAuth.callbackURL,
+        passReqToCallback: true
+    },
+    function (req, token, tokenSecret, profile, done) {
         process.nextTick(function () {
-            User.findOne({ 'twitter.id': profile.id }, function (err, user) {
-                if (err)
-                    return done(err);
+            if (!req.user) {
+                User.findOne({ 'twitter.id': profile.id }, function (err, user) {
+                    if (err)
+                        return done(err);
 
-                if (user) {
+                    if (user) {
+                        return done(null, user);
+                    } else {
+                        var newUser = new User();
+                        newUser.twitter.id = profile.id;
+                        newUser.twitter.token = token;
+                        newUser.twitter.username = profile.username;
+                        newUser.twitter.displayName = profile.displayName;
+
+                        newUser.save(function (err) {
+                            if (err)
+                                throw err;
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else {
+                var user = req.user; 
+                user.twitter.id = profile.id;
+                user.twitter.token = token;
+                user.twitter.username = profile.username;
+                user.twitter.displayName = profile.displayName;
+
+                user.save(function (err) {
+                    if (err)
+                        throw err;
                     return done(null, user);
-                } else {
-                    var newUser = new User();
-                    newUser.twitter.id = profile.id;
-                    newUser.twitter.token = token;
-                    newUser.twitter.username = profile.username;
-                    newUser.twitter.displayName = profile.displayName;
-
-                    newUser.save(function (err) {
-                        if (err)
-                            throw err;
-                        return done(null, newUser);
-                    });
-                }
-            });
+                });
+            }
         });
     }));
 
@@ -174,30 +208,45 @@ module.exports = function (passport) {
         clientID: configAuth.googleAuth.clientID,
         clientSecret: configAuth.googleAuth.clientSecret,
         callbackURL: configAuth.googleAuth.callbackURL,
+        passReqToCallback: true
     },
-    function (token, refreshToken, profile, done) {
+    function (req, token, refreshToken, profile, done) {
         process.nextTick(function () {
-            User.findOne({ 'google.id': profile.id }, function (err, user) {
-                if (err)
-                    return done(err);
+            if (!req.user) {
+                User.findOne({ 'google.id': profile.id }, function (err, user) {
+                    if (err)
+                        return done(err);
 
-                if (user) {
+                    if (user) {
+                        return done(null, user);
+                    } else {
+                        var newUser = new User();
+
+                        newUser.google.id = profile.id;
+                        newUser.google.token = token;
+                        newUser.google.name = profile.displayName;
+                        newUser.google.email = profile.emails[0].value;
+
+                        newUser.save(function (err) {
+                            if (err)
+                                throw err;
+                            return done(null, newUser);
+                        });
+                    }
+                });
+            } else {
+                var user = req.user; 
+                user.google.id = profile.id;
+                user.google.token = token;
+                user.google.name = profile.displayName;
+                user.google.emai = profile.emails[0].value;
+
+                user.save(function (err) {
+                    if (err)
+                        throw err;
                     return done(null, user);
-                } else {
-                    var newUser = new User();
-
-                    newUser.google.id = profile.id;
-                    newUser.google.token = token;
-                    newUser.google.name = profile.displayName;
-                    newUser.google.email = profile.emails[0].value; 
-
-                    newUser.save(function (err) {
-                        if (err)
-                            throw err;
-                        return done(null, newUser);
-                    });
-                }
-            });
+                });
+            }
         });
     }));
 };
