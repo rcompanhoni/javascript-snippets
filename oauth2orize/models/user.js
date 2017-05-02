@@ -1,29 +1,42 @@
 var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
-var userSchema = new mongoose.Schema({
-    email: {
-        type: String,
-        unique: true,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    hash: String,
-    salt: String
+var UserSchema = new mongoose.Schema({
+  username: {
+    type: String,
+    unique: true,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true
+  }
 });
 
-// generating a hash
-userSchema.methods.generateHash = function (password) {
-    return bcrypt.hashSync(password, bcrypt.genSaltSync(8), null);
+UserSchema.methods.verifyPassword = function (password, callback) {
+  bcrypt.compare(password, this.password, function (err, isMatch) {
+    if (err) return cb(err);
+    callback(null, isMatch);
+  });
 };
 
-// checking if password is valid
-userSchema.methods.validPassword = function (password) {
-    return bcrypt.compareSync(password, this.local.password);
-};
+// execute before each user.save() call
+UserSchema.pre('save', function (callback) {
+  var user = this;
 
-// create the model for users and expose it to our app
-module.exports = mongoose.model('User', userSchema);
+  if (!user.isModified('password')) return callback();
+
+  // password changed so we need to hash it
+  bcrypt.genSalt(5, function (err, salt) {
+    if (err) return callback(err);
+
+    bcrypt.hash(user.password, salt, null, function (err, hash) {
+      if (err) return callback(err);
+
+      user.password = hash;
+      callback();
+    });
+  });
+});
+
+module.exports = mongoose.model('User', UserSchema);

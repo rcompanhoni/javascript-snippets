@@ -7,6 +7,7 @@ var subResource = new Schema({
 
 var resourceSchema = new Schema({
 	name: String,
+	creatorId: String,
 	subResources: [subResource]
 });
 

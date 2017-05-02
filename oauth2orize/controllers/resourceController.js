@@ -6,6 +6,7 @@ module.exports.createResource = function (req, res) {
     var resource = new Resource();      
     resource.name = req.body.name;
     resource.subResources = req.body.subResources;
+    resource.creatorId = req.user._id; // added by passport
 
     resource.save(function(err) {
         if (err)

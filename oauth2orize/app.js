@@ -2,6 +2,7 @@ var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
+var passport = require('passport');
 
 // CONFIGURATION
 // ----------------------------------------------------
@@ -11,11 +12,29 @@ app.use(bodyParser.json());
 var configDB = require('./config/database');
 mongoose.connect(configDB.url);
 
+app.use(passport.initialize());
+
 // ROUTES
 // ----------------------------------------------------
 
-var routes = require('./routes');
-app.use('/api', routes);
+var router = express.Router();
+
+var authController = require('./controllers/authController');
+var resourceController = require('./controllers/resourceController');
+var userController = require('./controllers/userController');
+
+// resource
+router.post('/resources', authController.isAuthenticated, resourceController.createResource);
+router.get('/resources', resourceController.getResources);
+router.get('/resources/:resource_id', resourceController.getResourceById);
+router.put('/resources/:resource_id', resourceController.updateResource);
+router.delete('/resources/:resource_id', resourceController.deleteResource);
+
+// user
+router.post('/users', userController.postUsers);
+router.get('/users', userController.getUsers);
+
+app.use('/api', router);
 
 // SERVER
 // ----------------------------------------------------
