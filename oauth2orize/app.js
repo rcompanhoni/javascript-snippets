@@ -22,6 +22,7 @@ var router = express.Router();
 var authController = require('./controllers/authController');
 var resourceController = require('./controllers/resourceController');
 var userController = require('./controllers/userController');
+var oauth2ClientController = require('./controllers/oauth2ClientController');
 
 // resource
 router.post('/resources', authController.isAuthenticated, resourceController.createResource);
@@ -33,6 +34,10 @@ router.delete('/resources/:resource_id', resourceController.deleteResource);
 // user
 router.post('/users', userController.postUsers);
 router.get('/users', userController.getUsers);
+
+// oauth 2 client
+router.post('/clients', authController.isAuthenticated, oauth2ClientController.postClients);
+router.get('/clients', authController.isAuthenticated, oauth2ClientController.getClients);
 
 app.use('/api', router);
 
