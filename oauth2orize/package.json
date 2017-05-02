@@ -1,0 +1,16 @@
+{
+  "name": "oauth2orize",
+  "version": "1.0.0",
+  "description": "This app demonstrates how to use the oauth2orize module to protect APi endpoints using the OAuth 2.0 protocol",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.2",
+    "mongoose": "^4.9.7"
+  }
+}
