@@ -3,16 +3,32 @@ var app = express();
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var ejs = require('ejs');
+var session = require('express-session');
 
 // CONFIGURATION
 // ----------------------------------------------------
 
-app.use(bodyParser.json());
+// application/x-www-form-urlencoded and JSON
+app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.json())                          
 
+// mongoDB
 var configDB = require('./config/database');
 mongoose.connect(configDB.url);
 
+// passport
 app.use(passport.initialize());
+
+// view engine
+app.set('view engine', 'ejs');
+
+// use express session support since OAuth2orize requires it
+app.use(session({
+    secret: 'Super Secret Session Key',
+    saveUninitialized: true,
+    resave: true
+}));
 
 // ROUTES
 // ----------------------------------------------------
@@ -22,7 +38,9 @@ var router = express.Router();
 var authController = require('./controllers/authController');
 var resourceController = require('./controllers/resourceController');
 var userController = require('./controllers/userController');
-var oauth2ClientController = require('./controllers/oauth2ClientController');
+
+var clientController = require('./controllers/clientController');
+var oauth2Controller = require('./controllers/oauth2Controller');
 
 // resource
 router.post('/resources', authController.isAuthenticated, resourceController.createResource);
@@ -35,14 +53,15 @@ router.delete('/resources/:resource_id', resourceController.deleteResource);
 router.post('/users', userController.postUsers);
 router.get('/users', userController.getUsers);
 
-// oauth 2 client
-router.post('/clients', authController.isAuthenticated, oauth2ClientController.postClients);
-router.get('/clients', authController.isAuthenticated, oauth2ClientController.getClients);
+// application client
+router.post('/clients', authController.isAuthenticated, clientController.postClients);
+router.get('/clients', authController.isAuthenticated, clientController.getClients);
+
+// oauth2 -- authorization grant
+router.get('/oauth2/authorize', authController.isAuthenticated, oauth2Controller.authorization);
+router.post('/oauth2/authorize', authController.isAuthenticated, oauth2Controller.decision);
+router.post('/oauth2/token', authController.isClientAuthenticated, oauth2Controller.token);
 
 app.use('/api', router);
-
-// SERVER
-// ----------------------------------------------------
-
 app.listen(3000);
 console.log("listening at port 3000");
