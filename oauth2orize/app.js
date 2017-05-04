@@ -44,7 +44,7 @@ var oauth2Controller = require('./controllers/oauth2Controller');
 
 // resource
 router.post('/resources', authController.isAuthenticated, resourceController.createResource);
-router.get('/resources', resourceController.getResources);
+router.get('/resources', authController.isAuthenticated, resourceController.getResources);
 router.get('/resources/:resource_id', resourceController.getResourceById);
 router.put('/resources/:resource_id', resourceController.updateResource);
 router.delete('/resources/:resource_id', resourceController.deleteResource);
@@ -57,7 +57,7 @@ router.get('/users', userController.getUsers);
 router.post('/clients', authController.isAuthenticated, clientController.postClients);
 router.get('/clients', authController.isAuthenticated, clientController.getClients);
 
-// oauth2 -- authorization grant
+// oauth2 -- authorization grant -- http://localhost:3000/api/oauth2/authorize?response_type=code&client_id=test_application_id_1&redirect_uri=http://localhost:3000&scope=read
 router.get('/oauth2/authorize', authController.isAuthenticated, oauth2Controller.authorization);
 router.post('/oauth2/authorize', authController.isAuthenticated, oauth2Controller.decision);
 router.post('/oauth2/token', authController.isClientAuthenticated, oauth2Controller.token);

@@ -27,7 +27,7 @@ server.grant(oauth2orize.grant.code(function (client, redirectUri, user, ares, c
     // create a new authorization code
     var code = new Code({
         value: uid(16),
-        clientId: client._id,
+        clientId: client.clientId,
         redirectUri: redirectUri,
         userId: user._id
     });
@@ -53,7 +53,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectUri, c
             return callback(null, false);
         }
 
-        if (client._id.toString() !== authCode.clientId) {
+        if (client.clientId.toString() !== authCode.clientId) {
             return callback(null, false);
         }
 
@@ -89,7 +89,7 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectUri, c
 // user authorization endpoint
 exports.authorization = [
     server.authorization(function (clientId, redirectUri, callback) {
-        Client.findOne({ id: clientId }, function (err, client) {
+        Client.findOne({ clientId: clientId }, function (err, client) {
             if (err) {
                 return callback(err);
             }

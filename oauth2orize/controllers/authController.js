@@ -5,6 +5,7 @@ var BearerStrategy = require('passport-http-bearer').Strategy
 
 var Token = require('../models/token');
 var User = require('../models/user');
+var Client = require('../models/client');
 
 // basic strategy for authenticate users 
 passport.use(new BasicStrategy(function (username, password, callback) {
@@ -38,7 +39,7 @@ passport.use(new BasicStrategy(function (username, password, callback) {
 // basic strategy for authenticate oauth2 clients 
 passport.use('client-basic', new BasicStrategy(
     function (username, password, callback) {
-        Client.findOne({ id: username }, function (err, client) {
+        Client.findOne({ clientId: username }, function (err, client) {
             if (err) {
                 return callback(err);
             }

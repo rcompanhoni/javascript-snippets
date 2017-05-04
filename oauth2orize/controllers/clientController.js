@@ -4,7 +4,7 @@ exports.postClients = function (req, res) {
     var client = new Client();
 
     client.name = req.body.name;
-    client.id = req.body.id;
+    client.clientId = req.body.clientId;
     client.secret = req.body.secret;
     client.userId = req.user._id;
 
