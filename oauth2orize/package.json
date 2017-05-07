@@ -1,5 +1,5 @@
 {
-  "name": "oauth2orize_example",
+  "name": "oauth2orize_implicit_2",
   "version": "1.0.0",
   "description": "This app demonstrates how to use the oauth2orize module to protect APi endpoints using the OAuth 2.0 protocol",
   "main": "app.js",

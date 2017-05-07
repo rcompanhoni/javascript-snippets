@@ -57,8 +57,9 @@ router.get('/users', userController.getUsers);
 router.post('/clients', authController.isAuthenticated, clientController.postClients);
 router.get('/clients', authController.isAuthenticated, clientController.getClients);
 
-// oauth2 -- authorization grant -- http://localhost:3000/api/oauth2/authorize?response_type=code&client_id=test_application_id_1&redirect_uri=http://localhost:3000&scope=read
-router.get('/oauth2/authorize', authController.isAuthenticated, oauth2Controller.authorization);
+// oauth2 -- authorization grant -- http://localhost:3000/api/oauth2/authorize?response_type=code&client_id=test_application_id&redirect_uri=http://localhost:3000&scope=read
+// oauth2 -- implicit grant -- http://localhost:3000/api/oauth2/authorize?response_type=token&client_id=test_application_id&client_secret=test_application_secret&redirect_uri=http://localhost:3000&scope=readrouter.get('/oauth2/authorize', authController.isAuthenticated, oauth2Controller.authorization);
+// oauth2 -- password credentials -- http://localhost:3000/api/oauth2/authorize?response_type=password&username=Rafael&password=123
 router.post('/oauth2/authorize', authController.isAuthenticated, oauth2Controller.decision);
 router.post('/oauth2/token', authController.isClientAuthenticated, oauth2Controller.token);
 

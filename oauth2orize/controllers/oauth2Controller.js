@@ -1,4 +1,6 @@
-var oauth2orize = require('oauth2orize')
+var oauth2orize = require('oauth2orize');
+var bcrypt = require('bcrypt-nodejs');
+
 var User = require('../models/user');
 var Client = require('../models/client');
 var Token = require('../models/token');
@@ -86,6 +88,57 @@ server.exchange(oauth2orize.exchange.code(function (client, code, redirectUri, c
     });
 }));
 
+// GRANT TYPE: IMPLICIT
+// ----------------------------------------------------
+
+server.grant(oauth2orize.grant.token(function (client, user, ares, done) {
+    // create a new access token
+    var token = new Token({
+        value: uid(256),
+        clientId: client.clientId,
+        userId: user._id
+    });
+
+    // save the access token and check for errors
+    token.save(function (err) {
+        if (err) {
+            return callback(err);
+        }
+
+        done(null, token);
+    });
+}));
+
+// GRANT TYPE: RESOURCE OWNER PASSWORD CREDENTIALS
+// ----------------------------------------------------
+
+server.exchange(oauth2orize.exchange.password(function (client, username, password, scope, done) {
+    User.findOne({username: username}, function (err, user) {
+        if (err) return done(err)
+
+        if (!user) return done(null, false)
+
+        bcrypt.compare(password, user.password, function (err, res) {
+            if (!res) return done(null, false)
+
+            var token = new Token({
+                value: uid(256),
+                clientId: client.clientId,
+                userId: user._id
+            });
+            
+           // save the access token and check for errors
+            token.save(function (err) {
+                if (err) {
+                    return callback(err);
+                }
+
+                done(null, token);
+            });
+        })
+    })
+}))
+
 // user authorization endpoint
 exports.authorization = [
     server.authorization(function (clientId, redirectUri, callback) {
@@ -98,7 +151,11 @@ exports.authorization = [
         });
     }),
     function (req, res) {
-        res.render('dialog', { transactionID: req.oauth2.transactionID, user: req.user, client: req.oauth2.client });
+        res.render('dialog', { 
+            transactionID: req.oauth2.transactionID, 
+            user: req.user, 
+            client: req.oauth2.client 
+        });
     }
 ]
 
@@ -113,12 +170,6 @@ exports.token = [
     server.token(),
     server.errorHandler()
 ]
-
-
-// GRANT TYPE: CLIENT CREDENTIALS
-// ----------------------------------------------------
-// TODO
-
 
 // HELPERS
 // ----------------------------------------------------
