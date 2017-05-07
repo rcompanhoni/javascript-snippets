@@ -139,7 +139,7 @@ server.exchange(oauth2orize.exchange.password(function (client, username, passwo
     })
 }))
 
-// user authorization endpoint
+// client authorization endpoint
 exports.authorization = [
     server.authorization(function (clientId, redirectUri, callback) {
         Client.findOne({ clientId: clientId }, function (err, client) {
