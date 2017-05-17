@@ -23,6 +23,10 @@
     "joi": "^10.4.1",
     "mongoose": "^4.9.7",
     "nodemon": "^1.11.0",
+    "oauth2orize": "^1.8.0",
+    "passport": "^0.3.2",
+    "passport-http": "^0.3.0",
+    "passport-http-bearer": "^1.0.1",
     "restify": "^4.3.0"
   }
 }

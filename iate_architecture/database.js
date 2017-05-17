@@ -1,10 +1,14 @@
 import mongoose from 'mongoose'
 
+require('./api/src/Model/Auth/Client')
+require('./api/src/Model/Auth/Code')
+require('./api/src/Model/Auth/Token')
+require('./api/src/Model/Auth/User')
+
 require('./api/src/Model/Conteudo')
 require('./api/src/Model/Menor')
 require('./api/src/Model/Interessado')
 require('./api/src/Model/Interesse')
-require('./api/src/Model/Usuario')
 
 const db = 'mongodb://localhost:27017/test'
 

@@ -1,11 +1,14 @@
 import restify from 'restify'
 import bodyParser from 'body-parser'
 
+require('./database.js')
+
 import ConteudoTranslator from './api/src/Conteudo/Translator'
 import MenorTranslator from './api/src/Menor/Translator'
 import UsuarioTranslator from './api/src/Usuario/Translator'
 
-require('./database.js')
+import AuthManager from './api/src/Auth/authManager';
+import Oauth2Manager from './api/src/Auth/oauth2Manager';
 
 const server = restify.createServer()
 const port = process.env.PORT || 8888
@@ -64,6 +67,15 @@ server.get('/usuarios', (request, response, next) => {
     const usuarioTranslator = new UsuarioTranslator()
     usuarioTranslator.get(request, response)
 })
+
+// OAUTH 2.0
+// ----------------------------------------------------
+
+server.post('/oauth2/token', AuthManager.isClientAuthenticated, Oauth2Manager.token);
+
+
+// SERVER
+// ----------------------------------------------------
 
 server.listen(port, function() {
     console.log('Adoções API running! Port: ' + port)

@@ -2,41 +2,41 @@ var mongoose = require('mongoose');
 var bcrypt = require('bcrypt-nodejs');
 
 var userSchema = new mongoose.Schema({
-  email: {
+  username: {
     type: String,
     unique: true,
     required: true
   },
-  senha: {
+  password: {
     type: String,
     required: true
   }
 });
 
-userSchema.methods.verifyPassword = function (senha, callback) {
-  bcrypt.compare(senha, this.senha, function (err, isMatch) {
+userSchema.methods.verifyPassword = function (password, callback) {
+  bcrypt.compare(password, this.password, function (err, isMatch) {
     if (err) return cb(err);
     callback(null, isMatch);
   });
 };
 
-// executado antes de uma chamada a save()
+// execute before each user.save() call
 userSchema.pre('save', function (callback) {
   var user = this;
 
-  if (!user.isModified('senha')) return callback();
+  if (!user.isModified('password')) return callback();
 
-  // senha foi alterada -- precisa ser criptografada novamente
+  // password changed so we need to hash it
   bcrypt.genSalt(5, function (err, salt) {
     if (err) return callback(err);
 
-    bcrypt.hash(user.senha, salt, null, function (err, hash) {
+    bcrypt.hash(user.password, salt, null, function (err, hash) {
       if (err) return callback(err);
 
-      user.senha = hash;
+      user.password = hash;
       callback();
     });
   });
 });
 
-mongoose.model('Usuario', userSchema)
+mongoose.model('User', userSchema)

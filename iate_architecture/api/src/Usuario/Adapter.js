@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 export default class Adapter {
 	constructor(deps = {}) {
-		this.Usuario = mongoose.model('Usuario')
+		this.Usuario = mongoose.model('User')
 	}
 
 	save(body) {
