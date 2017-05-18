@@ -1,0 +1,2952 @@
+{
+	"variables": [],
+	"info": {
+		"name": "cdig",
+		"_postman_id": "a0200d83-3887-db73-d0f9-e42789a71f22",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "/atividades",
+			"description": "",
+			"item": [
+				{
+					"name": "/atividades/{id}",
+					"request": {
+						"url": "{{url}}/atividades/307888287417107718",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/atos",
+			"description": "",
+			"item": [
+				{
+					"name": "/atos/{id}",
+					"request": {
+						"url": "{{url}}/atos/578162863890237008",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/documentos (n)",
+					"request": {
+						"url": "{{url}}/atos/446360593184588875/documentos",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file1",
+									"type": "file",
+									"enabled": true,
+									"value": ""
+								},
+								{
+									"key": "file2",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								},
+								{
+									"key": "file3",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								},
+								{
+									"key": "file4",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/documentos (1)",
+					"request": {
+						"url": "{{url}}/atos/298253004367201405/documentos",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								},
+								{
+									"key": "nome",
+									"value": "Nome do documento",
+									"type": "text",
+									"enabled": true
+								},
+								{
+									"key": "descricao",
+									"value": "Descricao do documento. Pode ser um texto longo.",
+									"type": "text",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/partes",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/partes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"partes\": [\n    {\n      \"tipo_pessoa\":\"F\",\n      \"nome\":\"Leovan Tavares da Silva\",\n      \"cpf\":\"00533070031\",\n      \"profissao\":\"Eng. de computação\",\n      \"estado_civil\":\"solteiro\",\n      \"nacionalidade\":\"brasileiro\",\n      \"designacao\":\"Designação da parte\"\n    },\n    {\n      \"tipo_pessoa\":\"F\",\n      \"nome\":\"Eduardo Arruda\",\n      \"cpf\":\"00197523005\"\n    },\n    {\n      \"tipo_pessoa\":\"J\",\n      \"nome\":\"Grupo API\",\n      \"razao_social\":\"Arquitetura Processual Inteligente Ltda\",\n      \"cnpj\":\"08747227000107\"\n    }\n  ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/estado/{status}",
+					"request": {
+						"url": "{{url}}/atos/308548544334136602/estado/recebido",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/estado/historico",
+					"request": {
+						"url": "{{url}}/atos/308548544334136602/estado/historico",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/atividades (anexar)",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/atividades",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"descricao\":\"Atividade de avaliação\",\n    \"tipo\":\"anexar\",\n    \"usuario\":{\"email\":\"gustavo.bourscheidt@doc.space\"},\n    \"documento\": {\n        \"nome\":\"Documento a ser anexado\",\n        \"descricao\":\"Por favor, anexe um documento ao ato.\"\n    }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/atividades (assinar)",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/atividades",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"descricao\":\"Por favor, assine o documento.\",\n  \"usuario\":{\"email\":\"gustavo.theodoro@cartoriodigital.net.br\"},\n  \"tipo\":\"assinar\",\n  \"documento\":{\"id\":\"304917158964495541\"}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/atividades (avaliar)",
+					"request": {
+						"url": "{{url}}/atos/415822767208793909/atividades",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"descricao\":\"Avaliar documento 1.pdf\",\n    \"tipo\":\"avaliar\",\n    \"usuario\": {\n        \"id\":\"411502532603413826\"\n    },\n    \"documento\": {\n        \"id\": 415822868970997569\n    }\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/documentos",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/documentos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/partes",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/partes",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/equipe",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/equipe",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/cartorio",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/cartorio",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/movimentacoes",
+					"request": {
+						"url": "{{url}}/atos/578162863890237008/movimentacoes",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/atividades",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/atividades?",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/equipe/{eq}",
+					"request": {
+						"url": "{{url}}/atos/308548544334136602/equipe/311342654241637697",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/discussoes",
+					"request": {
+						"url": "{{url}}/atos/315056275358483470/discussoes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"assunto\":\"Conversa sobre o ato\",\n    \"usuarios\":[\n        {\"email\":\"leovant@gmail.com\"}\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/pagamentos",
+					"request": {
+						"url": "{{url}}/atos/330228242533319712/pagamentos",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"titulo\":\"Um pagamento\",\n  \"descricao\":\"Teste\",\n  \"valor_total\":222.22,\n  \"data_vencimento\":\"25/04/2016\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/equipe/{eq}",
+					"request": {
+						"url": "{{url}}/atos/308548544334136602/equipe/311342654241637697",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/envolvidos",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/envolvidos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/pagamentos",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/pagamentos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/tipos",
+					"request": {
+						"url": "{{url}}/atos/tipos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/eventos",
+					"request": {
+						"url": "{{url}}/atos/315059369169388562/eventos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\":\n    {\n        \"email\":\"arruda@cartoriodigital.net\"\n        \n    }, \n    \"titularidade\":\"titular\" \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/discussoes",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/discussoes",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}/atividades (contra-assinar)",
+					"request": {
+						"url": "{{url}}/atos/304802858123920556/atividades",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"descricao\":\"Por favor, assine o documento.\",\n  \"usuario\":{\"email\":\"gustavo.theodoro@cartoriodigital.net.br\"},\n  \"tipo\":\"contra-assinar\",\n  \"documento\":{\"id\":\"304917158964495541\"},\n  \"dados_registro\":\"Dados de registro do documento\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/atos/{id}",
+					"request": {
+						"url": "{{url}}/atos/415085326676002292",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/cartorios",
+			"description": "",
+			"item": [
+				{
+					"name": "/cartorios/{id}/atos",
+					"request": {
+						"url": "{{url}}/cartorios/288803055346910284/atos",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"descricao\":\"Ato.\",\n  \"tipo_ato\":{\"id\":1}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios",
+					"request": {
+						"url": "{{url}}/cartorios",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/{id}",
+					"request": {
+						"url": "{{url}}/cartorios/541741346679948304",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios?nome={nome}",
+					"request": {
+						"url": "{{url}}/cartorios?nome=tabelion",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/{id}/equipes",
+					"request": {
+						"url": "{{url}}/cartorios/332494641385440544/equipes",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/{id}/registrados",
+					"request": {
+						"url": "{{url}}/cartorios/332494641385440544/registrados",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/{id}/colaboradores",
+					"request": {
+						"url": "{{url}}/cartorios/332494641385440544/colaboradores",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/{id}/atos/{timestamp_inicio}/{timestamp_final}",
+					"request": {
+						"url": "{{url}}/cartorios/332494641385440544/atos/1451674577/1462132567",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": "Busca os atos concluídos no período entre os timestamps."
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/{id}/atos/equipes",
+					"request": {
+						"url": "{{url}}/cartorios/332494641385440544/equipes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\":\"Equipe de escrituras C\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/{id}/atos/colaboradores",
+					"request": {
+						"url": "{{url}}/cartorios/332494641385440544/colaboradores",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\":{\"email\":\"fulanodetal@hotmail.com\"},\n    \"titularidade\":\"substituto\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/tipos",
+					"request": {
+						"url": "{{url}}/cartorios/tipos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/cartorios/titulares",
+					"request": {
+						"url": "{{url}}/cartorios/332494641385440544/titulares",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/certificados",
+			"description": "",
+			"item": [
+				{
+					"name": "/certificados/{id}",
+					"request": {
+						"url": "{{url}}/certificados/332533062350931186",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/certificados/{id}/cartorios",
+					"request": {
+						"url": "{{url}}/certificados/332533062350931186/cartorios",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/certificados/{id}/cartorios/{cartorio}",
+					"request": {
+						"url": "{{url}}/certificados/332533062350931186/cartorios/332494641385440544",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/colaboradores",
+			"description": "",
+			"item": [
+				{
+					"name": "/cartorios/{id}/colaboradores",
+					"request": {
+						"url": "{{url}}/cartorios/314954636400264195/colaboradores",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\":\n        {\n            \"email\":\"gustavo.bourscheidt@doc.space\"\n            \n        }, \n    \"titularidade\":\"nenhuma\" \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/colaboradores/{id}/equipes/{id}",
+					"request": {
+						"url": "{{url}}/colaboradores/338294613271905513/equipes/331049035580310675",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/colaboradores/{id}",
+					"request": {
+						"url": "{{url}}/colaboradores/331039233374422160",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"titularidade\":\"titular\" \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/colaboradores/{id}",
+					"request": {
+						"url": "{{url}}/colaboradores/320887380129089197",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/colaboradores/{id}/equipes/{id}",
+					"request": {
+						"url": "{{url}}/colaboradores/331039233374422160/equipes/330995109522834570",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/colaboradores/{id}",
+					"request": {
+						"url": "{{url}}/colaboradores/327968058079446853",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\":\n    {\n        \"email\":\"arruda@cartoriodigital.net\"\n        \n    }, \n    \"titularidade\":\"titular\" \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/discussoes",
+			"description": "",
+			"item": [
+				{
+					"name": "/discussoes/{id}",
+					"request": {
+						"url": "{{url}}/discussoes/332634781428745465",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pago_em\":\"02/04/2016 08:00\",\n    \"pago_por\":{\"email\":\"leovan.tavares@doc.space\"}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/discussoes/{id}/participantes",
+					"request": {
+						"url": "{{url}}/discussoes/332634781428745465/participantes",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pago_em\":\"02/04/2016 08:00\",\n    \"pago_por\":{\"email\":\"leovan.tavares@doc.space\"}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/discussoes/{id}/mensagens",
+					"request": {
+						"url": "{{url}}/discussoes/332634781428745465/mensagens",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pago_em\":\"02/04/2016 08:00\",\n    \"pago_por\":{\"email\":\"leovan.tavares@doc.space\"}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/discussoes/{id}/mensagens/recentes",
+					"request": {
+						"url": "{{url}}/discussoes/332634781428745465/mensagens/recentes",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pago_em\":\"02/04/2016 08:00\",\n    \"pago_por\":{\"email\":\"leovan.tavares@doc.space\"}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/discussoes/{id}/mensagens",
+					"request": {
+						"url": "{{url}}/discussoes/332634781428745465/mensagens",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"mensagem\":\"Uma mensagem\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/discussoes/{id}/participantes",
+					"request": {
+						"url": "{{url}}/discussoes/332634781428745465/participantes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"participantes\":[\n        {\"email\":\"leovan.tavares@doc.space\"},\n        {\"id\":\"332503692315984904\"}\n    ]\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/discussoes/{id}/participantes/{pid}",
+					"request": {
+						"url": "{{url}}/discussoes/332634781428745465/participantes/332634781781067002",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/documentos",
+			"description": "",
+			"item": [
+				{
+					"name": "/documentos/{id} (atualizar conteudo)",
+					"request": {
+						"url": "{{url}}/documentos/304245427111199910",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}",
+					"request": {
+						"url": "{{url}}/documentos/83",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}",
+					"request": {
+						"url": "{{url}}/documentos/304245427111199910",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}",
+					"request": {
+						"url": "{{url}}/documentos/427516726180054123",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\":\"novo nome\",\n  \"descricao\":\"Nova descricao\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/visualizado",
+					"request": {
+						"url": "{{url}}/documentos/610713668912415868/visualizado 5",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/atividades",
+					"request": {
+						"url": "{{url}}/documentos/578065860720068389/atividades&usuario=541735718284690438&executada=false&tipo=assinar",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"nome\":\"novo nome\",\n  \"descricao\":\"Nova descricao\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/conteudo",
+					"request": {
+						"url": "{{url}}/documentos/470906326961096459/conteudo",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": "Download de documento."
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/avaliacoes",
+					"request": {
+						"url": "{{url}}/documentos/578065860720068389/avaliacoes",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/assinaturas",
+					"request": {
+						"url": "{{url}}/documentos/470906326961096459/assinaturas",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"value": "",
+									"type": "file",
+									"enabled": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/avaliacoes",
+					"request": {
+						"url": "{{url}}/documentos/304245427111199910/avaliacoes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"aprovado\":true,\n    \"comentario\":\"Lorem ipsum...\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/requisicoes",
+					"request": {
+						"url": "{{url}}/documentos/304245427111199910/requisicoes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/documentos/{id}/assinaturas",
+					"request": {
+						"url": "{{url}}/documentos/330235467138073635/assinaturas",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "arquivo1",
+									"type": "file",
+									"enabled": true,
+									"value": ""
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/equipes",
+			"description": "",
+			"item": [
+				{
+					"name": "/cartorios/{id}/equipes",
+					"request": {
+						"url": "{{url}}/cartorios/314954636400264195/equipes",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"         : \"EQUIPE\",\n    \"distribuicao\" : \"f\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/equipes/{id}/colaboradores/{id}",
+					"request": {
+						"url": " {{url}}/equipes/339747814231771002/colaboradores/343226209410222039",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/equipes/{id}",
+					"request": {
+						"url": "{{url}}/equipes/330937903058257033",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"         : \"EQUIPE CARTORIO DIGITAL -CDIG\",\n    \"distribuicao\" : \"f\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/equipes/{id}",
+					"request": {
+						"url": "{{url}}/equipes/331054200672748695",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/equipes/{id}/colaboradores/{id}",
+					"request": {
+						"url": "{{url}}/equipes/330995109522834570/colaboradores/320172984536925238",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/equipes/{id}",
+					"request": {
+						"url": "{{url}}/equipes/315056223701435405",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/equipes/{id}/colaboradores",
+					"request": {
+						"url": "{{url}}/equipes/332499576747459877/colaboradores",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/equipes/{id}/colaboradores copy",
+					"request": {
+						"url": "{{url}}/equipes/332499576747459877/colaboradores",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/eu",
+			"description": "",
+			"item": [
+				{
+					"name": "/eu",
+					"request": {
+						"url": "{{url}}/eu",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/atos",
+					"request": {
+						"url": "{{url}}/eu/atos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/atos/{id}/atividades",
+					"request": {
+						"url": "{{url}}/eu/atos/578162863890237008/atividades",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/atividades",
+					"request": {
+						"url": "{{url}}/eu/atividades",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer f0ff2d55a95980a2041ccc7623dadcc05592a235",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/certificados",
+					"request": {
+						"url": "{{url}}/eu/certificados",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/certificados/{id}",
+					"request": {
+						"url": "{{url}}/eu/certificados/{id}",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/certificados/",
+					"request": {
+						"url": "{{url}}/eu/certificados/",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "-----BEGIN CERTIFICATE-----\r\nMIIH5jCCBc6gAwIBAgIIGiqASLvGddcwDQYJKoZIhvcNAQELBQAwdTELMAkGA1UE\r\nBhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxNjA0BgNVBAsTLVNlY3JldGFyaWEg\r\nZGEgUmVjZWl0YSBGZWRlcmFsIGRvIEJyYXNpbCAtIFJGQjEZMBcGA1UEAxMQQUMg\r\nU0VSQVNBIFJGQiB2MjAeFw0xNTAxMTYyMTAwMDBaFw0xODAxMTUyMTAwMDBaMIHV\r\nMQswCQYDVQQGEwJCUjETMBEGA1UEChMKSUNQLUJyYXNpbDE2MDQGA1UECxMtU2Vj\r\ncmV0YXJpYSBkYSBSZWNlaXRhIEZlZGVyYWwgZG8gQnJhc2lsIC0gUkZCMRUwEwYD\r\nVQQLEwxSRkIgZS1DUEYgQTMxFDASBgNVBAsTCyhFTSBCUkFOQ08pMRMwEQYDVQQL\r\nEwpBUiBTQUZFV0VCMTcwNQYDVQQDEy5FRFVBUkRPIEhFTlJJUVVFIFBFUkVJUkEg\r\nREUgQVJSVURBOjU5NTQ5OTk4MDUzMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIB\r\nCgKCAQEA2um14vfe2i2DGOJWLCWlGJbivHqpY+D7uowSeoaIHPYo4XbEB1SZOdYh\r\nGfeKVrMWMo+VAG1NjlCPuPsejK0I1Gf5jo2y9mC7IAmcn25IdYileMvCBqr6Mic/\r\ne1SDS3DXd/Zfl/WDR4wIys+7jyg+CWPJiP39jj+/h3eM2awocV3VXAtWupeHEF2H\r\nkxscG76y1yWxuAu+TtHQ+hx8wbP/43qKb7tjBi82kBd0QKYwZHPHHlJjbH7GLWoh\r\nz09iUsHJhYdbGgGUIG0IfPoGT/s1DNOyc0rySOJqBl+onYFjMAh90sG2gOcZ6Ba4\r\nl5AN4c4+36TwrvGKE7JocfPR5c7VTwIDAQABo4IDFzCCAxMwgZkGCCsGAQUFBwEB\r\nBIGMMIGJMEgGCCsGAQUFBzAChjxodHRwOi8vd3d3LmNlcnRpZmljYWRvZGlnaXRh\r\nbC5jb20uYnIvY2FkZWlhcy9zZXJhc2FyZmJ2Mi5wN2IwPQYIKwYBBQUHMAGGMWh0\r\ndHA6Ly9vY3NwLmNlcnRpZmljYWRvZGlnaXRhbC5jb20uYnIvc2VyYXNhcmZidjIw\r\nCQYDVR0TBAIwADAfBgNVHSMEGDAWgBSyoMQ9Rp58yIVsCB4QMpRlRnBBczBxBgNV\r\nHSAEajBoMGYGBmBMAQIDCjBcMFoGCCsGAQUFBwIBFk5odHRwOi8vcHVibGljYWNh\r\nby5jZXJ0aWZpY2Fkb2RpZ2l0YWwuY29tLmJyL3JlcG9zaXRvcmlvL2RwYy9kZWNs\r\nYXJhY2FvLXJmYi5wZGYwgfMGA1UdHwSB6zCB6DBKoEigRoZEaHR0cDovL3d3dy5j\r\nZXJ0aWZpY2Fkb2RpZ2l0YWwuY29tLmJyL3JlcG9zaXRvcmlvL2xjci9zZXJhc2Fy\r\nZmJ2Mi5jcmwwRKBCoECGPmh0dHA6Ly9sY3IuY2VydGlmaWNhZG9zLmNvbS5ici9y\r\nZXBvc2l0b3Jpby9sY3Ivc2VyYXNhcmZidjIuY3JsMFSgUqBQhk5odHRwOi8vcmVw\r\nb3NpdG9yaW8uaWNwYnJhc2lsLmdvdi5ici9sY3IvU2VyYXNhL3JlcG9zaXRvcmlv\r\nL2xjci9zZXJhc2FyZmJ2Mi5jcmwwDgYDVR0PAQH/BAQDAgXgMB0GA1UdJQQWMBQG\r\nCCsGAQUFBwMCBggrBgEFBQcDBDCBsAYDVR0RBIGoMIGlgRxDT05UQVRPQEVEVUFS\r\nRE9BUlJVREEuQ09NLkJSoD0GBWBMAQMBoDQTMjIxMDMxOTcxNTk1NDk5OTgwNTMx\r\nNzA2Mjg0OTA1NTAwMDAwMTA1NDA3MzA5MVNKU1JToC0GBWBMAQMFoCQTIjA1NzEx\r\nNzkxMDQ4NTAwMTAwOTRQT1JUTyBBTEVHUkUgUlOgFwYFYEwBAwagDhMMMDAwMDAw\r\nMDAwMDAwMA0GCSqGSIb3DQEBCwUAA4ICAQBWQQoSpN/1cJ9ZCZSWhUzlrlrEaiZo\r\n7XV3hbazQXRNjDoWBcb4f2yuFtGYhEH2vwTPXg2mp2woPavbMgPO0xMFuIMYvWQT\r\n2X5sLDVb7kbb63zMOJ7IrB59N3VD0ZuahTsZj4Ndhtbs54/A5JbR7ViTzloudIHm\r\nL0ZBtUwW3HM5TLs6u6+qfYEKMbF6rzEI6gXzyb5nKoS0E0UL7DZBR2+ZCUO7pRXd\r\nYyGci50ZbvBEBTvoGqnEcxZoo0WXV8ClpQ4rt8fZsdicCeCcO6lF1tCUtHStxjbM\r\n5WWBH6ZnqQgizCECCo9bpQXvLlTrT/7ROXEmtBnA9DXdaJRMQNsG0PznxQWxjwfx\r\nuqlYin4SnImSkTIyw4toLB4cVWBxPMPnTsmZIvfxcF6qhfvyp+Nbb78xO9J8Zcp+\r\npM6b8nY6Z8pZFumz51dH1S/EPc7QXrWAFSIwcvpl1DcDfhQmOBq6F5HIwGtOmevS\r\njjCDDcetS9DlJ5+iAH+LuwBOzFD8jMZJu+jn+1GEiMmj2FUca2cs+hT07NI9Dg7K\r\ndJ8d9DSYuGj5YlQFTVRPL/Txj5vNvj/tQM5iCuJwd8U8SG9qsYHPXybzBfyk63DT\r\n/W0sPFYEVtYoo/Rf9ydA54cb1dp9nCZmNwMvKEdtiOmJoVCY7PQeBGsFCDESxetv\r\njhkiXlH5zF4FQQ==\r\n-----END CERTIFICATE-----\r\n"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/certificados/{id}",
+					"request": {
+						"url": "{{url}}/eu/certificados/{id}",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu",
+					"request": {
+						"url": "{{url}}/eu",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"            : \"NOME   \",\n    \"nome_mae\"        : \"NOME MÃE ACENTO\",\n    \"nome_pai\"        : \"NOME PAI\",\n    \"sexo\"            : \"M\",\n    \"estado_civil\"    : \"SOLTEIRO UPDATE\",\n    \"nome_conjuge\"    : \"NOME CONJUGE\",\n    \"regime_bens\"     : \"REGIME BENS\",\n    \"profissao\"       : \"PROFISSÃO\",\n    \"data_nascimento\" : \"1981-01-01\",\n    \"data_casamento\"  : \"1982-01-01\",\n    \"enderecos\"       : \n    [\n        {\"numero\" : \"001\", \"tipo_endereco\" : \"TIPO ENDERECO 1\", \"complemento\" : \"COMPLEMENTO 1\", \"cep\" : \"96000000\", \"principal\" : \"t\", \"logradouro\" : \"endereco 1\", \"localidade\" : \"localidade 1\"},\n        {\"numero\" : \"002\", \"tipo_endereco\" : \"TIPO ENDERECO 2\", \"complemento\" : \"COMPLEMENTO 2\", \"cep\" : \"96000001\", \"principal\" : \"f\", \"logradouro\" : \"endereco 2\", \"localidade\" : \"localidade 2\"}\n    ],\n    \"emails\"          : \n    [   \n        {\"tipo_email\" : \"tipo email 1\",  \"email\": \"email1@email.com\", \"principal\" : \"t\", \"validado\" : \"t\"},\n        {\"tipo_email\" : \"tipo email 1\",  \"email\": \"email2@email.com\", \"principal\" : \"f\", \"validado\" : \"t\"}\n    ],\n    \"telefones\"       :\n    [\n        {\"tipo_telefone\" : \"tipo telefone\", \"ddi\" : \"55\", \"ddd\" : \"51\", \"numero\" : \"123456789\", \"principal\" : \"t\", \"validado\" : \"t\"},\n        {\"tipo_telefone\" : \"tipo telefone\", \"ddi\" : \"55\", \"ddd\" : \"51\", \"numero\" : \"987654322\", \"principal\" : \"f\", \"validado\" : \"t\"}\n    ],\n    \"documentos\"      :\n    [\n        {\"id_tipo_documento_identidade\" : \"1\", \"numero\": \"00675077001\", \"data_emissao\" : \"1900-01-01\", \"data_validade\" : \"1901-01-01\", \"principal\" : \"t\"},\n        {\"id_tipo_documento_identidade\" : \"2\", \"numero\": \"10\", \"data_emissao\" : \"1900-01-01\", \"data_validade\" : \"1901-01-01\", \"principal\" : \"f\"},\n        {\"id_tipo_documento_identidade\" : \"3\", \"numero\": \"000000000000003\", \"data_emissao\" : \"1900-01-01\", \"data_validade\" : \"1901-01-01\", \"principal\" : \"f\"}\n        \n        \n    ]\n\n      \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/logout",
+					"request": {
+						"url": "{{url}}/eu/logout",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/cartorio/{id}/favorito",
+					"request": {
+						"url": "{{url}}/eu/cartorio/334575531439686887/favorito",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/meuscartoriosfavoritos",
+					"request": {
+						"url": "{{url}}/eu/meuscartoriosfavoritos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\":\n    {\n        \"email\":\"arruda@cartoriodigital.net\"\n        \n    }, \n    \"titularidade\":\"titular\" \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/eventos",
+					"request": {
+						"url": "{{url}}/eu/eventos/",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\":\n    {\n        \"email\":\"arruda@cartoriodigital.net\"\n        \n    }, \n    \"titularidade\":\"titular\" \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/escopo (colaborador)",
+					"request": {
+						"url": "{{url}}/eu/escopo?cartorio=411475924962247923",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/escopo (admin)",
+					"request": {
+						"url": "{{url}}/eu/escopo?admin=true",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/pagamentos",
+			"description": "",
+			"item": [
+				{
+					"name": "/pagamentos/{id}",
+					"request": {
+						"url": "{{url}}/pagamentos/480432439433364926",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"nome\": \"Leovan Tavares \",\n      \"designacao\": \"Contratante\",\n      \"cpf\": \"00533070031\",\n      \"nacionalidade\": \"brasileiro\",\n      \"profissao\": \"programador\",\n      \"estado_civil\": \"solteiro\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/pagamentos/{id}/execucao",
+					"request": {
+						"url": "{{url}}/pagamentos/332643848633189637/execucao",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"pago_em\":\"02/04/2016 08:00\",\n    \"pago_por\":{\"email\":\"leovan.tavares@doc.space\"}\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/partes",
+			"description": "",
+			"item": [
+				{
+					"name": "/partes/{id}",
+					"request": {
+						"url": "{{url}}/partes/445630995958335196",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/partes/{id}",
+					"request": {
+						"url": "{{url}}/partes/332523953723540571",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/partes/{id}",
+					"request": {
+						"url": "{{url}}/partes/332523953723540571",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"nome\": \"Leovan Tavares \",\n      \"designacao\": \"Contratante\",\n      \"cpf\": \"00533070031\",\n      \"nacionalidade\": \"brasileiro\",\n      \"profissao\": \"programador\",\n      \"estado_civil\": \"solteiro\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/tipos_atos",
+			"description": "",
+			"item": [
+				{
+					"name": "/tipos-atos/{id}",
+					"request": {
+						"url": "http://localhost/tipos-atos/90",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"      : \"Tipo ato Update\",\n    \"descricao\" : \"Descricao ATO Update\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/eu/tipos-atos",
+					"request": {
+						"url": "http://localhost/eu/tipos-atos",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"            : \"Tipo Ato Administrador\",\n    \"descricao\"       : \"Descrição Ato Administrador\",\n    \"tipos_cartorios\" : \"256\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/tipos-atos/{id}",
+					"request": {
+						"url": "{{url}}/tipos-atos/84",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"      : \"Tipo Cartorio Update\",\n    \"descricao\" : \"Descricao Update\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/tipos-atos/{id}",
+					"request": {
+						"url": "http://localhost/tipos-atos/85",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"      : \"Tipo Cartorio Update\",\n    \"descricao\" : \"Descricao Update\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/tipos_cartorios",
+			"description": "",
+			"item": [
+				{
+					"name": "/tipos-cartorios/{id}",
+					"request": {
+						"url": "{{url}}/tipos-cartorios/512",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"      : \"Tipo Cartorio Update\",\n    \"descricao\" : \"Descricao Update\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/tipos-cartorios",
+					"request": {
+						"url": "http://localhost/usuarios/tipos-cartorios",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"      : \"Tipo Cartorio\",\n    \"descricao\" : \"Descricao\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/tipos-cartorios/{id}",
+					"request": {
+						"url": "http://localhost/tipos-cartorios/512",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"      : \"Tipo Cartorio Update\",\n    \"descricao\" : \"Descricao Update\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/tipos-cartorios/{id}",
+					"request": {
+						"url": "http://localhost/tipos-cartorios/4",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"      : \"Tipo Cartorio Update\",\n    \"descricao\" : \"Descricao Update\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/usuarios",
+			"description": "",
+			"item": [
+				{
+					"name": "/usuarios",
+					"request": {
+						"url": "{{url}}/usuarios",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\":\"Eduardo Arruda\",\n    \"email\":\"eduardo.arruda@doc.space\",\n    \"cpf\":\"595.499.980-53\",\n    \"senha\":\"827ccb0eea8a706c4c34a16891f84e7b\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios",
+					"request": {
+						"url": "{{url}}/usuarios",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\":\"Fulano de tal\",\n    \"email\":\"fulanodetal@hotmail.com\",\n    \"cpf\":\"23133805053\",\n    \"senha\":\"827ccb0eea8a706c4c34a16891f84e7b\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/{id}",
+					"request": {
+						"url": "{{url}}/usuarios/445577769754035226",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\":\"Fulano de tal\",\n    \"email\":\"fulanodetal@hotmail.com\",\n    \"cpf\":\"23133805053\",\n    \"senha\":\"827ccb0eea8a706c4c34a16891f84e7b\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/{id}/certificados",
+					"request": {
+						"url": "{{url}}/usuarios/315052990471865353/certificados",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\":\"Fulano de tal\",\n    \"email\":\"fulanodetal@hotmail.com\",\n    \"cpf\":\"23133805053\",\n    \"senha\":\"827ccb0eea8a706c4c34a16891f84e7b\"\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/{id}/certificados",
+					"request": {
+						"url": "{{url}}/usuarios/315052990471865353/certificados",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "-----BEGIN CERTIFICATE-----\r\nMIIHvDCCBaSgAwIBAgIICqmeqMs5aNswDQYJKoZIhvcNAQELBQAwdTELMAkGA1UE\r\nBhMCQlIxEzARBgNVBAoTCklDUC1CcmFzaWwxNjA0BgNVBAsTLVNlY3JldGFyaWEg\r\nZGEgUmVjZWl0YSBGZWRlcmFsIGRvIEJyYXNpbCAtIFJGQjEZMBcGA1UEAxMQQUMg\r\nU0VSQVNBIFJGQiB2MjAeFw0xNTAxMjcxNjEzMDBaFw0xODAxMjYxNjEzMDBaMIHK\r\nMQswCQYDVQQGEwJCUjETMBEGA1UEChMKSUNQLUJyYXNpbDE2MDQGA1UECxMtU2Vj\r\ncmV0YXJpYSBkYSBSZWNlaXRhIEZlZGVyYWwgZG8gQnJhc2lsIC0gUkZCMRUwEwYD\r\nVQQLEwxSRkIgZS1DUEYgQTMxFDASBgNVBAsTCyhFTSBCUkFOQ08pMRMwEQYDVQQL\r\nEwpBUiBTQUZFV0VCMSwwKgYDVQQDEyNMRU9WQU4gVEFWQVJFUyBEQSBTSUxWQTow\r\nMDUzMzA3MDAzMTCCASIwDQYJKoZIhvcNAQEBBQADggEPADCCAQoCggEBAL1/0zD7\r\nPpXaJYggXyL0kDR0p5wSCFK02iJ6n1Cidph2DX19bYE8qCa55w7dn1pTIWukKb71\r\nri+eEYZNwbzNlvkSANdoBA6ovoKO0WWtzSJHOAOiLhcUde5mz6mrV7GzTGsox/e/\r\nS/UVrnMlgbeZ/zXoouFl9jVgelhKzAOs7J3ZAormvGY9LOAbW5yAxdy8IIPLzf6y\r\npIpLShlBTQGJlOBdUTuZqHzA3ItlKop7Mz2t8bH2QWmgdmNTsGfnblh8Msx1lAff\r\nkoPVs9JSWVpaUcXoMB+GrCLvUWspu3u2Th5YEoT0GxRz33HtIye6stm0YKsR5WKe\r\ng0eF9r+OT7V4V0ECAwEAAaOCAvgwggL0MIGZBggrBgEFBQcBAQSBjDCBiTBIBggr\r\nBgEFBQcwAoY8aHR0cDovL3d3dy5jZXJ0aWZpY2Fkb2RpZ2l0YWwuY29tLmJyL2Nh\r\nZGVpYXMvc2VyYXNhcmZidjIucDdiMD0GCCsGAQUFBzABhjFodHRwOi8vb2NzcC5j\r\nZXJ0aWZpY2Fkb2RpZ2l0YWwuY29tLmJyL3NlcmFzYXJmYnYyMAkGA1UdEwQCMAAw\r\nHwYDVR0jBBgwFoAUsqDEPUaefMiFbAgeEDKUZUZwQXMwcQYDVR0gBGowaDBmBgZg\r\nTAECAwowXDBaBggrBgEFBQcCARZOaHR0cDovL3B1YmxpY2FjYW8uY2VydGlmaWNh\r\nZG9kaWdpdGFsLmNvbS5ici9yZXBvc2l0b3Jpby9kcGMvZGVjbGFyYWNhby1yZmIu\r\ncGRmMIHzBgNVHR8EgeswgegwSqBIoEaGRGh0dHA6Ly93d3cuY2VydGlmaWNhZG9k\r\naWdpdGFsLmNvbS5ici9yZXBvc2l0b3Jpby9sY3Ivc2VyYXNhcmZidjIuY3JsMESg\r\nQqBAhj5odHRwOi8vbGNyLmNlcnRpZmljYWRvcy5jb20uYnIvcmVwb3NpdG9yaW8v\r\nbGNyL3NlcmFzYXJmYnYyLmNybDBUoFKgUIZOaHR0cDovL3JlcG9zaXRvcmlvLmlj\r\ncGJyYXNpbC5nb3YuYnIvbGNyL1NlcmFzYS9yZXBvc2l0b3Jpby9sY3Ivc2VyYXNh\r\ncmZidjIuY3JsMA4GA1UdDwEB/wQEAwIF4DAdBgNVHSUEFjAUBggrBgEFBQcDAgYI\r\nKwYBBQUHAwQwgZEGA1UdEQSBiTCBhoERTEVPVkFOVEBHTUFJTC5DT02gOAYFYEwB\r\nAwGgLxMtMDQwOTE5ODQwMDUzMzA3MDAzMTAwMDAwMDAwMDAwMDAwMDAwMDAwMDAw\r\nMDAwoB4GBWBMAQMFoBUTEzAwMDAwMDAwMDAwMDAwMDAwMDCgFwYFYEwBAwagDhMM\r\nMDAwMDAwMDAwMDAwMA0GCSqGSIb3DQEBCwUAA4ICAQAkQNLgoz8ayC4mVtlQq0WS\r\n0bQQX1zzdXh2Rsdo2JFdfSvRiTEQRu/IqVaTPp0qdHri2OIt+iPjhnohVjO0PSR5\r\npTG3/WncDtsqsiKubD9M7wqgafA4Jp8lZ/LmDehw4fJJaPRNz9+X6tZfJy8k3a0b\r\nUDvCAKD+oWYUhza56HDC7H8DiJkNAU7vWqCV9nQ/KsNVlNSA7rG+yZu8HJi+yzvJ\r\nsYleGfVVkz95v+dt5NPdpdS04leXGtkjtSDpzY0FQCi2QKTRYmh9ZNCY7N/VZT/0\r\nvTsz1mdvMYiJqBhXjeZwegKvUzSbl+eFOwlf6oWhzVGZ30YfZoALDBrO7dIbjkuK\r\nqP/W28VixMNrTaydMLeDKmJoKXVG/7GZDiyGo5fTbiLKrLWh2IX8xb4fBoSstLFx\r\nd+t1PT44dkf2SAKc/iRnBZnt0jly3k06P++7Tv5oVNCsjR7YHLFiIpdVoRT6dJc0\r\n+jLBrGg9F6e3OWCnDD4eROr2JX/keEITNBbu6hgunxzEmWL9VlE7nvBJvs4FjGec\r\np4wrptKR0vxtyWwJEzwIxlFpzl7K6gUhp7qvWVEY10TyQZgZmw1XhWWTaGKrqIDf\r\nf+DeTdCGSRMBQyAFCjPEYg7nsoOsLzZ0zW9Qh060SEDBE9oY7pArtgCEiWcs+nAm\r\ntcjyDIK2bqrQYu6Ghyffbw==\r\n-----END CERTIFICATE-----"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/{id}/certificados/{cert}/registrado",
+					"request": {
+						"url": "{{url}}/usuarios/315052990471865353/certificados/330404752158360777/registrado",
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/{id}/certificados/{cert}/registrado",
+					"request": {
+						"url": "{{url}}/usuarios/315052990471865353/certificados/330404752158360777/registrado",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/{id}/atos/{timestamp_inicial}/{timestamp_final}",
+					"request": {
+						"url": "{{url}}/usuarios/314954636400264195/atos/1459194366/1459194366",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\":\n    {\n        \"email\":\"arruda@cartoriodigital.net\"\n        \n    }, \n    \"titularidade\":\"titular\" \n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/usuarios/{id}",
+					"request": {
+						"url": "{{url}}/usuarios/328887866371343486",
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"description": ""
+							},
+							{
+								"key": "Content-Type",
+								"value": "{{content-type}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\"            : \"NOME USUARIO\",\n    \"nome_mae\"        : \"NOME MÃE USUARIO\",\n    \"nome_pai\"        : \"NOME PAI USUARIO\",\n    \"sexo\"            : \"M\",\n    \"estado_civil\"    : \"SOLTEIRO UPDATE\",\n    \"nome_conjuge\"    : \"NOME CONJUGE\",\n    \"regime_bens\"     : \"REGIME BENS\",\n    \"profissao\"       : \"PROFISSÃO\",\n    \"data_nascimento\" : \"1981-01-01\",\n    \"data_casamento\"  : \"1982-01-01\",\n    \"cpf\"             : \"00675077002\",\n    \"enderecos\"       : \n    [\n        {\"numero\" : \"001\", \"tipo_endereco\" : \"TIPO ENDERECO 1\", \"complemento\" : \"COMPLEMENTO 1\", \"cep\" : \"96000000\", \"principal\" : \"t\", \"logradouro\" : \"endereco 1\", \"localidade\" : \"localidade 1\"},\n        {\"numero\" : \"002\", \"tipo_endereco\" : \"TIPO ENDERECO 2\", \"complemento\" : \"COMPLEMENTO 2\", \"cep\" : \"96000001\", \"principal\" : \"f\", \"logradouro\" : \"endereco 2\", \"localidade\" : \"localidade 2\"}\n    ],\n    \"emails\"          : \n    [   \n        {\"tipo_email\" : \"tipo email 1\",  \"email\": \"email1@email.com\", \"principal\" : \"t\", \"validado\" : \"t\"},\n        {\"tipo_email\" : \"tipo email 1\",  \"email\": \"email2@email.com\", \"principal\" : \"f\", \"validado\" : \"t\"}\n    ],\n    \"telefones\"       :\n    [\n        {\"tipo_telefone\" : \"tipo telefone\", \"ddi\" : \"55\", \"ddd\" : \"51\", \"numero\" : \"123456789\", \"principal\" : \"t\", \"validado\" : \"t\"},\n        {\"tipo_telefone\" : \"tipo telefone\", \"ddi\" : \"55\", \"ddd\" : \"51\", \"numero\" : \"987654322\", \"principal\" : \"f\", \"validado\" : \"t\"}\n    ],\n    \"documentos\"      :\n    [\n        {\"id_tipo_documento_identidade\" : \"1\", \"numero\": \"123456\", \"data_emissao\" : \"1900-01-01\", \"data_validade\" : \"1901-01-01\", \"principal\" : \"t\"},\n        {\"id_tipo_documento_identidade\" : \"2\", \"numero\": \"111111\", \"data_emissao\" : \"1900-01-01\", \"data_validade\" : \"1901-01-01\", \"principal\" : \"f\"},\n        {\"id_tipo_documento_identidade\" : \"3\", \"numero\": \"AHB 22222\", \"data_emissao\" : \"1900-01-01\", \"data_validade\" : \"1901-01-01\", \"principal\" : \"f\"}\n        \n    ]\n\n      \n}"
+						},
+						"description": "[\"id\", \"10\"]"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "AixMobil API",
+			"description": "",
+			"item": [
+				{
+					"name": "/login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"postman.setEnvironmentVariable(\"aixmobil-token\", jsonData.token);"
+								]
+							}
+						}
+					],
+					"request": {
+						"url": "{{aixmobil-url}}login",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"usuario\":{{aixmobil-usuario}},\r\n  \"senha\":{{aixmobil-senha}}\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/transacoes/credito",
+					"request": {
+						"url": "{{aixmobil-url}}transacoes/credito",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "SessionId",
+								"value": "{{aixmobil-token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCliente\":{{aixmobil-idCliente}},\r\n  \"cartao\":{{aixmobil-cartao-teste}},\r\n  \"bandeira\":1,\r\n  \"portador\":\"Cliente da Cartório Digital 01\",\r\n  \"cvv\":111,\r\n  \"validade\":\"11/2021\",\r\n  \"valor\":123.45,\r\n  \"parcelas\":1,\r\n  \"seuNumero\":\"123456\",\r\n  \"cpfCnpjPortador\":\"11111111111\",\r\n  \"dataNascimento\":\"1971-01-01\",\r\n  \"telefone\":5199998877,\r\n  \"email\":\"contato@cartoriodigital.net.br\",\r\n  \"dadosAdicionais\":\"Nota de emolumentos Nº 12345 do ato Nº 1234567\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/transacoes/debito",
+					"request": {
+						"url": "{{aixmobil-url}}transacoes/debito",
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "SessionId",
+								"value": "{{aixmobil-token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCliente\":{{aixmobil-idCliente}},\r\n  \"cartao\":{{aixmobil-cartao-teste}},\r\n  \"bandeira\":1,\r\n  \"portador\":\"Cliente da Cartório Digital 01\",\r\n  \"cvv\":111,\r\n  \"validade\":\"11/2021\",\r\n  \"valor\":123.45,\r\n  \"parcelas\":1,\r\n  \"seuNumero\":\"123456\",\r\n  \"cpfCnpjPortador\":\"11111111111\",\r\n  \"dataNascimento\":\"1971-01-01\",\r\n  \"telefone\":5199998877,\r\n  \"email\":\"contato@cartoriodigital.net.br\",\r\n  \"dadosAdicionais\":\"Nota de emolumentos Nº 12345 do ato Nº 1234567\",\r\n  \"urlCallback\":\"http://www.cartoriodigital.net.br/api/?token=123456\"\r\n}\r\n"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/transacoes",
+					"request": {
+						"url": "{{aixmobil-url}}transacoes?dataInicio=2016-11-01&dataFim=2016-11-30",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "SessionId",
+								"value": "{{aixmobil-token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCliente\":{{aixmobil-idCliente}},\r\n  \"cartao\":{{aixmobil-cartao-teste}},\r\n  \"bandeira\":1,\r\n  \"portador\":\"Cliente da Cartório Digital 01\",\r\n  \"cvv\":111,\r\n  \"validade\":\"11/2021\",\r\n  \"valor\":123.45,\r\n  \"parcelas\":1,\r\n  \"seuNumero\":\"123456\",\r\n  \"cpfCnpjPortador\":\"11111111111\",\r\n  \"dataNascimento\":\"1971-01-01\",\r\n  \"telefone\":5199998877,\r\n  \"email\":\"contato@cartoriodigital.net.br\",\r\n  \"dadosAdicionais\":\"Nota de emolumentos Nº 12345 do ato Nº 1234567\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/transacoes/{idTransacao}",
+					"request": {
+						"url": "{{aixmobil-url}}transacoes/904",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "SessionId",
+								"value": "{{aixmobil-token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCliente\":{{aixmobil-idCliente}},\r\n  \"cartao\":{{aixmobil-cartao-teste}},\r\n  \"bandeira\":1,\r\n  \"portador\":\"Cliente da Cartório Digital 01\",\r\n  \"cvv\":111,\r\n  \"validade\":\"11/2021\",\r\n  \"valor\":123.45,\r\n  \"parcelas\":1,\r\n  \"seuNumero\":\"123456\",\r\n  \"cpfCnpjPortador\":\"11111111111\",\r\n  \"dataNascimento\":\"1971-01-01\",\r\n  \"telefone\":5199998877,\r\n  \"email\":\"contato@cartoriodigital.net.br\",\r\n  \"dadosAdicionais\":\"Nota de emolumentos Nº 12345 do ato Nº 1234567\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/transacoes/{idTransacao}/pagamentos",
+					"request": {
+						"url": "{{aixmobil-url}}transacoes/904/statuspagamentos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "SessionId",
+								"value": "{{aixmobil-token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCliente\":{{aixmobil-idCliente}},\r\n  \"cartao\":{{aixmobil-cartao-teste}},\r\n  \"bandeira\":1,\r\n  \"portador\":\"Cliente da Cartório Digital 01\",\r\n  \"cvv\":111,\r\n  \"validade\":\"11/2021\",\r\n  \"valor\":123.45,\r\n  \"parcelas\":1,\r\n  \"seuNumero\":\"123456\",\r\n  \"cpfCnpjPortador\":\"11111111111\",\r\n  \"dataNascimento\":\"1971-01-01\",\r\n  \"telefone\":5199998877,\r\n  \"email\":\"contato@cartoriodigital.net.br\",\r\n  \"dadosAdicionais\":\"Nota de emolumentos Nº 12345 do ato Nº 1234567\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/transacoes/{idTransacao}/statuspagamentos",
+					"request": {
+						"url": "{{aixmobil-url}}transacoes/904/pagamentos",
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "SessionId",
+								"value": "{{aixmobil-token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCliente\":{{aixmobil-idCliente}},\r\n  \"cartao\":{{aixmobil-cartao-teste}},\r\n  \"bandeira\":1,\r\n  \"portador\":\"Cliente da Cartório Digital 01\",\r\n  \"cvv\":111,\r\n  \"validade\":\"11/2021\",\r\n  \"valor\":123.45,\r\n  \"parcelas\":1,\r\n  \"seuNumero\":\"123456\",\r\n  \"cpfCnpjPortador\":\"11111111111\",\r\n  \"dataNascimento\":\"1971-01-01\",\r\n  \"telefone\":5199998877,\r\n  \"email\":\"contato@cartoriodigital.net.br\",\r\n  \"dadosAdicionais\":\"Nota de emolumentos Nº 12345 do ato Nº 1234567\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "/transacoes/{idTransacao}",
+					"request": {
+						"url": "{{aixmobil-url}}transacoes/903",
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json",
+								"description": ""
+							},
+							{
+								"key": "SessionId",
+								"value": "{{aixmobil-token}}",
+								"description": ""
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"idCliente\":{{aixmobil-idCliente}},\r\n  \"cartao\":{{aixmobil-cartao-teste}},\r\n  \"bandeira\":1,\r\n  \"portador\":\"Cliente da Cartório Digital 01\",\r\n  \"cvv\":111,\r\n  \"validade\":\"11/2021\",\r\n  \"valor\":123.45,\r\n  \"parcelas\":1,\r\n  \"seuNumero\":\"123456\",\r\n  \"cpfCnpjPortador\":\"11111111111\",\r\n  \"dataNascimento\":\"1971-01-01\",\r\n  \"telefone\":5199998877,\r\n  \"email\":\"contato@cartoriodigital.net.br\",\r\n  \"dadosAdicionais\":\"Nota de emolumentos Nº 12345 do ato Nº 1234567\"\r\n}"
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "/ping",
+			"request": {
+				"url": "{{url}}/ping",
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/usuarios/login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							"var jsonData = JSON.parse(responseBody);\r",
+							"postman.setEnvironmentVariable(\"token\", jsonData.token_acesso);"
+						]
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": {
+						"username": "{{app-key}}",
+						"password": "{{app-password}}",
+						"saveHelperData": true,
+						"showPassword": false
+					}
+				},
+				"url": "{{url}}/usuarios/login",
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					},
+					{
+						"key": "Authorization",
+						"value": "Basic Y2RpZy53ZWI6NDA3YTRkODBmY2U3OTE3NTFjZDgzYWIxYWYzZDliMjY=",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"email\":\"eduardo.arruda@doc.space\",\n    \"senha\":\"dc483e80a7a0bd9ef71d8cf973673924\"\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "/eu/escopo",
+			"request": {
+				"url": "{{url}}/eu/escopo?cartorio=607076880096429084",
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{token}}",
+						"description": ""
+					},
+					{
+						"key": "Content-Type",
+						"value": "{{content-type}}",
+						"description": ""
+					}
+				],
+				"body": {},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}
