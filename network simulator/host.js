@@ -19,6 +19,36 @@ if (!process.argv[2]) {
     // METHODS
     //----------------------------------------------------
 
+    function displayMainOptions() {
+        var mainOptions = [
+            {
+                type: "list",
+                name: "selectedOption",
+                message: "Por favor, escolha uma opção:",
+                choices: [
+                    { value: "table", name: "Exibir tabela de roteamento deste host"},
+                    { value: "message", name: "Enviar nova mensagem"},
+                ]
+            },
+        ]
+
+        inquirer.prompt(mainOptions).then(function (answer) {
+            switch(answer.selectedOption) {
+                case "table":
+                    console.log("\nTODO - exibir tabela de roteamento\n\n");
+                    displayDefaultMenu();
+                    break;
+
+                case "message":
+                    displayMessageWizard();
+                    break;
+
+                default:
+                    displayDefaultMenu();
+            }
+        });
+    }
+
     function displayMessageWizard() {
         var wizardQuestions = [
             {
@@ -41,7 +71,7 @@ if (!process.argv[2]) {
 
         inquirer.prompt(wizardQuestions).then(function (answers) {
             server.send(answers.message, 0, answers.message.length, answers.port, answers.ip, function (err, bytes) {
-                if (err) console.error(err);
+                if (err) console.error("Não foi possível enviar a mensagem: ", err);
 
                 console.log('Arquivo enviado por UDP para ' + answers.ip + ':' + answers.port + "\n");
                 displayDefaultMenu();
@@ -50,18 +80,18 @@ if (!process.argv[2]) {
     }
 
     function displayDefaultMenu() {
-        console.log("Aguardando mensagens...(pressione qualquer tecla para iniciar nova mensagem");
+        console.log("Aguardando mensagens...(pressione qualquer tecla para opções");
 
         process.stdin.setRawMode(true);
         process.stdin.resume();
         process.stdin.once('data', function () {
-            displayMessageWizard();
+            displayMainOptions();
         });
     }
 
     // START
     //----------------------------------------------------
 
-    displayDefaultMenu()
+    displayDefaultMenu();
 }
 
