@@ -1,0 +1,19 @@
+{
+  "name": "network_simulator",
+  "version": "1.0.0",
+  "description": "Network Simulator",
+  "main": "host.js",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "console.table": "^0.8.0",
+    "inquirer": "^3.0.6",
+    "ip": "^1.1.5",
+    "prettyjson": "^1.2.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rafael Companhoni",
+  "license": "ISC"
+}
