@@ -61,8 +61,11 @@ server.on("message", function (buffer, rinfo) {
     console.log(EOL, "RECEBIDO:", EOL);
     console.log(prettyjson.render(package, { keysColor: 'yellow' }), EOL);
 
-    // TODO - router sends to host in same network  
-
+    // router sends to host in same network  
+    if(isRouter && package.destinyIp == originIp && package.destinyPort != originPort) {
+        console.log("Redirecionando para host da rede local...");
+        sendMessage(package, displayDefaultMenu);
+    }
     
     // router sends to another router
     if (isRouter && package.destinyIp != originIp) {
