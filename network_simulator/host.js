@@ -61,6 +61,10 @@ server.on("message", function (buffer, rinfo) {
     console.log(EOL, "RECEBIDO:", EOL);
     console.log(prettyjson.render(package, { keysColor: 'yellow' }), EOL);
 
+    // TODO - router sends to host in same network  
+
+    
+    // router sends to another router
     if (isRouter && package.destinyIp != originIp) {
         var routeInfo = routes.find(function (route) {
             return (route.ip == package.destinyIp);
@@ -154,7 +158,7 @@ function sendMessage(package, callback) {
             console.log("O host informado não consta na tabela de roteamento para a rede local", EOL);
         } else {
             // send package to host in same network
-            sendPackage(package, package.destinyPort);
+            sendPackage(package, package.destinyPort, originIp);
         }
     } else {
         var routerInfo = routes.find(function (route) {
@@ -162,7 +166,7 @@ function sendMessage(package, callback) {
         });
 
         // send package to router
-        sendPackage(package, routerInfo.port);
+        sendPackage(package, routerInfo.port, originIp);
     }
 
     callback();
@@ -194,12 +198,11 @@ function populateRoutingTable() {
 }
 
 function sendPackage(package, port, ip) {
-    // always send to originIp -- if host, then same network, else to router (also same network)
     packageBuffer = new Buffer.from(JSON.stringify(package));
-    server.send(packageBuffer, 0, packageBuffer.length, port, originIp, function (err, bytes) {
+    server.send(packageBuffer, 0, packageBuffer.length, port, ip, function (err, bytes) {
         if (err) console.error("Não foi possível enviar a mensagem: ", err);
 
-        console.log('Mensagem enviada por UDP para ' + originIp + ':' + port + "\n");
+        console.log('Mensagem enviada por UDP para ' + ip + ':' + port + "\n");
     });
 }
 
