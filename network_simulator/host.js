@@ -22,7 +22,7 @@ const EOL = require('os').EOL;
 
 program
     .option("-p, --port <required>", null)
-    .option("-t, --table [optional]", null)
+    .option("-t, --table <required>", null)
     .option("-r, --router", false)
     .parse(process.argv);
 
@@ -57,22 +57,20 @@ server.bind(originPort);
 
 server.on("message", function (buffer, rinfo) {
     var package = JSON.parse(buffer.toString());
+    
     console.log(EOL, "RECEBIDO:", EOL);
     console.log(prettyjson.render(package, { keysColor: 'yellow' }), EOL);
 
     if (isRouter && package.destinyIp != originIp) {
-        console.log("ROTEANDO...");
-
-        // TODO: find destinyIp in the router table and get the port
-        var isInRoutingTable = routes.find(function (route) {
+        var routeInfo = routes.find(function (route) {
             return (route.ip == package.destinyIp);
         });
 
-        if (!isInRoutingTable) {
+        if (!routeInfo) {
             console.log("Rede informada não foi encontrada")
         } else {
-            console.log(prettyjson.render(package, { keysColor: 'yellow' }), EOL);   
-            // TODO: send package directly to host in another network
+            console.log("ROTEANDO para " + routeInfo.ip + ":" + routeInfo.port);
+            sendPackage(package, routeInfo.port, routeInfo.ip);
         }
     }
 
@@ -175,9 +173,7 @@ function displayDefaultMenu() {
 
     process.stdin.setRawMode(true);
     process.stdin.resume();
-    process.stdin.once('data', function () {
-        displayMainOptions();
-    });
+    process.stdin.once('data', displayMainOptions);
 }
 
 function populateRoutingTable() {
@@ -198,6 +194,7 @@ function populateRoutingTable() {
 }
 
 function sendPackage(package, port, ip) {
+    // always send to originIp -- if host, then same network, else to router (also same network)
     packageBuffer = new Buffer.from(JSON.stringify(package));
     server.send(packageBuffer, 0, packageBuffer.length, port, originIp, function (err, bytes) {
         if (err) console.error("Não foi possível enviar a mensagem: ", err);
