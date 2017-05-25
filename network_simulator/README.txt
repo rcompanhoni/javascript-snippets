@@ -9,7 +9,6 @@ TOPICS COVERED
 > Read file line by line with 'fs' and 'readline'
 > IP local information with 'ip'
 > Sending a JSON as a buffer and then reading it on the client
-> Object.keys to iterate over an object's properties
 > Displaying a formatted table with 'console.table'
 > Additional command line flags with 'commander'
 > Terminate the process with errors: process.exit(1)
