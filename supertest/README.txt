@@ -1,8 +1,8 @@
 Supertest
 
-From the book "Express in Action" by Evan M Hahn. This application 
+From the book "Express in Action" by Evan M Hahn. 
 
-Uses the 'supertest' module to make integration tests on an Express API. “What’s My User Agent?” is a simple application for getting the User Agent string of your users. 
+This application uses the 'supertest' module to make integration tests on an Express API. “What’s My User Agent?” is a simple application for getting the User Agent string of your users. 
 It will support a classic HTML view when you visit it in a browser. You’ll also be able to get the user’s User Agent as plain text. There will be just one route for these two responses. 
 
 * If a visitor comes to the root of your site (at /) and doesn’t request HTML (as most web browsers would), they’ll be shown their User Agent as plain text. 
