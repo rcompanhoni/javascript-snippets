@@ -1,0 +1,22 @@
+{
+  "name": "supertest",
+  "version": "1.0.0",
+  "description": "Supertest",
+  "main": "index.js",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "start": "node app",
+    "test": "mocha"
+  },
+  "dependencies": {
+    "cheerio": "^0.17.0",
+    "ejs": "^1.0.0",
+    "express": "^4.10.1"
+  },
+  "devDependencies": {
+    "mocha": "^2.0.1",
+    "cheerio": "^0.17.0",
+    "supertest": "^0.14.0"
+  }
+}
