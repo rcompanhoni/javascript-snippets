@@ -1,0 +1,15 @@
+{
+  "name": "forever-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "start": "forever app.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.15.3",
+    "forever": "^0.15.3"
+  }
+}
