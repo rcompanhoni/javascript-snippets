@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Field, reduxForm } from 'redux-form';
+import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { createPost } from '../actions';
 
 class PostsNew extends Component {
     renderField(field) {
-        const { meta: {touched, error } } = field;
+        const { meta: {touched, error } } = field; // ES6, same as 'touched = field.meta.touched' and 'error = field.meta.error'
         const className = `form-group ${touched && error ? 'has-danger' : ''}`;
 
         return (
@@ -17,14 +20,16 @@ class PostsNew extends Component {
                 />
 
                 <div className="text-help">
-                    {touched ? error : ''}
+                    {touched ? error : ''}  {/* display the error (if any) -- equivalent to field.meta.touched ? field.meta.error : '' */}
                 </div>
             </div>
         )
     }
 
     onSubmit(values) {
-        console.log(values);
+        this.props.createPost(values, () => {
+            this.props.history.push('/'); // redirects to main post list
+        });
     }
 
     render() {
@@ -49,6 +54,7 @@ class PostsNew extends Component {
                 />
 
                 <button type="submit" className="btn btn-primary">Submit</button>
+                <Link to="/" className="btn btn-danger">Cancel</Link>
             </form>
         );
     };
@@ -76,4 +82,6 @@ function validate(values) {
 export default reduxForm({ 
     validate,
     form: 'PostNewForm'    
- })(PostsNew);
+ })(
+    connect(null, { createPost })(PostsNew)
+ );
