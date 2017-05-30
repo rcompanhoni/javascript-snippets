@@ -1,0 +1,15 @@
+{
+  "name": "browserify_app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build-my-js": "browserify main.js -o compiled.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "browserify": "^14.4.0",
+    "random-color": "^1.0.1"
+  }
+}
