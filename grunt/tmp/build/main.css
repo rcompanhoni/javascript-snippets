@@ -1,0 +1,10 @@
+article {
+  display: block;
+}
+article h1 {
+  font-size: 17pt;
+  color: #900;
+}
+article p {
+  line-height: 1.5em;
+}
