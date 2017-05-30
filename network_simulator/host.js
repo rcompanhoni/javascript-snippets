@@ -184,6 +184,8 @@ function displayDefaultMenu() {
 }
 
 function populateRoutingTable() {
+    // LINUX
+    // var inputFile = fs.createReadStream(".\\" + routesFilePath);
     var inputFile = fs.createReadStream(".\\" + routesFilePath);
 
     const rl = readline.createInterface({
@@ -201,6 +203,8 @@ function populateRoutingTable() {
 }
 
 function sendPackage(package, port, ip) {
+    // LINUX
+    // packageBuffer = JSON.stringify(package);
     packageBuffer = new Buffer.from(JSON.stringify(package));
     server.send(packageBuffer, 0, packageBuffer.length, port, ip, function (err, bytes) {
         if (err) console.error("Não foi possível enviar a mensagem: ", err);
