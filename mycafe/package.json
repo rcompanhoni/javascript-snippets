@@ -1,0 +1,17 @@
+{
+  "name": "mycafe",
+  "version": "1.0.0",
+  "description": "From book \"Learning BDD with JS\" by Enrique Amodeo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "chai": "^4.0.2",
+    "mocha": "^3.4.2",
+    "sinon": "^2.3.4",
+    "sinon-chai": "^2.11.0"
+  }
+}
