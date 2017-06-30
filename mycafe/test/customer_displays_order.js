@@ -14,6 +14,8 @@ describe('Customer displays order', function () {
   beforeEach(function () {
     this.orderStorage = newStorage();
     this.messageStorage = newStorage();
+    
+    // order system has the fake 'mongoose' DAO
     this.orderSystem = orderSystemWith({
       order: this.orderStorage.dao(),
       message: this.messageStorage.dao()
