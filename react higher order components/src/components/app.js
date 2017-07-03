@@ -6,6 +6,7 @@ export default class App extends Component {
     return (
       <div>
         <Header />
+        {this.props.children} {/* needed for routing */}
       </div>
     );
   }
