@@ -1,4 +1,4 @@
-# React/Redux Blog With TDD
+# React/Redux Blog Comment
 
 Tutorial from Udemy's 'Advanced React and Redux' by Stephen Grider. Demonstrates how to create tests using Mocha and Chai for React components, action creators and reducers.
 
