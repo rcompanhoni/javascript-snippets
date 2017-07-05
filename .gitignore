@@ -18,3 +18,6 @@ server_files/*
 bundle.js
 npm-debug.log
 .DS_Store
+
+# Application secret and config
+*config.js*
