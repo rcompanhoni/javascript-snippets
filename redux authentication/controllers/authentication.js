@@ -37,3 +37,7 @@ exports.signup = function(req, res, next) {
         })
     });
 }
+
+exports.signin = function(req, res, next) {
+    return res.send({ token: tokenForUser(req.user) }); // user is available here thanks to the Passport middleware
+}

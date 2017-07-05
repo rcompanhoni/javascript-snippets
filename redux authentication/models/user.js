@@ -26,6 +26,15 @@ userSchema.pre('save', function(next) {
     });
 });
 
+// compares the informed candidate password with the actual entity password
+userSchema.methods.comparePassword = function(candidatePassword, callback) {
+    bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
+        if (err) { return callback(err); }
+
+        callback(null, isMatch);
+    })
+}
+
 // create the actual model class (corresponds to a Mongo collection named 'user')
 const ModelClass = mongoose.model('user', userSchema);
 
