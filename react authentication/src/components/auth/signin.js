@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { reduxForm, Field } from 'redux-form';
+import { connect } from 'react-redux';
+
 import * as actions from '../../actions/index';
- 
+
 class Signin extends Component {
     handleFormSubmit({ email, password }) {
         console.log(email, password)
+        debugger;
         this.props.signinUser({ email, password });
     }
- 
+
     render() {
         const { handleSubmit } = this.props;
- 
+
         return (
             <form onSubmit={handleSubmit(this.handleFormSubmit.bind(this))}>
                 <fieldset className="form-group">
@@ -28,9 +31,13 @@ class Signin extends Component {
         );
     }
 }
- 
-const reduxFormSettings = {
-    form: 'signin'
-}
- 
-export default reduxForm(reduxFormSettings, null, actions)(Signin)
+
+const validate = null;
+const mapStateToProps = null;
+
+const SigninReduxForm = reduxForm({
+    form: 'signin',
+    validate
+})(Signin);
+
+export default connect(mapStateToProps, actions)(SigninReduxForm);
