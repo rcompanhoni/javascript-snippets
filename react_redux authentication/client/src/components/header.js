@@ -10,12 +10,12 @@ class Header extends Component {
             </li>
         } else {
             return [
-            <li className="nav-item">
-                <Link to="/signin" className="nav-link" key="{1}">Sign In</Link>
+            <li className="nav-item" key="{1}">
+                <Link to="/signin" className="nav-link">Sign In</Link>
             </li>,
 
-            <li className="nav-item">
-                <Link to="/signup" className="nav-link" key="{2}">Sign Up</Link>
+            <li className="nav-item" key="{2}">
+                <Link to="/signup" className="nav-link">Sign Up</Link>
             </li>
             ];
         }
