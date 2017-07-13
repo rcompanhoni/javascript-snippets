@@ -9,21 +9,15 @@ import {
 const ROOT_URL = 'http://localhost:3090';
 
 export function signinUser({ email, password }) {
-    // /this function (and the dispatch method) is available here via 'redux-thunk'
+    // /this function and the dispatch method are available here via 'redux-thunk'
     return function(dispatch) {
         axios.post(`${ROOT_URL}/signin`, { email, password })
             .then(response => {
-                // update state to indicate user is authenticated
                 dispatch({ type: AUTH_USER });
-
-                // save the jwt token
                 localStorage.setItem('token', response.data.token);
-
-                // redirect to the route '/feature'
                 browserHistory.push('/feature');
             })  
             .catch(() => {
-                // show error to the user
                 dispatch(authError('Bad Login Info'));
             })
     }
