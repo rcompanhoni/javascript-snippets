@@ -1,8 +1,0 @@
-Forever example (from https://github.com/EvanHahn/Express.js-in-Action-code/tree/master/Chapter_10/forever-example)
-
-Forever is a module that keeps your apps running forever -- if your app crashes, Forever will try to restart it. Change the script section in the package.json 
-to 
-
-    "scripts": {
-        "start": "forever app.js"
-    },
