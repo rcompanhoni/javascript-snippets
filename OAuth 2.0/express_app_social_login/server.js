@@ -41,22 +41,10 @@ require('./config/passport')(passport); // adds authentication methods to passpo
 // CONTROLLERS
 // =============================================================================
 
-// API CONTROLLERS
-// ----------------------------------------------------
-
-var resourceController = require('./controllers/api/resourceController');
-
-// WEB CONTROLLERS
-// ----------------------------------------------------
-
 require('./controllers/web/viewRoutes.js')(app, passport); // load our routes and pass in our app and fully configured passport
 var authenticationController = require('./controllers/web/authenticationController');
 
-// REGISTER ROUTES
-// ----------------------------------------------------
-
 app.use(authenticationController);
-app.use('/api', resourceController);
 
 // START THE SERVER
 // =============================================================================
