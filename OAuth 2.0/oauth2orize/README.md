@@ -29,7 +29,10 @@ In the *app.js* file there are 3 routes related to the authorization flows:
 
 ### PACKAGES USED
 
+* **oauth2orize**: is an authorization server toolkit for Node.js. It provides a suite of middleware that, combined with Passport authentication strategies and application-specific route handlers, can be used to assemble a server that implements the OAuth 2.0 protocol.
+
 * **passport-http**: lets you authenticate HTTP requests using the standard basic and digest schemes in your Node.js applications. By plugging into Passport, support for these schemes can be easily and unobtrusively integrated into any application or framework that supports Connect-style middleware, including Express.
+
 * **passport-http-bearer**: lets you authenticate HTTP requests using bearer tokens, as specified by RFC 6750, in your Node.js applications. Bearer tokens are typically used protect API endpoints, and are often issued using OAuth 2.0.
 
 
