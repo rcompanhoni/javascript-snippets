@@ -1,4 +1,4 @@
-# Oauth2orize Example
+# oauth2orize example
 
 This application demonstrates how to use oauth2orize along with the passport module to implement 3 (out of 4) OAuth 2.0 authorization grants
 
