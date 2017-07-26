@@ -9,8 +9,6 @@ import '../style/materialize.css';
 import '../style/react-range.css';
 import '../style/style.css';
 
-console.log("This is here to test the bundle hash")
-
 const App = () => {
   const store = createStore(reducers, {}, applyMiddleware(ReduxThunk));
 
