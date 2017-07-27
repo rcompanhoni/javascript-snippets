@@ -1,4 +1,4 @@
-# REAL WORLD WEBPACK
+# WEBPACK STATIC WEBSITE
 
 From Stephen Grider's Webpack 2: The Complete Developer's Guider. This example shows how to use a webpack configuration that will add two bundles -- one for the application code and one for the dependencies. This is useful for preventing the browser to download a single, big bundle.js file everytime the user opens the application.
 
