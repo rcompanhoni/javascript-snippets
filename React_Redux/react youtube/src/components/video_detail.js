@@ -1,7 +1,7 @@
 import React from 'react';
 import CommentList from './comment_list';
 
-const VideoDetail = ({ video }) => {
+const VideoDetail = ({ video, comments }) => {
     if (!video) {
         return <div>Loading...</div>;
     }
@@ -20,7 +20,7 @@ const VideoDetail = ({ video }) => {
                 <div>{video.snippet.description}</div>    
             </div>
 
-            <CommentList />
+            <CommentList comments={comments} />
         </div>
     );
 }

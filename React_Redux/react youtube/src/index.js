@@ -7,7 +7,7 @@ import SearchBar from './components/search_bar';
 import VideoList from './components/video_list';
 import VideoDetail from './components/video_detail';
 
-const API_KEY = 'AIzaSyA4d2oALii8hDNe3FY-FBzpHXGeBuje5eM';
+const API_KEY = 'TODO';
 
 class App extends Component {
 	constructor(props) {
@@ -15,7 +15,8 @@ class App extends Component {
 
 		this.state = {
 			videos: [],
-			selectedVideo: null
+			selectedVideo: null,
+			comments: null
 		};
 
 		this.videoSearch('surfboards');
@@ -25,7 +26,13 @@ class App extends Component {
 		YTSearch({ key: API_KEY, term: term }, (videos) => {
 			this.setState({
 				videos: videos,
-				selectedVideo: videos[0]
+				selectedVideo: videos[0],
+				comments: [
+					{ author: "Some person 1", text: "This is a comment about this video"},
+					{ author: "Some person 2", text: "This is a comment about this video"},
+					{ author: "Some person 3", text: "This is a comment about this video"},
+					{ author: "Some person 4", text: "This is a comment about this video"}
+				]
 			});
 		});
 	}
@@ -37,7 +44,7 @@ class App extends Component {
 			<div>
 				<SearchBar onSearchTermChange={videoSearch} />
 
-				<VideoDetail video={this.state.selectedVideo} />
+				<VideoDetail video={this.state.selectedVideo} comments={this.state.comments} />
 
 				<VideoList
 					onVideoSelect={selectedVideo => this.setState({ selectedVideo })}

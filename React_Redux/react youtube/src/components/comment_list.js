@@ -1,25 +1,21 @@
-import _ from 'lodash';
 import React from 'react';
+import CommentItem from './comment_item';
 
-import Comment from './comment';
-
-const CommentList = ({comments}) => {
-    const commentComponent = <div>Loading comment...s</div>;
-
-    if (!_.isEmpty(comments)) {
-        commentComponents = comments.map((comment) => {
-            return (
-                <div>TODO- comment </div>
-            );
-        });
-    }
+const CommentList = (props) => {
+    const commentItems = props.comments.map((comment) => {
+        return (
+            <li className="list-group-item">
+                <CommentItem author={comment.author} text={comment.text} />
+            </li>
+        );
+    });
 
     return(
         <div>
             <h4>Comments</h4>
 
-            <ul className="col-md-4 list-group">
-                <li>TODO - comment</li>
+            <ul className="list-group">
+                {commentItems}
             </ul>
         </div>
     );
