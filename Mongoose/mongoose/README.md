@@ -1,6 +1,6 @@
 # mongoose users 
 
-Simple example demonstrating mongoose core operations
+Simple example demonstrating mongoose core operations (CRUD)
 
 MODULES/PACKAGES USED
 
