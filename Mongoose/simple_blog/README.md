@@ -1,8 +1,8 @@
 # Simple Blog
 
-Demonstrates how to reference entities in Mongoose schemas. In the association_test the populate modifier is used to load the complete reference (analogous to 
-MS Entity Framework 'Include').
-
+Demonstrates how to reference entities in Mongoose schemas. Some notes:
+    * In the association_test the populate modifier is used to load the complete reference (analogous to MS Entity Framework 'Include').
+    * The UserSchema uses the 'pre' hook on the 'remove' method -- this is used to include some integrity to the DB by removing any related blog posts of the user being deleted.
 
 MODULES/PACKAGES USED
 

@@ -22,7 +22,7 @@ describe("Associations", () => {
     });
 
     // uses the populate modifier to include the 'blogPosts' along with the fetched user -- NOTE: each blogPost will not bring its whole comment reference
-    it.only('saves a relation between a user and a blogpost', (done) => {
+    it('saves a relation between a user and a blogpost', (done) => {
         User.findOne({ name: 'Joe'})
             .populate('blogPosts')
             .then((user) => {
@@ -33,7 +33,7 @@ describe("Associations", () => {
 
     // uses the populate modifier to include the 'blogPosts' along with the fetched user -- NOTE: it uses an object to indicate that each blogPost will be 
     // fetched along with its comments. 
-    it.only('saves a full relation graph', (done) => {
+    it('saves a full relation graph', (done) => {
         User.findOne({ name: 'Joe'})
             .populate({
                 path: 'blogPosts',
