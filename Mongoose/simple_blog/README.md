@@ -1,6 +1,8 @@
-# virtual types
+# Simple Blog
 
-A virtual type (or field) is a computed property based on some other property. In this example UserSchema.postCount is a computed property that uses posts.length. Note that the virtual field it's not actually present in the Mongo database.
+Demonstrates how to reference entities in Mongoose schemas. In the association_test the populate modifier is used to load the complete reference (analogous to 
+MS Entity Framework 'Include').
+
 
 MODULES/PACKAGES USED
 
