@@ -4,7 +4,7 @@ const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;
 
 class Environment {
-    constructor(canvasElement, worldSize, garbagePercentage, fuelStationQuantity) {
+    constructor(canvasElement, worldSize, garbagePercentage, fuelStationQuantity, agentInitialPosition) {
         // the world grid -- each number stored in this array will represent the index of the spritesheet tile in use at that particular location
         this.world = [[]];
         this.worldSize = worldSize;
@@ -19,6 +19,8 @@ class Environment {
         this.spritesheet = new Image();
         this.spritesheet.src = './spritesheet.png';
         this.spritesheet.onload = this.createWorld.bind(this);
+
+        this.previousAgentPosition = { x: 0, y: 0 };
     }
 
     createWorld() {
@@ -27,7 +29,7 @@ class Environment {
             this.world[x] = [];
 
             for (var y = 0; y < this.worldSize; y++) {
-                this.world[x][y] = 0;
+                this.world[x][y] = GRASS;
             }
         }
 
@@ -37,17 +39,17 @@ class Environment {
 
         // vertical (left and right)
         for (var y = yLimit; y < this.worldSize - yLimit; y++) {
-            this.world[xLimit][y] = 1;
-            this.world[this.worldSize - (xLimit + 1)][y] = 1;
+            this.world[xLimit][y] = WALL;
+            this.world[this.worldSize - (xLimit + 1)][y] = WALL;
         }
 
         // horizontal (left)
-        this.world[xLimit - 1][yLimit] = 1;
-        this.world[xLimit - 1][this.worldSize - yLimit - 1] = 1;
+        this.world[xLimit - 1][yLimit] = WALL;
+        this.world[xLimit - 1][this.worldSize - yLimit - 1] = WALL;
 
         // horizontal (right)
-        this.world[this.worldSize - xLimit][yLimit] = 1;
-        this.world[this.worldSize - xLimit][this.worldSize - yLimit - 1] = 1;
+        this.world[this.worldSize - xLimit][yLimit] = WALL;
+        this.world[this.worldSize - xLimit][this.worldSize - yLimit - 1] = WALL;
 
         this.redraw();
     }
@@ -77,8 +79,41 @@ class Environment {
     }
 
     getCurrentState(agentPosition) {
+        const neighbours = this.getNeighbours(agentPosition);
+
         return {
-            // TODO - state needed for agent to decide next action
-        }
+            isDirty: false,
+            hasFuelStation: false,
+            hasGarbageCan: false,
+            neighbours: neighbours
+        };
+    }
+
+    getNeighbours(position) {
+        let x = position.x;
+        let y = position.y;
+
+        return {
+            west:       x >= 0          ? this.world[x][y - 1]      : undefined,
+            northWest:  (x - 1) >= 0    ? this.world[x - 1][y - 1]  : undefined,
+            north:      (x - 1) >= 0    ? this.world[x - 1][y]      : undefined,
+            northEast:  (x - 1) >= 0    ? this.world[x - 1][y + 1]  : undefined,
+            east:       x >= 0          ? this.world[x][y + 1]      : undefined,
+            southEast:  (x + 1) >= 0    ? this.world[x + 1][y + 1]  : undefined,
+            south:      (x + 1) >= 0    ? this.world[x + 1][y]      : undefined,
+            southWest:  (x + 1) >= 0    ? this.world[x + 1][y - 1]  : undefined
+        };
+    }
+
+    updateAgentPosition(agentPosition) {
+        this.world[this.previousAgentPosition.x][this.previousAgentPosition.y] = GRASS;
+        this.world[agentPosition.x][agentPosition.y] = AGENT;
+        this.previousAgentPosition = { x: agentPosition.x, y: agentPosition.y };
+
+        this.redraw();
+    }
+
+    applyAgentAction(action) {
+        // TODO
     }
 }

@@ -1,6 +1,13 @@
 "use strict";
 
-function runSimulation() {  
+const COVERED_ALL_MAP = "covered all map";
+
+// types of terrain
+const GRASS = 0;
+const WALL = 1;
+const AGENT = 4;
+      
+function runSimulation() {
     // environment
     const worldCanvas = document.getElementById('world-canvas');
     const worldSize = Number(document.getElementById('world-size').value);
@@ -11,11 +18,18 @@ function runSimulation() {
     // agent
     const agent = new Agent();
 
-    // simulation loop -- ends when agent covers all the map
     const refreshId = setInterval(function () {
-        const coveredAllMap = agent.act(environment.getCurrentState());
-        if (coveredAllMap) {
+        // agent reacts to the environment
+        const currentState = environment.getCurrentState(agent.position)
+        const actionResult = agent.act(currentState);
+
+        // actions are applied to the environment
+        environment.updateAgentPosition(agent.position);
+        environment.applyAgentAction(actionResult);
+
+        // if the whole map was covered then the simulation ends
+        if (actionResult === COVERED_ALL_MAP) {
             clearInterval(refreshId);
         }
-    }, 500);
+    }, 2000);
 }
