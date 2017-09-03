@@ -4,7 +4,7 @@ const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;
 
 class Environment {
-    constructor(canvasElement, worldSize, garbagePercentage, fuelStationQuantity, agentInitialPosition) {
+    constructor(spritesheet, canvasElement, worldSize, garbagePercentage, fuelStationQuantity, agentInitialPosition) {
         // the world grid -- each number stored in this array will represent the index of the spritesheet tile in use at that particular location
         this.world = [[]];
         this.worldSize = worldSize;
@@ -16,11 +16,11 @@ class Environment {
         this.ctx = this.canvas.getContext("2d");
 
         // an image containing all sprites
-        this.spritesheet = new Image();
-        this.spritesheet.src = './spritesheet.png';
-        this.spritesheet.onload = this.createWorld.bind(this);
-
+        this.spritesheet = spritesheet;
         this.previousAgentPosition = { x: 0, y: 0 };
+
+        this.createWorld();
+        this.redraw();
     }
 
     createWorld() {
@@ -34,6 +34,7 @@ class Environment {
         }
 
         // walls
+        /*
         const xLimit = Math.ceil(0.125 * this.worldSize);
         const yLimit = Math.ceil(0.125 * this.worldSize);
 
@@ -51,7 +52,12 @@ class Environment {
         this.world[this.worldSize - xLimit][yLimit] = WALL;
         this.world[this.worldSize - xLimit][this.worldSize - yLimit - 1] = WALL;
 
-        this.redraw();
+        */
+
+        this.worldInfo = {
+            size: this.worldSize - 1,
+            map: this.world
+        }
     }
 
     redraw() {
@@ -94,26 +100,25 @@ class Environment {
         let y = position.y;
 
         return {
-            west:       x >= 0          ? this.world[x][y - 1]      : undefined,
-            northWest:  (x - 1) >= 0    ? this.world[x - 1][y - 1]  : undefined,
-            north:      (x - 1) >= 0    ? this.world[x - 1][y]      : undefined,
-            northEast:  (x - 1) >= 0    ? this.world[x - 1][y + 1]  : undefined,
-            east:       x >= 0          ? this.world[x][y + 1]      : undefined,
-            southEast:  (x + 1) >= 0    ? this.world[x + 1][y + 1]  : undefined,
-            south:      (x + 1) >= 0    ? this.world[x + 1][y]      : undefined,
-            southWest:  (x + 1) >= 0    ? this.world[x + 1][y - 1]  : undefined
+            west:       x >= 0                          ? this.world[x][y - 1]      : undefined,
+            northWest:  (x - 1) >= 0                    ? this.world[x - 1][y - 1]  : undefined,
+            north:      (x - 1) >= 0                    ? this.world[x - 1][y]      : undefined,
+            northEast:  (x - 1) >= 0                    ? this.world[x - 1][y + 1]  : undefined,
+            east:       x >= 0                          ? this.world[x][y + 1]      : undefined,
+            southEast:  (x + 1) < this.worldSize        ? this.world[x + 1][y + 1]  : undefined,
+            south:      (x + 1) < this.worldSize        ? this.world[x + 1][y]      : undefined,
+            southWest:  (x + 1) < this.worldSize        ? this.world[x + 1][y - 1]  : undefined
         };
     }
 
-    updateAgentPosition(agentPosition) {
+    applyAgentAction(action) {
+        const newAgentPositionX = action.positionX;
+        const newAgentPositionY = action.positionY;
+
         this.world[this.previousAgentPosition.x][this.previousAgentPosition.y] = GRASS;
-        this.world[agentPosition.x][agentPosition.y] = AGENT;
-        this.previousAgentPosition = { x: agentPosition.x, y: agentPosition.y };
+        this.world[newAgentPositionX][newAgentPositionY] = AGENT;
+        this.previousAgentPosition = { x: newAgentPositionX, y: newAgentPositionY };
 
         this.redraw();
-    }
-
-    applyAgentAction(action) {
-        // TODO
     }
 }
