@@ -3,6 +3,11 @@
 const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;
 
+// types of terrain
+const GRASS = 0;
+const WALL = 1;
+const AGENT = 4;
+
 class Environment {
     constructor(spritesheet, canvasElement, worldSize, garbagePercentage, fuelStationQuantity, agentInitialPosition) {
         // the world grid -- each number stored in this array will represent the index of the spritesheet tile in use at that particular location
@@ -53,11 +58,6 @@ class Environment {
         this.world[this.worldSize - xLimit][this.worldSize - yLimit - 1] = WALL;
 
         */
-
-        this.worldInfo = {
-            size: this.worldSize - 1,
-            map: this.world
-        }
     }
 
     redraw() {
@@ -82,6 +82,15 @@ class Environment {
                     TILE_HEIGHT);               // image height
             }
         }
+    }
+
+    getMap() {
+        let worldMap = [];
+        worldMap = this.world.map(function(worldRow) {
+            return worldRow.slice();
+        });
+
+        return worldMap;
     }
 
     getCurrentState(agentPosition) {
@@ -111,11 +120,16 @@ class Environment {
         };
     }
 
+    drawAgent(position) {
+        this.world[position.x][position.y] = AGENT;
+        this.redraw();
+    }
+
     applyAgentAction(action) {
         const newAgentPositionX = action.positionX;
         const newAgentPositionY = action.positionY;
 
-        this.world[this.previousAgentPosition.x][this.previousAgentPosition.y] = GRASS;
+        this.world[this.previousAgentPosition.x][this.previousAgentPosition.y] = GRASS; // TODO -- keep fuel station and garbage can
         this.world[newAgentPositionX][newAgentPositionY] = AGENT;
         this.previousAgentPosition = { x: newAgentPositionX, y: newAgentPositionY };
 

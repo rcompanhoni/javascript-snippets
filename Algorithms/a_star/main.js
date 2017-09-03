@@ -1,14 +1,12 @@
 "use strict";
 
+const SIMULATION_SPEED = 100;
 const COVERED_ALL_MAP = "covered all map";
 
-// types of terrain
-const GRASS = 0;
-const WALL = 1;
-const AGENT = 4;
-      
+let environment;
+let agent;
+
 function runSimulation() {
-    
     const worldCanvas = document.getElementById('world-canvas');
     const worldSize = Number(document.getElementById('world-size').value);
     const garbagePercentage = Number(document.getElementById('garbage-percentage').value);
@@ -17,21 +15,32 @@ function runSimulation() {
     let spritesheet = new Image();
     spritesheet.src = './spritesheet.png';
     spritesheet.onload = function() {
-        const environment = new Environment(this, worldCanvas, worldSize, garbagePercentage, fuelStationQuantity);
-        const agent = new Agent(environment.worldInfo);
-    
+        environment = new Environment(this, worldCanvas, worldSize, garbagePercentage, fuelStationQuantity);
+        agent = new Agent(environment.getMap());
+        environment.drawAgent(agent.position);
+
+        // agent acts on initial spot and starts moving
+        agentEnvironmentInteraction();
+        agent.setMovement(MOVING);
+
         const refreshId = setInterval(function () {
-            // agent reacts to the environment
-            const currentState = environment.getCurrentState(agent.position)
-            const actionResult = agent.act(currentState);
-    
-            // actions are applied to the environment
-            environment.applyAgentAction(actionResult);
+            const actionResult = agentEnvironmentInteraction();
     
             // if the whole map was covered then the simulation ends
-            if (actionResult === COVERED_ALL_MAP) {
+            if (actionResult.isWorldCleared) {
                 clearInterval(refreshId);
+                alert("FIM DA SIMULAÇÃO.");
             }
-        }, 50);
+        }, SIMULATION_SPEED);
     } 
 }
+
+// agent reacts to the environment -- its actions are then applied to the environment
+function agentEnvironmentInteraction() {
+    const currentState = environment.getCurrentState(agent.position)
+    const actionResult = agent.act(currentState);
+    environment.applyAgentAction(actionResult);
+
+    return actionResult;
+}
+

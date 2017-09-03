@@ -1,5 +1,8 @@
 /***** this A-star implementation expects the world array to be square: it must have equal height and width. *****/
 
+const STOPPED               = 'stopped';
+const MOVING                = 'moving';
+
 const DIRECTION_SOUTH       = 'direction south';
 const DIRECTION_SOUTHWEST   = 'direction southwest';
 const DIRECTION_WEST        = 'direction west';
@@ -9,17 +12,26 @@ const DIRECTION_NORTHEAST   = 'direction northeast';
 const DIRECTION_EAST        = 'direction east';
 const DIRECTION_SOUTHEAST   = 'direction southeast';
 
+const SPOT_CLEARED          = -1;
+
 class Agent {
-    constructor(worldInfo) {
-        this.walkableTiles = [GRASS];
+    constructor(worldMap) {
         this.fuelLevel = 100;
         this.garbageCapacity = 100;
+        this.currentDirection = DIRECTION_SOUTH;
+        this.movementStatus = STOPPED;
         this.position = {
             x: 0,
             y: 0
         };
-        this.currentDirection = DIRECTION_SOUTH;
-        this.worldInfo = worldInfo;
+        
+        this.walkableTiles = [GRASS];
+        this.map = worldMap;
+        this.worldSize = this.map[0].length;
+    }
+
+    setMovement(movementStatus) {
+        this.movementStatus = movementStatus;
     }
 
     act(state) {
@@ -38,31 +50,55 @@ class Agent {
     }
 
     move(state) {
-        // TODO -- mark in the map each visited position -- if all visited the simulation is over
+        if (this.movementStatus === MOVING) {
+            switch(this.currentDirection) {
+                case DIRECTION_SOUTH:
+                    if (this.position.y === this.worldSize - 1) {
+                        this.currentDirection = DIRECTION_NORTH;
+                        this.position.x++;
+                    } else {
+                        this.position.y++;
+                    }
+                    break;
+    
+                case DIRECTION_NORTH:
+                    if (this.position.y === 0) {
+                        this.currentDirection = DIRECTION_SOUTH;
+                        this.position.x++;
+                    } else {
+                        this.position.y--;
+                    }
+                    break;
+            }
+        }
+        
+        // mark current spot as cleared and check if the whole map is cleared
+        this.map[this.position.x][this.position.y] = SPOT_CLEARED;
+        const isWorldCleared = this.isWorldCleared();
 
-        switch(this.currentDirection) {
-            case DIRECTION_SOUTH:
-                if (this.position.y === this.worldInfo.size) {
-                    this.currentDirection = DIRECTION_NORTH;
-                    this.position.x++;
-                } else {
-                    this.position.y++;
-                }
-                break;
-
-            case DIRECTION_NORTH:
-                if (this.position.y === 0) {
-                    this.currentDirection = DIRECTION_SOUTH;
-                    this.position.x++;
-                } else {
-                    this.position.y--;
-                }
-                break;
-        }  
-
-        return { 
+        if (isWorldCleared) {
+            this.movementStatus = STOPPED;
+        } 
+        
+        return {
+            isWorldCleared: isWorldCleared, 
             positionX: this.position.x,
             positionY: this.position.y
         }
+    }
+
+    isWorldCleared() {
+        let clearedSpots = 0;
+        for(let x = 0; x < this.worldSize; x++) {
+            for(let y = 0; y < this.worldSize; y++) {
+                if (this.map[x][y] == SPOT_CLEARED) {
+                    clearedSpots++;
+                } else {
+                    return false;
+                }
+            }
+        }
+
+        return clearedSpots === Math.pow(this.worldSize, 2);
     }
 }
