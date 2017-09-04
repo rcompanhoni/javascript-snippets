@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html>
-<meta http-equiv="content-type" content="text/html; charset=utf-8">
-<title>A-STAR Pathfinding</title>
 
-<style>
-    #container { 
-        text-align:center; 
-    }
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8">
+    <title>A-STAR Pathfinding</title>
 
-    #menu, canvas {
-        margin-top: 20px;
-    }
-</style>
+    <style>
+        canvas {
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
 
-<script type='text/javascript' src='environment.js'></script>
-<script type='text/javascript' src='agent.js'></script>
-<script type='text/javascript' src='main.js'></script>
+        textarea {
+            display: none
+        }
+
+        #container {
+            margin-top: 20px;
+            width: 50%;
+            margin: 0 auto;
+        }
+
+        #canvas-container {
+            margin-top: 20px;
+            position: relative;
+        }
+
+        #world-canvas {
+            z-index: 0;
+        }
+
+        #agent-canvas {
+            z-index: 1;
+        }
+    </style>
+
+    <script type='text/javascript' src='status-display.js'></script>
+    <script type='text/javascript' src='environment.js'></script>
+    <script type='text/javascript' src='agent.js'></script>
+    <script type='text/javascript' src='main.js'></script>
 
 </head>
 
@@ -25,10 +49,15 @@
             <input id="world-size" type="text" class="form-control" placeholder="Tamanho do mapa">
             <input id="garbage-percentage" type="text" class="form-control" placeholder="Porcentagem de sujeiras">
             <input id="fuel-station-quantity" type="text" class="form-control" placeholder="Qtde de postos">
+            <input id="garbage-can-quantity" type="text" class="form-control" placeholder="Qtde de lixeiras">
             <input type='button' onClick='runSimulation()' value='Executar'>
         </div>
 
-        <canvas id="world-canvas"></canvas>
+        <div id="canvas-container">
+            <textarea id="status-display"></textarea>
+            <canvas id="world-canvas"></canvas>
+            <canvas id="agent-canvas"></canvas>
+        </div>
     </div>
 </body>
 
