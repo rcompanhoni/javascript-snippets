@@ -156,19 +156,20 @@ class Environment {
         };
     }
 
+    // TODO -- this information is available in the agent's map
     getNeighbours(position) {
         let x = position.x;
         let y = position.y;
 
         return {
-            west:       x >= 0                          ? this.world[x][y - 1]      : undefined,
-            northWest:  (x - 1) >= 0                    ? this.world[x - 1][y - 1]  : undefined,
-            north:      (x - 1) >= 0                    ? this.world[x - 1][y]      : undefined,
-            northEast:  (x - 1) >= 0                    ? this.world[x - 1][y + 1]  : undefined,
-            east:       x >= 0                          ? this.world[x][y + 1]      : undefined,
-            southEast:  (x + 1) < this.worldSize        ? this.world[x + 1][y + 1]  : undefined,
-            south:      (x + 1) < this.worldSize        ? this.world[x + 1][y]      : undefined,
-            southWest:  (x + 1) < this.worldSize        ? this.world[x + 1][y - 1]  : undefined
+            west:       this.world[x-1]     != undefined    ? this.world[x-1][y]        : undefined,
+            northWest:  this.world[x - 1]   != undefined    ? this.world[x - 1][y - 1]  : undefined,
+            north:      this.world[x]       != undefined    ? this.world[x][y - 1]      : undefined,
+            northEast:  this.world[x + 1]   != undefined    ? this.world[x + 1][y - 1]  : undefined,
+            east:       this.world[x + 1]   != undefined    ? this.world[x + 1][y]      : undefined,
+            southEast:  this.world[x + 1]   != undefined    ? this.world[x + 1][y + 1]  : undefined,
+            south:      this.world[x]       != undefined    ? this.world[x][y + 1]      : undefined,
+            southWest:  this.world[x - 1]   != undefined    ? this.world[x - 1][y + 1]  : undefined
         };
     }
 

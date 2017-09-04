@@ -39,14 +39,18 @@ class Agent {
     }
 
     act(state) {
-        if (state.hasFuelStation && this.fuelLevel < 100) {
+        if (state.nearFuelStation && this.fuelLevel < 100) {
             // TODO: refuel
         } 
-        else if (state.hasGarbageCan && this.garbageCapacity < 100) {
+        else if (state.nearGarbageCan && this.garbageCapacity < 100) {
             // TODO: unloadGarbage
         }
         else if (state.content === GARBAGE) {
             return this.clean();
+        }
+        else if (this.collisionAhead(state)) {
+            // TODO - find empty place on the map to continue vertical search
+            // TODO - use A* to find best path from current spot to destiny
         } 
         else {
             return this.move(state);
@@ -104,6 +108,8 @@ class Agent {
         }
     }
 
+    /********************* HELPERS *********************/
+
     isWholeWorldVisited() {
         let clearedSpots = 0;
 
@@ -118,5 +124,19 @@ class Agent {
         }
 
         return clearedSpots === Math.pow(this.worldSize, 2);
+    }
+
+    collisionAhead(state) {
+        switch(this.currentDirection) {
+            case DIRECTION_NORTH:
+                return (state.neighbours.north === WALL) || (state.neighbours.north === FUEL_STATION) || (state.neighbours.north === GARBAGE_CAN);
+                break;
+
+            case DIRECTION_SOUTH:
+                return (state.neighbours.south === WALL) || (state.neighbours.south === FUEL_STATION) || (state.neighbours.south === GARBAGE_CAN);
+                break;    
+        }
+
+        return false;
     }
 }

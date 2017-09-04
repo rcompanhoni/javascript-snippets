@@ -46,7 +46,7 @@ function runSimulation() {
 
             if (actionResult.isWorldCleared) {
                 clearInterval(simulationId);
-                statusDisplay.print("SIMULAÇÃO TERMINADA.")
+                statusDisplay.print("\nSIMULAÇÃO TERMINADA.")
             }
         }, SIMULATION_SPEED);
     } 
