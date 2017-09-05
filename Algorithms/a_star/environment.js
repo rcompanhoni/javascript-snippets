@@ -137,40 +137,29 @@ class Environment {
     }
 
     getMap() {
-        let worldMap = [];
-        worldMap = this.world.map(function(worldRow) {
-            return worldRow.slice();
-        });
+        let map = [];
+        for (var x = 0; x < this.worldSize; x++) {
+            map[x] = new Array(this.worldSize).fill(GRASS);
+        }
 
-        return worldMap;
+        for (let x = 0; x < this.worldSize; x++) {
+            for (let y = 0; y < this.worldSize; y++) {
+                let realContent = this.world[x][y];
+                let mapContent = realContent;
+
+                if (realContent === GARBAGE) {
+                    mapContent = GRASS;
+                }
+
+                map[x][y] = new Spot(x, y, mapContent);
+            }
+        }
+
+        return map;
     }
 
     getState(position) {
-        const neighbours = this.getNeighbours(position);
-
-        return {
-            content: this.world[position.x][position.y],
-            hasFuelStation: false,
-            hasGarbageCan: false,
-            neighbours: neighbours
-        };
-    }
-
-    // TODO -- this information is available in the agent's map
-    getNeighbours(position) {
-        let x = position.x;
-        let y = position.y;
-
-        return {
-            west:       this.world[x-1]     != undefined    ? this.world[x-1][y]        : undefined,
-            northWest:  this.world[x - 1]   != undefined    ? this.world[x - 1][y - 1]  : undefined,
-            north:      this.world[x]       != undefined    ? this.world[x][y - 1]      : undefined,
-            northEast:  this.world[x + 1]   != undefined    ? this.world[x + 1][y - 1]  : undefined,
-            east:       this.world[x + 1]   != undefined    ? this.world[x + 1][y]      : undefined,
-            southEast:  this.world[x + 1]   != undefined    ? this.world[x + 1][y + 1]  : undefined,
-            south:      this.world[x]       != undefined    ? this.world[x][y + 1]      : undefined,
-            southWest:  this.world[x - 1]   != undefined    ? this.world[x - 1][y + 1]  : undefined
-        };
+        return new Spot(position.x, position.y, this.world[position.x][position.y]);
     }
 
     applyAgentAction(action) {
