@@ -32,8 +32,8 @@ class Environment {
         this.redraw();
     }
 
-    createWorld(garbagePercentage, fuelStationQuantity, garbageCanQuantity) { 
-        
+    createWorld(garbagePercentage, fuelStationQuantity, garbageCanQuantity) {
+
         /******** grass ********/
 
         for (var x = 0; x < this.worldSize; x++) {
@@ -159,25 +159,17 @@ class Environment {
     }
 
     getState(position) {
-        return new Spot(position.x, position.y, this.world[position.x][position.y]);
+        return this.world[position.x][position.y];
     }
 
     applyAgentAction(action) {
-        switch(action.status) {
+        switch (action.status) {
             case STATUS_SPOT_CLEARED:
-                this.world[action.positionX][action.positionY] = GRASS;
+                this.world[action.x][action.y] = GRASS;
                 this.redraw();
-                break;
-
-            case STATUS_STOPPED:
-                // TODO
-                break;
-
-            case STATUS_MOVED:
-                // TODO
-                break;
+            break;
         }
 
-        this.redrawAgent(action.positionX, action.positionY);
+        this.redrawAgent(action.x, action.y);
     }
 }

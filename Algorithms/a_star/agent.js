@@ -1,125 +1,138 @@
 "use strict";
 
-const STOPPED               = 'stopped';
-const MOVING                = 'moving';
-const ON_ROUTE              = 'on route';
+const MOVEMENT_STOPPED = 'movement stopped';
+const MOVEMENT_MOVING = 'movement moving';
+const MOVEMENT_ON_ROUTE = 'movement on route';
 
-const DIRECTION_SOUTH       = 'direction south';
-const DIRECTION_SOUTHWEST   = 'direction southwest';
-const DIRECTION_WEST        = 'direction west';
-const DIRECTION_NORTHWEST   = 'direction northwest';
-const DIRECTION_NORTH       = 'direction north';
-const DIRECTION_NORTHEAST   = 'direction northeast';
-const DIRECTION_EAST        = 'direction east';
-const DIRECTION_SOUTHEAST   = 'direction southeast';
-
-const VISITED               = 'visited';
-const CURRENT_POSITION      = 'current position';
-
-const STATUS_SPOT_CLEARED   = 'status spot cleared';
-const STATUS_STOPPED        = 'status stopped'; 
-const STATUS_MOVED          = 'status moved'; 
+const DIRECTION_SOUTH = 'direction south';
+const DIRECTION_SOUTHWEST = 'direction southwest';
+const DIRECTION_WEST = 'direction west';
+const DIRECTION_NORTHWEST = 'direction northwest';
+const DIRECTION_NORTH = 'direction north';
+const DIRECTION_NORTHEAST = 'direction northeast';
+const DIRECTION_EAST = 'direction east';
+const DIRECTION_SOUTHEAST = 'direction southeast';
 
 class Agent {
     constructor(worldMap) {
+        this.currentSpot = new Spot(0, 0);
+
         this.fuelLevel = 100;
         this.garbageCapacity = 100;
+
         this.currentDirection = DIRECTION_SOUTH;
-        this.movementStatus = STOPPED;
-        this.position = {
-            x: 0,
-            y: 0
-        };
-        
-        this.walkableTiles = [GRASS];
+        this.movementStatus = MOVEMENT_STOPPED;
+
         this.map = worldMap;
         this.worldSize = this.map[0].length;
     }
 
     act(state) {
-        if (state.nearFuelStation && this.fuelLevel < 100) {
+        this.currentSpot.content = state;
+        let action = new Action(this.currentSpot.x, this.currentSpot.y, STATUS_NO_CHANGES);
+
+        if (this.currentSpot.nearFuelStation && this.fuelLevel < 100) {
             // TODO: refuel
-        } 
-        else if (state.nearGarbageCan && this.garbageCapacity < 100) {
+        }
+        else if (this.currentSpot.nearGarbageCan && this.garbageCapacity < 100) {
             // TODO: unloadGarbage
         }
-        else if (state.content === GARBAGE) {
-            return this.clean();
+        else if (this.currentSpot.content === GARBAGE) {
+            action = this.clean();
         }
-        else if (this.collisionAhead(state)) {
-            const destination = this.findNextAvailableSpot();
-            this.route = this.findPath2(this.map[this.position.x][this.position.y], destination);
-            this.movementStatus = ON_ROUTE;
-        } 
-        else {
-            return this.move(state);
+        else if (this.movementStatus === MOVEMENT_ON_ROUTE) {
+            action = this.routeStep();
         }
+        else if (this.collisionAhead()) {
+            action = this.generateRouteToNextAvailableSpot()
+        }
+        else if (this.movementStatus === MOVEMENT_MOVING) {
+            action = this.move();
+        }
+
+        if (this.isWholeWorldVisited()) {
+            action.status = STATUS_WORLD_CLEARED;
+        }
+
+        return action;
     }
 
     /********************* STATE HANDLERS *********************/
 
     clean() {
-        return {
-            isWholeWorldVisited: this.isWholeWorldVisited(), 
-            positionX: this.position.x,
-            positionY: this.position.y,
-            status: STATUS_SPOT_CLEARED
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_SPOT_CLEARED);
+    }
+
+    move() {
+        switch (this.currentDirection) {
+            case DIRECTION_SOUTH:
+                if (this.currentSpot.y === this.worldSize - 1) {
+                    this.currentDirection = DIRECTION_NORTH;
+                    this.currentSpot.x++;
+                } else {
+                    this.currentSpot.y++;
+                }
+                break;
+
+            case DIRECTION_NORTH:
+                if (this.currentSpot.y === 0) {
+                    this.currentDirection = DIRECTION_SOUTH;
+                    this.currentSpot.x++;
+                } else {
+                    this.currentSpot.y--;
+                }
+                break;
+        }
+
+        // mark current spot as visited on the agent's map
+        this.map[this.currentSpot.x][this.currentSpot.y].isVisited = true;
+
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_MOVED);
+    }
+
+    routeStep() {
+        if (this.route.length > 0) {
+            const routeSpot = this.route.shift();
+
+            return {
+                isWorldCleared: false,
+                positionX: routeSpot.x,
+                positionY: routeSpot.y,
+                status: this.movementStatus === MOVEMENT_ON_ROUTE
+            }
         }
     }
 
-    move(state) {
-        const isWholeWorldVisited = this.isWholeWorldVisited();
-        let status;
-
-        if (isWholeWorldVisited) {
-            this.movementStatus = STOPPED;
-            status = STATUS_STOPPED;
-        } 
-
-        if (this.movementStatus === MOVING) {
-            switch(this.currentDirection) {
-                case DIRECTION_SOUTH:
-                    if (this.position.y === this.worldSize - 1) {
-                        this.currentDirection = DIRECTION_NORTH;
-                        this.position.x++;
-                    } else {
-                        this.position.y++;
+    generateRouteToNextAvailableSpot() {
+        let destination;
+        switch (this.currentDirection) {
+            case DIRECTION_NORTH:
+                for (let y = this.currentSpot.y - 1; y > 0; y--) {
+                    if (this.map[this.currentSpot.x][y].content === GRASS) {
+                        destination = this.map[this.currentSpot.x][y];
+                        break;
                     }
-                    break;
-    
-                case DIRECTION_NORTH:
-                    if (this.position.y === 0) {
-                        this.currentDirection = DIRECTION_SOUTH;
-                        this.position.x++;
-                    } else {
-                        this.position.y--;
-                    }
-                    break;
-            }
+                }
+                break;
         }
-        
-        // mark current spot as visited on the agent's map
-        this.map[this.position.x][this.position.y].isVisited = true;
 
-        return {
-            isWorldCleared: isWholeWorldVisited, 
-            positionX: this.position.x,
-            positionY: this.position.y,
-            status: this.movementStatus === MOVING ? STATUS_MOVED : STATUS_STOPPED
-        }
+        // A*
+        this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], destination);       
+        this.movementStatus = MOVEMENT_ON_ROUTE;
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
     }
 
     /********************* HELPERS *********************/
 
-    setMovement(movementStatus) {
-        this.movementStatus = movementStatus;
+    startMoving() {
+        this.movementStatus = MOVEMENT_MOVING;
     }
 
     isWholeWorldVisited() {
         let clearedSpots = 0;
 
-        for(let x = 0; x < this.worldSize; x++) {
-            for(let y = 0; y < this.worldSize; y++) {
+        for (let x = 0; x < this.worldSize; x++) {
+            for (let y = 0; y < this.worldSize; y++) {
                 if (this.map[x][y].isVisited) {
                     clearedSpots++;
                 } else {
@@ -131,28 +144,28 @@ class Agent {
         return clearedSpots === Math.pow(this.worldSize, 2);
     }
 
-    getNeighbours(position) {
-        let x = position.x;
-        let y = position.y;
+    getNeighbours(spot) {
+        let x = spot.x;
+        let y = spot.y;
 
         // if neighbour is outside the map then returns undefined
         return {
-            west:       this.map[x-1]     != undefined    ? this.map[x-1][y]        : undefined,
-            northWest:  this.map[x - 1]   != undefined    ? this.map[x - 1][y - 1]  : undefined,
-            north:      this.map[x]       != undefined    ? this.map[x][y - 1]      : undefined,
-            northEast:  this.map[x + 1]   != undefined    ? this.map[x + 1][y - 1]  : undefined,
-            east:       this.map[x + 1]   != undefined    ? this.map[x + 1][y]      : undefined,
-            southEast:  this.map[x + 1]   != undefined    ? this.map[x + 1][y + 1]  : undefined,
-            south:      this.map[x]       != undefined    ? this.map[x][y + 1]      : undefined,
-            southWest:  this.map[x - 1]   != undefined    ? this.map[x - 1][y + 1]  : undefined
+            west: this.map[x - 1] !== undefined ? this.map[x - 1][y] : undefined,
+            northWest: this.map[x - 1] !== undefined ? this.map[x - 1][y - 1] : undefined,
+            north: this.map[x] !== undefined ? this.map[x][y - 1] : undefined,
+            northEast: this.map[x + 1] !== undefined ? this.map[x + 1][y - 1] : undefined,
+            east: this.map[x + 1] !== undefined ? this.map[x + 1][y] : undefined,
+            southEast: this.map[x + 1] !== undefined ? this.map[x + 1][y + 1] : undefined,
+            south: this.map[x] !== undefined ? this.map[x][y + 1] : undefined,
+            southWest: this.map[x - 1] !== undefined ? this.map[x - 1][y + 1] : undefined
         };
     }
 
     // Returns boolean if next spot is an obstacle (does not consider the edges as obstacles)
-    collisionAhead(state) {
-        const neighbours = this.getNeighbours(state);
+    collisionAhead() {
+        const neighbours = this.getNeighbours(this.currentSpot);
 
-        switch(this.currentDirection) {
+        switch (this.currentDirection) {
             case DIRECTION_NORTH:
                 if (neighbours.north) {
                     return (neighbours.north.content === WALL) || (neighbours.north.content === FUEL_STATION) || (neighbours.north.content === GARBAGE_CAN);
@@ -163,114 +176,13 @@ class Agent {
                 if (neighbours.south) {
                     return (neighbours.south.content === WALL) || (neighbours.south.content === FUEL_STATION) || (neighbours.south.content === GARBAGE_CAN);
                 }
-                break;    
+                break;
         }
 
         return false;
     }
 
-    findNextAvailableSpot() {
-        switch(this.currentDirection) {
-            case DIRECTION_NORTH:
-                for(let y = this.position.y - 1; y > 0; y--) {
-                    if (this.map[this.position.x][y].content === GRASS) {
-                        return this.map[this.position.x][y];
-                    }
-                }
-                break;
-        }
-    }
-
     findPath(initialPosition, finalPosition) {
-        /*
-            Initialize open and closed lists // open can be implemented as a priority queue (node with lowest f value)
-            Make the start vertex current
-            Calculate heuristic distance of start vertex to destination (h)
-            Calculate f value for start vertex (f = g + h, where g = 0)
-
-            WHILE current vertex is not the destination
-                // updates wach adjacent node with new f values
-                FOR each vertex adjacent to current
-                    IF vertex not in closed list and not in open list THEN
-                        Add vertex to open list
-                    END IF
-                    
-                    Calculate distance from start (g)
-                    Calculate heuristic distance to destination (h)
-                    Calculate f value (f = g + h)
-                    
-                    IF new f value < existing f value or there is no existing f value THEN
-                        Update f value
-                        Set parent to be the current vertex
-                    END IF
-                NEXT adjacent vertex
-                
-                Add current vertex to closed list
-                Remove vertex with lowest f value from open list and make it current // if there's a tie then choose randomly between the lowest vertex
-            END WHILE
-        */
-        let openList = [];
-        let closedList = [];
-
-        let current = initialPosition;
-        current.h = distance(initialPosition, finalPosition);
-        current.g = 0;
-        current.f = current.g + current.h;
-
-        // WHILE current vertex is not the destination
-        do {
-            const neighbours = this.getNeighbours(current);
-            let neighboursList = Object.keys(neighbours).map(direction => neighbours[direction]);
-          
-            // FOR each vertex adjacent to current
-            neighboursList.forEach(neighbour => {
-                const openNeighbour = openList.find(openPosition => {
-                    return openPosition.x === neighbour.x && openPosition.y === neighbour.x;
-                });
-
-                const closedNeighbour = closedList.find(closedPosition => {
-                    return closedPosition.x === neighbour.x && closedPosition.y === neighbour.x;
-                });
-
-                // IF vertex not in closed list and not in open list THEN
-                if (!openNeighbour && !closedNeighbour) {
-                    openList.push(neighbour);
-                }
-
-                // Calculate distance from start (g)
-                neighbour.g = current.g + distance(neighbour, initialPosition);
-
-                // Calculate heuristic distance to destination (h)
-                neighbour.h = distance(neighbour, finalPosition);
-
-                // Calculate f value (f = g + h)
-                let f = neighbour.g + neighbour.h;
-
-                // IF new f value < existing f value or there is no existing f value THEN
-                //     Update f value
-                //     Set parent to be the current vertex
-                // END IF
-                if (f < neighbour.f || neighbour.f === undefined) {
-                    neighbour.f = f;
-                }
-            });
-
-            // Add current vertex to closed list
-            closedList.push(current);
-
-            // Remove vertex with lowest f value from open list and make it current -- if there's a tie then choose randomly between the lowest vertex
-            current = openList.reduce((best, candidate) => {
-                return candidate.f < best.f ? candidate : best;
-            });
-        } while((current.x !== finalPosition.x) && (current.y !== finalPosition.y))
-
-        // Euclidean, since diagonal movement is allowed
-        function distance(initial, final) {
-            return Math.max(Math.abs(initial.x - final.x), Math.abs(initial.y - final.y));
-        }
-    }
-
-    findPath2(initialPosition, finalPosition) {
         let openList = [];
         let closedList = [];
 
@@ -279,37 +191,36 @@ class Agent {
         initialPosition.f = initialPosition.g + initialPosition.h;
 
         openList.push(initialPosition);
-        
-        while(openList.length > 0) {
+
+        while (openList.length > 0) {
             let current = openList.reduce((best, candidate) => {
                 return candidate.f < best.f ? candidate : best;
             });
 
             if (current.x === finalPosition.x && current.y === finalPosition.y) {
-                return reconstructPath(); // TODO - reconstruct path
+                return reconstructPath(current);
             }
 
             const currentOpenIndex = openList.findIndex(spot => spot.x === current.x && spot.y === current.y);
             openList.splice(currentOpenIndex, 1);
             closedList.push(current);
 
-            // list of neighbours (add parent to each spot)
-            // WRONG -- prevent adding undefined in the neighbourList -- also, prevent adding obstacles
+            // map Neighbour to a list
             const neighbours = this.getNeighbours(current);
-            let neighboursList = Object.keys(neighbours).map(direction => { 
+            let neighboursList = Object.keys(neighbours).reduce((neighbourList, direction) => {
                 let neighbour = neighbours[direction];
-                if (neighbour) {
-                        neighbour.parent = current;
-                        return neighbour;
+                if (neighbour && neighbour.content === GRASS) {
+                    neighbourList.push(neighbour);
                 }
-            });
+                return neighbourList;
+            }, []);
 
             neighboursList.forEach(neighbour => {
                 const isClosed = closedList.find(closedPosition => {
                     return (closedPosition.x === neighbour.x) && (closedPosition.y === neighbour.y);
                 });
 
-                if (isClosed){
+                if (isClosed) {
                     return;
                 }
 
@@ -333,11 +244,12 @@ class Agent {
                     neighbour.g = g;
                     neighbour.f = f;
                 }
-            });            
+            });
         }
 
         return [];
 
+        // euclidean
         function distance(initial, final) {
             return Math.max(Math.abs(initial.x - final.x), Math.abs(initial.y - final.y));
         }
@@ -345,9 +257,9 @@ class Agent {
         function reconstructPath(current) {
             let totalPath = [current];
 
-            while(current.parent) {
+            while (current.parent) {
                 current = current.parent;
-                totalPath.push(current);
+                totalPath.unshift(current);
             }
 
             return totalPath;

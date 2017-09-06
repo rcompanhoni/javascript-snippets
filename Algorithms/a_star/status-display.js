@@ -26,12 +26,20 @@ class StatusDisplay {
                 message = "Localização limpa";
                 break;
             
-            case STATUS_STOPPED:
+            case STATUS_NO_CHANGES:
                 message = "Agente parado";
                 break;
 
             case STATUS_MOVED:
                 message = "Agente movimentando-se";
+                break;
+
+            case STATUS_ROUTE_DEFINED:
+                message = "Rota definida (A*)";
+                break;
+
+            case MOVEMENT_ON_ROUTE:
+                message = "Percorrendo rota";
                 break;
         }
 

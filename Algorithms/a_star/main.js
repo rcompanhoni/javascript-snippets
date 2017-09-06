@@ -27,7 +27,7 @@ function runSimulation() {
 
     // when spritesheet is loaded then create environment, agent and start simulation
     let spritesheet = new Image();
-    spritesheet.src = './spritesheet.png';
+    spritesheet.src = './img/spritesheet.png';
     spritesheet.onload = function() {
         environment = new Environment(this, worldCanvas, agentCanvas, worldSize, garbagePercentage, fuelStationQuantity, garbageCanQuantity);
         agent = new Agent(environment.getMap());
@@ -37,14 +37,14 @@ function runSimulation() {
         // agent acts on initial spot and starts moving
         let actionResult = agentEnvironmentInteraction();
         statusDisplay.printStatus(actionResult.status)
-        agent.setMovement(MOVING);
+        agent.startMoving();
 
         // simulation loop
         simulationId = setInterval(function () {
             actionResult = agentEnvironmentInteraction();
             statusDisplay.printStatus(actionResult.status)
 
-            if (actionResult.isWorldCleared) {
+            if (actionResult.status === STATUS_WORLD_CLEARED) {
                 clearInterval(simulationId);
                 statusDisplay.print("\nSIMULAÇÃO TERMINADA.")
             }
@@ -54,7 +54,7 @@ function runSimulation() {
 
 // agent reacts to the environment -- its actions are then applied to the environment
 function agentEnvironmentInteraction() {
-    const currentState = environment.getState(agent.position)
+    const currentState = environment.getState(agent.currentSpot)
     const actionResult = agent.act(currentState);
     environment.applyAgentAction(actionResult);
     return actionResult;
