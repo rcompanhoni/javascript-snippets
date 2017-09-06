@@ -132,8 +132,8 @@ class Agent {
     }
 
     getNeighbours(position) {
-        let x = this.position.x;
-        let y = this.position.y;
+        let x = position.x;
+        let y = position.y;
 
         // if neighbour is outside the map then returns undefined
         return {
@@ -149,8 +149,8 @@ class Agent {
     }
 
     // Returns boolean if next spot is an obstacle (does not consider the edges as obstacles)
-    collisionAhead() {
-        const neighbours = this.getNeighbours(this.position.x, this.position.y);
+    collisionAhead(state) {
+        const neighbours = this.getNeighbours(state);
 
         switch(this.currentDirection) {
             case DIRECTION_NORTH:
@@ -293,28 +293,31 @@ class Agent {
             openList.splice(currentOpenIndex, 1);
             closedList.push(current);
 
+            // list of neighbours (add parent to each spot)
+            // WRONG -- prevent adding undefined in the neighbourList -- also, prevent adding obstacles
             const neighbours = this.getNeighbours(current);
             let neighboursList = Object.keys(neighbours).map(direction => { 
                 let neighbour = neighbours[direction];
-                neighbour.parent = current;
-                return neighbour;
+                if (neighbour) {
+                        neighbour.parent = current;
+                        return neighbour;
+                }
             });
 
             neighboursList.forEach(neighbour => {
-                const closedNeighbour = closedList.find(closedPosition => {
-                    return closedPosition.x === neighbour.x && closedPosition.y === neighbour.x;
+                const isClosed = closedList.find(closedPosition => {
+                    return (closedPosition.x === neighbour.x) && (closedPosition.y === neighbour.y);
                 });
 
-                if (closedNeighbour){
+                if (isClosed){
                     return;
                 }
 
-                // TODO -- wrong
-                const openNeighbour = openList.find(openPosition => {
-                    return openPosition.x === neighbour.x && openPosition.y === neighbour.x;
+                const isOpen = openList.find(openPosition => {
+                    return (openPosition.x === neighbour.x) && (openPosition.y === neighbour.y);
                 });
 
-                if (!openNeighbour) {
+                if (!isOpen) {
                     openList.push(neighbour);
                 }
 
@@ -339,8 +342,15 @@ class Agent {
             return Math.max(Math.abs(initial.x - final.x), Math.abs(initial.y - final.y));
         }
 
-        function reconstructPath() {
-            return [];
+        function reconstructPath(current) {
+            let totalPath = [current];
+
+            while(current.parent) {
+                current = current.parent;
+                totalPath.push(current);
+            }
+
+            return totalPath;
         }
     }
 }
