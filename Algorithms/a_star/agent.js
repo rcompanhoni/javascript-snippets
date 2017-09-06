@@ -2,7 +2,8 @@
 
 const MOVEMENT_STOPPED = 'movement stopped';
 const MOVEMENT_MOVING = 'movement moving';
-const MOVEMENT_ON_ROUTE = 'movement on route';
+const MOVEMENT_FOWARD_ROUTE = 'movement foward route';
+const MOVEMENT_BACKWARDS_ROUTE = 'movement backwards route';
 
 const DIRECTION_SOUTH = 'direction south';
 const DIRECTION_SOUTHWEST = 'direction southwest';
@@ -25,6 +26,8 @@ class Agent {
 
         this.map = worldMap;
         this.worldSize = this.map[0].length;
+
+        this.routeStep = 0;
     }
 
     act(state) {
@@ -40,8 +43,11 @@ class Agent {
         else if (this.currentSpot.content === GARBAGE) {
             action = this.clean();
         }
-        else if (this.movementStatus === MOVEMENT_ON_ROUTE) {
-            action = this.routeStep();
+        else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
+            action = this.routeStepFoward();
+        }
+        else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
+            action = this.routeStepBackward();
         }
         else if (this.collisionAhead()) {
             action = this.generateRouteToNextAvailableSpot()
@@ -64,6 +70,62 @@ class Agent {
     }
 
     move() {
+        this.moveOneSpot(this.currentDirection);
+
+        // mark current spot as visited on the agent's map
+        this.map[this.currentSpot.x][this.currentSpot.y].isVisited = true;
+
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_MOVED);
+    }
+
+    routeStepFoward() {
+        this.routeStep++;
+        let status = MOVEMENT_FOWARD_ROUTE;
+        
+        if (this.routeStep === this.route.length) {
+            status = STATUS_NO_CHANGES;
+        } else {
+            const nextSpot = this.route[this.routeStep];
+            const neighbours = this.getNeighbours(this.currentSpot);
+            const nextDirection = Object.keys(neighbours).find(key => neighbours[key].x === nextSpot.x && neighbours[key].y === nextSpot.y);
+            this.moveOneSpot(nextDirection);
+        }
+
+        return new Action(this.currentSpot.x, this.currentSpot.y, status);
+    }
+
+    routeStepBackward() {
+        // TODO
+    }
+
+    generateRouteToNextAvailableSpot() {
+        let destination;
+        switch (this.currentDirection) {
+            case DIRECTION_NORTH:
+                for (let y = this.currentSpot.y - 1; y > 0; y--) {
+                    if (this.map[this.currentSpot.x][y].content === GRASS) {
+                        destination = this.map[this.currentSpot.x][y];
+                        break;
+                    }
+                }
+                break;
+        }
+
+        // A*
+        this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], destination);       
+        this.movementStatus = MOVEMENT_FOWARD_ROUTE;
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
+    }
+
+    /********************* HELPERS *********************/
+
+    startMoving() {
+        this.movementStatus = MOVEMENT_MOVING;
+    }
+
+    moveOneSpot(direction) {
+        // TODO - missing other directions
+
         switch (this.currentDirection) {
             case DIRECTION_SOUTH:
                 if (this.currentSpot.y === this.worldSize - 1) {
@@ -83,49 +145,6 @@ class Agent {
                 }
                 break;
         }
-
-        // mark current spot as visited on the agent's map
-        this.map[this.currentSpot.x][this.currentSpot.y].isVisited = true;
-
-        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_MOVED);
-    }
-
-    routeStep() {
-        if (this.route.length > 0) {
-            const routeSpot = this.route.shift();
-
-            return {
-                isWorldCleared: false,
-                positionX: routeSpot.x,
-                positionY: routeSpot.y,
-                status: this.movementStatus === MOVEMENT_ON_ROUTE
-            }
-        }
-    }
-
-    generateRouteToNextAvailableSpot() {
-        let destination;
-        switch (this.currentDirection) {
-            case DIRECTION_NORTH:
-                for (let y = this.currentSpot.y - 1; y > 0; y--) {
-                    if (this.map[this.currentSpot.x][y].content === GRASS) {
-                        destination = this.map[this.currentSpot.x][y];
-                        break;
-                    }
-                }
-                break;
-        }
-
-        // A*
-        this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], destination);       
-        this.movementStatus = MOVEMENT_ON_ROUTE;
-        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
-    }
-
-    /********************* HELPERS *********************/
-
-    startMoving() {
-        this.movementStatus = MOVEMENT_MOVING;
     }
 
     isWholeWorldVisited() {
@@ -144,6 +163,7 @@ class Agent {
         return clearedSpots === Math.pow(this.worldSize, 2);
     }
 
+    // returns an object where each key is a direction and each value a Spot object
     getNeighbours(spot) {
         let x = spot.x;
         let y = spot.y;
