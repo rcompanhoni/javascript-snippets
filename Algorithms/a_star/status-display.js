@@ -38,8 +38,16 @@ class StatusDisplay {
                 message = "Rota definida (A*)";
                 break;
 
-            case MOVEMENT_ON_ROUTE:
-                message = "Percorrendo rota";
+            case STATUS_FOWARD_ROUTE:
+                message = "Percorrendo rota (indo)";
+                break;
+
+            case STATUS_BACKWARDS_ROUTE:
+                message = "Percorrendo rota (voltando)";
+                break;
+
+            case STATUS_DESTINATION_REACHED:
+                message = "Destino encontrado";
                 break;
         }
 

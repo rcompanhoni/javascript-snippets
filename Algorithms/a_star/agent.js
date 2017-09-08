@@ -5,14 +5,14 @@ const MOVEMENT_MOVING = 'movement moving';
 const MOVEMENT_FOWARD_ROUTE = 'movement foward route';
 const MOVEMENT_BACKWARDS_ROUTE = 'movement backwards route';
 
-const DIRECTION_SOUTH = 'direction south';
-const DIRECTION_SOUTHWEST = 'direction southwest';
-const DIRECTION_WEST = 'direction west';
-const DIRECTION_NORTHWEST = 'direction northwest';
-const DIRECTION_NORTH = 'direction north';
-const DIRECTION_NORTHEAST = 'direction northeast';
-const DIRECTION_EAST = 'direction east';
-const DIRECTION_SOUTHEAST = 'direction southeast';
+const SOUTH = 'south';
+const SOUTHWEST = 'southWest';
+const WEST = 'west';
+const NORTHWEST = 'northWest';
+const NORTH = 'north';
+const NORTHEAST = 'northEast';
+const EAST = 'east';
+const SOUTHEAST = 'southEast';
 
 class Agent {
     constructor(worldMap) {
@@ -21,8 +21,10 @@ class Agent {
         this.fuelLevel = 100;
         this.garbageCapacity = 100;
 
-        this.currentDirection = DIRECTION_SOUTH;
+        this.currentDirection = SOUTH;
         this.movementStatus = MOVEMENT_STOPPED;
+        this.previousDirection = null;
+        this.mustGoBack = false;
 
         this.map = worldMap;
         this.worldSize = this.map[0].length;
@@ -70,7 +72,7 @@ class Agent {
     }
 
     move() {
-        this.moveOneSpot(this.currentDirection);
+        this.moveOneSpot();
 
         // mark current spot as visited on the agent's map
         this.map[this.currentSpot.x][this.currentSpot.y].isVisited = true;
@@ -80,18 +82,32 @@ class Agent {
 
     routeStepFoward() {
         this.routeStep++;
-        let status = MOVEMENT_FOWARD_ROUTE;
-        
+        let actionStatus = STATUS_FOWARD_ROUTE;
+
         if (this.routeStep === this.route.length) {
-            status = STATUS_NO_CHANGES;
+            if (!this.mustGoBack) {
+                this.currentDirection = this.previousDirection;
+                this.movementStatus = MOVEMENT_MOVING;
+            } else {
+                this.movementStatus = MOVEMENT_BACKWARDS_ROUTE;
+            }
+
+            this.routeStep = 0;
+            actionStatus = STATUS_DESTINATION_REACHED;
         } else {
             const nextSpot = this.route[this.routeStep];
             const neighbours = this.getNeighbours(this.currentSpot);
-            const nextDirection = Object.keys(neighbours).find(key => neighbours[key].x === nextSpot.x && neighbours[key].y === nextSpot.y);
-            this.moveOneSpot(nextDirection);
+            this.currentDirection = Object.keys(neighbours).find(key => {
+                if (neighbours[key]) {
+                    return neighbours[key].x === nextSpot.x && neighbours[key].y === nextSpot.y
+                }
+
+                return false;
+            });
+            this.moveOneSpot();
         }
 
-        return new Action(this.currentSpot.x, this.currentSpot.y, status);
+        return new Action(this.currentSpot.x, this.currentSpot.y, actionStatus);
     }
 
     routeStepBackward() {
@@ -101,7 +117,16 @@ class Agent {
     generateRouteToNextAvailableSpot() {
         let destination;
         switch (this.currentDirection) {
-            case DIRECTION_NORTH:
+            case SOUTH:
+                for (let y = this.currentSpot.y + 1; y > 0; y++) {
+                    if (this.map[this.currentSpot.x][y].content === GRASS) {
+                        destination = this.map[this.currentSpot.x][y];
+                        break;
+                    }
+                }
+                break;
+
+            case NORTH:
                 for (let y = this.currentSpot.y - 1; y > 0; y--) {
                     if (this.map[this.currentSpot.x][y].content === GRASS) {
                         destination = this.map[this.currentSpot.x][y];
@@ -112,7 +137,7 @@ class Agent {
         }
 
         // A*
-        this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], destination);       
+        this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], destination);
         this.movementStatus = MOVEMENT_FOWARD_ROUTE;
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
     }
@@ -123,26 +148,52 @@ class Agent {
         this.movementStatus = MOVEMENT_MOVING;
     }
 
-    moveOneSpot(direction) {
-        // TODO - missing other directions
-
+    moveOneSpot() {
         switch (this.currentDirection) {
-            case DIRECTION_SOUTH:
+            case WEST:
+                this.currentSpot.x--;
+                break;
+
+            case NORTHWEST:
+                this.currentSpot.x--;
+                this.currentSpot.y--;
+                break;
+
+            case NORTH:
+                if (this.currentSpot.y === 0) {
+                    this.currentDirection = SOUTH;
+                    this.currentSpot.x++;
+                } else {
+                    this.currentSpot.y--;
+                }
+                break;
+
+            case NORTHEAST:
+                this.currentSpot.x++;
+                this.currentSpot.y--;
+                break;
+
+            case EAST:
+                this.currentSpot.x++;
+                break;
+
+            case SOUTHEAST:
+                this.currentSpot.x++;
+                this.currentSpot.y++;
+                break;
+
+            case SOUTH:
                 if (this.currentSpot.y === this.worldSize - 1) {
-                    this.currentDirection = DIRECTION_NORTH;
+                    this.currentDirection = NORTH;
                     this.currentSpot.x++;
                 } else {
                     this.currentSpot.y++;
                 }
                 break;
 
-            case DIRECTION_NORTH:
-                if (this.currentSpot.y === 0) {
-                    this.currentDirection = DIRECTION_SOUTH;
-                    this.currentSpot.x++;
-                } else {
-                    this.currentSpot.y--;
-                }
+            case SOUTHWEST:
+                this.currentSpot.x--;
+                this.currentSpot.y++;
                 break;
         }
     }
@@ -186,15 +237,33 @@ class Agent {
         const neighbours = this.getNeighbours(this.currentSpot);
 
         switch (this.currentDirection) {
-            case DIRECTION_NORTH:
+            case NORTH:
                 if (neighbours.north) {
-                    return (neighbours.north.content === WALL) || (neighbours.north.content === FUEL_STATION) || (neighbours.north.content === GARBAGE_CAN);
+                    if (neighbours.north.content === WALL) {
+                        this.previousDirection = this.currentDirection;
+                        this.mustGoBack = false;
+                        return true;
+                    }
+
+                    if ((neighbours.north.content === FUEL_STATION) || (neighbours.north.content === GARBAGE_CAN)) {
+                        this.mustGoBack = true;
+                        return true;
+                    }
                 }
                 break;
 
-            case DIRECTION_SOUTH:
+            case SOUTH:
                 if (neighbours.south) {
-                    return (neighbours.south.content === WALL) || (neighbours.south.content === FUEL_STATION) || (neighbours.south.content === GARBAGE_CAN);
+                    if (neighbours.south.content === WALL) {
+                        this.previousDirection = this.currentDirection;
+                        this.mustGoBack = false;
+                        return true;
+                    }
+
+                    if ((neighbours.south.content === FUEL_STATION) || (neighbours.south.content === GARBAGE_CAN)) {
+                        this.mustGoBack = true;
+                        return true;
+                    }
                 }
                 break;
         }
@@ -202,6 +271,7 @@ class Agent {
         return false;
     }
 
+    // A*
     findPath(initialPosition, finalPosition) {
         let openList = [];
         let closedList = [];
@@ -218,6 +288,30 @@ class Agent {
             });
 
             if (current.x === finalPosition.x && current.y === finalPosition.y) {
+                openList.forEach(spot => {
+                    delete spot.f;
+                    delete spot.g;
+                    delete spot.h;
+                    
+                    if (spot.parent) {
+                        delete spot.parent.f;
+                        delete spot.parent.g;
+                        delete spot.parent.h;
+                    }
+                });
+                
+                closedList.forEach(spot => {
+                    delete spot.f;
+                    delete spot.g;
+                    delete spot.h;
+
+                    if (spot.parent) {
+                        delete spot.parent.f;
+                        delete spot.parent.g;
+                        delete spot.parent.h;
+                    }
+                });
+
                 return reconstructPath(current);
             }
 
