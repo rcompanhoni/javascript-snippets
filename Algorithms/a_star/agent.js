@@ -139,7 +139,7 @@ class Agent {
         let actionStatus = STATUS_BACKWARDS_ROUTE;
         this.routeStep--;
 
-        if (this.routeStep === 0) {
+        if (this.routeStep === -1) {
             this.currentDirection = this.previousDirection;
             this.movementStatus = MOVEMENT_MOVING;
             actionStatus = STATUS_DESTINATION_REACHED;
