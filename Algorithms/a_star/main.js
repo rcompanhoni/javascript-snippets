@@ -1,6 +1,6 @@
 "use strict";
 
-const SIMULATION_SPEED = 100;
+const SIMULATION_SPEED = 50;
 
 const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;

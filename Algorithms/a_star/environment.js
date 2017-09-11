@@ -95,6 +95,8 @@ class Environment {
                 garbageCanQuantity--;
             }
         }
+
+        this.world[6][0] = GARBAGE_CAN;
     }
 
     redraw() {

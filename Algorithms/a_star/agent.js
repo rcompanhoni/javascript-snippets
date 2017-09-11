@@ -33,6 +33,9 @@ class Agent {
     }
 
     act(state) {
+        // mark current spot as visited on the agent's map
+        this.map[this.currentSpot.x][this.currentSpot.y].isVisited = true;
+
         this.currentSpot.content = state;
         let action = new Action(this.currentSpot.x, this.currentSpot.y, STATUS_NO_CHANGES);
 
@@ -51,12 +54,12 @@ class Agent {
         else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
             action = this.routeStepBackward();
         }
-        else if (this.collisionAhead()) {
-            action = this.generateRouteToNextAvailableSpot()
+        else if (this.collisionAhead(this.currentDirection)) {
+            action = this.generateRouteToNextAvailableSpot();
         }
         else if (this.movementStatus === MOVEMENT_MOVING) {
             action = this.move();
-        }
+        }       
 
         if (this.isWholeWorldVisited()) {
             action.status = STATUS_WORLD_CLEARED;
@@ -73,10 +76,6 @@ class Agent {
 
     move() {
         this.moveOneSpot();
-
-        // mark current spot as visited on the agent's map
-        this.map[this.currentSpot.x][this.currentSpot.y].isVisited = true;
-
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_MOVED);
     }
 
@@ -117,8 +116,8 @@ class Agent {
     generateRouteToNextAvailableSpot() {
         let destination;
         switch (this.currentDirection) {
-            case SOUTH:
-                for (let y = this.currentSpot.y + 1; y > 0; y++) {
+            case NORTH:
+                for (let y = this.currentSpot.y - 1; y >= -1; y--) {
                     if (this.map[this.currentSpot.x][y].content === GRASS) {
                         destination = this.map[this.currentSpot.x][y];
                         break;
@@ -126,8 +125,20 @@ class Agent {
                 }
                 break;
 
-            case NORTH:
-                for (let y = this.currentSpot.y - 1; y > 0; y--) {
+            case EAST:
+                let rightX = this.currentSpot.x;
+                rightX++;
+
+                for (let y = this.currentSpot.y; y >= -1; y--) {
+                    if (this.map[rightX][y].content === GRASS) {
+                        destination = this.map[rightX][y];
+                        break;
+                    }
+                }
+                break;
+
+            case SOUTH:
+                for (let y = this.currentSpot.y + 1; y > 0; y++) {
                     if (this.map[this.currentSpot.x][y].content === GRASS) {
                         destination = this.map[this.currentSpot.x][y];
                         break;
@@ -160,12 +171,7 @@ class Agent {
                 break;
 
             case NORTH:
-                if (this.currentSpot.y === 0) {
-                    this.currentDirection = SOUTH;
-                    this.currentSpot.x++;
-                } else {
-                    this.currentSpot.y--;
-                }
+                this.currentSpot.y--;
                 break;
 
             case NORTHEAST:
@@ -183,12 +189,7 @@ class Agent {
                 break;
 
             case SOUTH:
-                if (this.currentSpot.y === this.worldSize - 1) {
-                    this.currentDirection = NORTH;
-                    this.currentSpot.x++;
-                } else {
-                    this.currentSpot.y++;
-                }
+                this.currentSpot.y++;
                 break;
 
             case SOUTHWEST:
@@ -203,7 +204,7 @@ class Agent {
 
         for (let x = 0; x < this.worldSize; x++) {
             for (let y = 0; y < this.worldSize; y++) {
-                if (this.map[x][y].isVisited) {
+                if (this.map[x][y].isVisited || this.map[x][y].content === WALL || this.map[x][y].content === FUEL_STATION || this.map[x][y].content === GARBAGE_CAN) {
                     clearedSpots++;
                 } else {
                     return false;
@@ -232,38 +233,33 @@ class Agent {
         };
     }
 
-    // Returns boolean if next spot is an obstacle (does not consider the edges as obstacles)
-    collisionAhead() {
+    // Returns boolean if next spot is an obstacle 
+    collisionAhead(direction) {
+        this.previousDirection = this.currentDirection;
+        this.mustGoBack = false;
+
         const neighbours = this.getNeighbours(this.currentSpot);
 
-        switch (this.currentDirection) {
+        switch (direction) {
             case NORTH:
-                if (neighbours.north) {
-                    if (neighbours.north.content === WALL) {
-                        this.previousDirection = this.currentDirection;
-                        this.mustGoBack = false;
-                        return true;
-                    }
+                if (!neighbours.north) {
+                    return true;
+                }
 
-                    if ((neighbours.north.content === FUEL_STATION) || (neighbours.north.content === GARBAGE_CAN)) {
-                        this.mustGoBack = true;
-                        return true;
-                    }
+                if (neighbours.north) {
+                    return (neighbours.north.content === WALL || neighbours.north.content === FUEL_STATION || neighbours.north.content === GARBAGE_CAN);
                 }
                 break;
 
             case SOUTH:
-                if (neighbours.south) {
-                    if (neighbours.south.content === WALL) {
-                        this.previousDirection = this.currentDirection;
-                        this.mustGoBack = false;
-                        return true;
-                    }
+                // map limit
+                if (!neighbours.south) {
+                    this.currentDirection = EAST;
+                    return true;
+                }
 
-                    if ((neighbours.south.content === FUEL_STATION) || (neighbours.south.content === GARBAGE_CAN)) {
-                        this.mustGoBack = true;
-                        return true;
-                    }
+                if (neighbours.south) {
+                    return (neighbours.south.content === WALL || neighbours.south.content === FUEL_STATION || neighbours.south.content === GARBAGE_CAN);
                 }
                 break;
         }
@@ -372,7 +368,9 @@ class Agent {
             let totalPath = [current];
 
             while (current.parent) {
-                current = current.parent;
+                const parent = current.parent;
+                delete current.parent; 
+                current = parent;
                 totalPath.unshift(current);
             }
 
