@@ -54,6 +54,9 @@ class Agent {
         else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
             action = this.routeStepBackward();
         }
+        else if (this.endOfMap()) {
+            action = this.swtichDirection();
+        }
         else if (this.collisionAhead(this.currentDirection)) {
             action = this.generateRouteToNextAvailableSpot();
         }
@@ -153,7 +156,30 @@ class Agent {
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
     }
 
+    swtichDirection() {
+        if (this.currentDirection === SOUTH) {
+            this.currentDirection = NORTH;
+        } else if (this.currentDirection === NORTH) {    
+            this.currentDirection = SOUTH;
+        }
+
+        this.currentSpot.x++;
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_MOVED);
+    }
+
     /********************* HELPERS *********************/
+
+    endOfMap() {
+        if (this.currentDirection === SOUTH && (this.currentSpot.y + 1) == this.worldSize) {
+            return true;
+        }
+
+        if (this.currentDirection === NORTH && this.currentSpot.y === 0) {
+            return true;
+        }
+
+        return false;
+    }
 
     startMoving() {
         this.movementStatus = MOVEMENT_MOVING;
