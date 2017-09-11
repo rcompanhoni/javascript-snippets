@@ -44,7 +44,10 @@ class Agent {
         this.currentSpot.content = state;
         let action = new Action(this.currentSpot.x, this.currentSpot.y, STATUS_NO_CHANGES);
 
-        if (this.movementStatus === MOVEMENT_REFUELING) {
+        if (this.fuelLevel === 0) {
+            action = new Action(this.currentSpot.x, this.currentSpot.y, STATUS_OUT_OF_FUEL);
+        }
+        else if (this.movementStatus === MOVEMENT_REFUELING) {
             action = this.refuel();
         }
         else if (this.currentSpot.content === GARBAGE) {
@@ -239,20 +242,26 @@ class Agent {
         this.previousDirection = this.currentDirection;
 
         // finds the closest fuel station on map
-        let fuelStation;
+        let closestFuelStation;
         for (let x = 0; x < this.worldSize; x++) {
             for (let y = 0; y < this.worldSize; y++) {
                 let spot = this.map[x][y];
                 if (spot.content === FUEL_STATION) {
-                    let distance = this.distance(this.currentSpot, spot);
-                    if (!fuelStation || distance < closestFuelStation) {
-                        fuelStation = spot;
+                    if (!closestFuelStation) {
+                        closestFuelStation = spot;
+                    } else {
+                        let closestDistance = this.distance(this.currentSpot, closestFuelStation);
+                        let candidateDistance = this.distance(this.currentSpot, spot);
+    
+                        if (candidateDistance < closestDistance) {
+                            closestFuelStation = spot;
+                        }
                     }
                 }
             }
         }
         
-        const neighbours = this.getNeighbours(fuelStation);
+        const neighbours = this.getNeighbours(closestFuelStation);
         const directions = Object.keys(neighbours);
 
         // check if already in a neighbour spot
@@ -272,6 +281,11 @@ class Agent {
         } else {
             closestParkingSpace = directions.reduce((closestNeighbour, direction) => {
                 const neighbour = neighbours[direction];
+
+                if (!closestNeighbour) {
+                    return neighbour;
+                }
+
                 if (neighbour && neighbour.content === GRASS) {
                     const bestDistance = this.distance(this.currentSpot, closestNeighbour);
                     const candidateDistance = this.distance(this.currentSpot, neighbour);

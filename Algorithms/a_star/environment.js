@@ -96,8 +96,14 @@ class Environment {
             }
         }
 
-        // causes error limit
-        this.world[4][15] = GARBAGE_CAN;
+        // introduce a problematic obstacle here (for testing)
+        // this.world[15][10] = FUEL_STATION;
+
+        // this.world[1][12] = FUEL_STATION;
+        // this.world[4][11] = FUEL_STATION;
+        // this.world[7][4] = FUEL_STATION;
+        // this.world[8][9] = FUEL_STATION;
+        // this.world[11][3] = FUEL_STATION;
     }
 
     redraw() {

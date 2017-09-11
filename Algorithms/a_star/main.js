@@ -45,6 +45,11 @@ function runSimulation() {
             actionResult = agentEnvironmentInteraction();
             statusDisplay.printStatus(actionResult.status)
 
+            if (actionResult.status === STATUS_OUT_OF_FUEL) {
+                clearInterval(simulationId);
+                statusDisplay.print("\nSIMULAÇÃO TERMINADA -- SEM COMBUSTÍVEL")
+            }
+
             if (actionResult.status === STATUS_WORLD_CLEARED) {
                 clearInterval(simulationId);
                 statusDisplay.print("\nSIMULAÇÃO TERMINADA.")
