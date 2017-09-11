@@ -1,6 +1,6 @@
 "use strict";
 
-const SIMULATION_SPEED = 50;
+const SIMULATION_SPEED = 60;
 
 const TILE_WIDTH = 32;
 const TILE_HEIGHT = 32;
@@ -12,8 +12,9 @@ let simulationId;
 
 function runSimulation() {
     clearInterval(simulationId);
-    if (statusDisplay)
+    if (statusDisplay) {
         statusDisplay.clear();
+    }
 
     const worldCanvas = document.getElementById('world-canvas');
     const agentCanvas = document.getElementById('agent-canvas');

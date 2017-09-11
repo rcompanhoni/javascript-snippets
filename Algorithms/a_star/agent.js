@@ -25,6 +25,7 @@ class Agent {
         this.movementStatus = MOVEMENT_STOPPED;
         this.previousDirection = null;
         this.mustGoBack = false;
+        this.toCurve = true;
 
         this.map = worldMap;
         this.worldSize = this.map[0].length;
@@ -48,17 +49,20 @@ class Agent {
         else if (this.currentSpot.content === GARBAGE) {
             action = this.clean();
         }
+        if (this.fuelLevel <= 30) {
+            action = this.generateRouteToClosestFuelStation();
+        }
         else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
             action = this.routeStepFoward();
         }
         else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
             action = this.routeStepBackward();
         }
-        else if (this.endOfMap()) {
-            action = this.swtichDirection();
-        }
         else if (this.collisionAhead(this.currentDirection)) {
             action = this.generateRouteToNextAvailableSpot();
+        }
+        else if (this.endOfMap()) {
+            action = this.swtichDirection();
         }
         else if (this.movementStatus === MOVEMENT_MOVING) {
             action = this.move();
@@ -120,19 +124,37 @@ class Agent {
         let destination;
         switch (this.currentDirection) {
             case NORTH:
-                for (let y = this.currentSpot.y - 1; y >= -1; y--) {
+                // tries next posiion on same column
+                for (let y = this.currentSpot.y - 1; y >= 0; y--) {
                     if (this.map[this.currentSpot.x][y].content === GRASS) {
                         destination = this.map[this.currentSpot.x][y];
                         break;
                     }
                 }
+
+                // tries free position on next column
+                if (!destination) {
+                    let nextX = this.currentSpot.x;
+                    nextX++;
+
+                    for (let nextY = 0; nextY < this.worldSize; nextY++) {
+                        if (this.map[nextX][nextY].content === GRASS) {
+                            destination = this.map[nextX][nextY];
+                            break;
+                        }
+                    }
+
+                    this.toCurve = false;
+                    this.currentDirection = SOUTH;
+                }
+
                 break;
 
             case EAST:
                 let rightX = this.currentSpot.x;
                 rightX++;
 
-                for (let y = this.currentSpot.y; y >= -1; y--) {
+                for (let y = this.currentSpot.y; y >= 0; y--) {
                     if (this.map[rightX][y].content === GRASS) {
                         destination = this.map[rightX][y];
                         break;
@@ -141,12 +163,29 @@ class Agent {
                 break;
 
             case SOUTH:
-                for (let y = this.currentSpot.y + 1; y > 0; y++) {
+                // tries next posiion on same column
+                for (let y = this.currentSpot.y + 1; y < this.worldSize - 1; y++) {
                     if (this.map[this.currentSpot.x][y].content === GRASS) {
                         destination = this.map[this.currentSpot.x][y];
                         break;
                     }
                 }
+
+                // tries free position on next column
+                if (!destination) {
+                    let nextX = this.currentSpot.x + 1;
+
+                    for (let nextY = this.worldSize - 1; nextY >= 0; nextY--) {
+                        if (this.map[nextX][nextY].content === GRASS) {
+                            destination = this.map[nextX][nextY];
+                            break;
+                        }
+                    }
+
+                    this.toCurve = false;
+                    this.currentDirection = NORTH;
+                }
+
                 break;
         }
 
@@ -156,18 +195,33 @@ class Agent {
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
     }
 
+    generateRouteToClosestFuelStation() {
+        // TODO - find the closest fuel station on map, get its neighbours and select a free spot to park and refuel
+    }
+
     swtichDirection() {
-        if (this.currentDirection === SOUTH) {
+        if (this.toCurve) {
+            this.previousDirection = this.currentDirection;
+            this.currentDirection = EAST;
+            this.moveOneSpot();
+        } else {
+            this.toCurve = true;
+        }
+
+        if (this.previousDirection === SOUTH) {    
             this.currentDirection = NORTH;
-        } else if (this.currentDirection === NORTH) {    
+        } else if (this.previousDirection === NORTH) {    
             this.currentDirection = SOUTH;
         }
 
-        this.currentSpot.x++;
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_MOVED);
     }
 
     /********************* HELPERS *********************/
+
+    startMoving() {
+        this.movementStatus = MOVEMENT_MOVING;
+    }
 
     endOfMap() {
         if (this.currentDirection === SOUTH && (this.currentSpot.y + 1) == this.worldSize) {
@@ -179,10 +233,6 @@ class Agent {
         }
 
         return false;
-    }
-
-    startMoving() {
-        this.movementStatus = MOVEMENT_MOVING;
     }
 
     moveOneSpot() {
@@ -221,8 +271,15 @@ class Agent {
             case SOUTHWEST:
                 this.currentSpot.x--;
                 this.currentSpot.y++;
-                break;
-        }
+                break;   
+            }
+
+        this.fuelLevel--;
+        this.updateFuelDisplay();
+    }
+
+    updateFuelDisplay() {
+        document.getElementById('fuel-capacity').innerText = this.fuelLevel;
     }
 
     isWholeWorldVisited() {
@@ -268,33 +325,35 @@ class Agent {
 
         switch (direction) {
             case NORTH:
-                if (!neighbours.north) {
-                    return true;
-                }
-
                 if (neighbours.north) {
                     return (neighbours.north.content === WALL || neighbours.north.content === FUEL_STATION || neighbours.north.content === GARBAGE_CAN);
                 }
+
                 break;
 
             case SOUTH:
-                // map limit
-                if (!neighbours.south) {
-                    this.currentDirection = EAST;
-                    return true;
-                }
-
                 if (neighbours.south) {
                     return (neighbours.south.content === WALL || neighbours.south.content === FUEL_STATION || neighbours.south.content === GARBAGE_CAN);
                 }
+
                 break;
         }
 
         return false;
     }
 
+    clearParentsFromMap() {
+        for (let x = 0; x < this.worldSize; x++) {
+            for (let y = 0; y < this.worldSize; y++) {
+                delete this.map[x][y].parent;
+            }
+        }
+    }
+
     // A*
     findPath(initialPosition, finalPosition) {
+        this.clearParentsFromMap();
+
         let openList = [];
         let closedList = [];
 
@@ -310,30 +369,8 @@ class Agent {
             });
 
             if (current.x === finalPosition.x && current.y === finalPosition.y) {
-                openList.forEach(spot => {
-                    delete spot.f;
-                    delete spot.g;
-                    delete spot.h;
-                    
-                    if (spot.parent) {
-                        delete spot.parent.f;
-                        delete spot.parent.g;
-                        delete spot.parent.h;
-                    }
-                });
-                
-                closedList.forEach(spot => {
-                    delete spot.f;
-                    delete spot.g;
-                    delete spot.h;
-
-                    if (spot.parent) {
-                        delete spot.parent.f;
-                        delete spot.parent.g;
-                        delete spot.parent.h;
-                    }
-                });
-
+                // clear for next iterations
+                clearCalculations();
                 return reconstructPath(current);
             }
 
@@ -390,6 +427,7 @@ class Agent {
             return Math.max(Math.abs(initial.x - final.x), Math.abs(initial.y - final.y));
         }
 
+        // returns the final route (initial position as first)
         function reconstructPath(current) {
             let totalPath = [current];
 
@@ -402,5 +440,34 @@ class Agent {
 
             return totalPath;
         }
+
+        
+
+        function clearCalculations() {
+            openList.forEach(spot => {
+                delete spot.f;
+                delete spot.g;
+                delete spot.h;
+                
+                if (spot.parent) {
+                    delete spot.parent.f;
+                    delete spot.parent.g;
+                    delete spot.parent.h;
+                }
+            });
+            
+            closedList.forEach(spot => {
+                delete spot.f;
+                delete spot.g;
+                delete spot.h;
+
+                if (spot.parent) {
+                    delete spot.parent.f;
+                    delete spot.parent.g;
+                    delete spot.parent.h;
+                }
+            });
+        }
+
     }
 }

@@ -96,7 +96,8 @@ class Environment {
             }
         }
 
-        this.world[6][0] = GARBAGE_CAN;
+        // causes error limit
+        this.world[4][15] = GARBAGE_CAN;
     }
 
     redraw() {
