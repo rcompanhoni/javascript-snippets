@@ -49,6 +49,10 @@ class StatusDisplay {
             case STATUS_DESTINATION_REACHED:
                 message = "Destino encontrado";
                 break;
+
+            case STATUS_REFUELING:
+                message = "Agente recarregando...";
+                break;
         }
 
         this.displayStatus.value += message + '\n';

@@ -8,6 +8,7 @@ const STATUS_WORLD_CLEARED          = 'status world cleared';
 const STATUS_FOWARD_ROUTE           = 'status foward route';
 const STATUS_BACKWARDS_ROUTE        = 'status backwards route';
 const STATUS_DESTINATION_REACHED    = 'status destination reached';
+const STATUS_REFUELING              = 'status refueling';
 
 class Action {
     constructor(x, y, status) {

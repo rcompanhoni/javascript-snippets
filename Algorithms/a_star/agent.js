@@ -4,6 +4,7 @@ const MOVEMENT_STOPPED = 'movement stopped';
 const MOVEMENT_MOVING = 'movement moving';
 const MOVEMENT_FOWARD_ROUTE = 'movement foward route';
 const MOVEMENT_BACKWARDS_ROUTE = 'movement backwards route';
+const MOVEMENT_REFUELING = 'movement refueling';
 
 const SOUTH = 'south';
 const SOUTHWEST = 'southWest';
@@ -19,11 +20,14 @@ class Agent {
         this.currentSpot = new Spot(0, 0);
 
         this.fuelLevel = 100;
+        this.onRefuelRoute = false;
+
         this.garbageCapacity = 100;
 
         this.currentDirection = SOUTH;
         this.movementStatus = MOVEMENT_STOPPED;
         this.previousDirection = null;
+        
         this.mustGoBack = false;
         this.toCurve = true;
 
@@ -40,29 +44,26 @@ class Agent {
         this.currentSpot.content = state;
         let action = new Action(this.currentSpot.x, this.currentSpot.y, STATUS_NO_CHANGES);
 
-        if (this.currentSpot.nearFuelStation && this.fuelLevel < 100) {
-            // TODO: refuel
-        }
-        else if (this.currentSpot.nearGarbageCan && this.garbageCapacity < 100) {
-            // TODO: unloadGarbage
+        if (this.movementStatus === MOVEMENT_REFUELING) {
+            action = this.refuel();
         }
         else if (this.currentSpot.content === GARBAGE) {
             action = this.clean();
         }
-        if (this.fuelLevel <= 30) {
-            action = this.generateRouteToClosestFuelStation();
-        }
         else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
             action = this.routeStepFoward();
         }
-        else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
+        else if (this.fuelLevel <= 30) {
+            action = this.generateRouteToClosestFuelStation();
+        }
+        else if (this.movementStatus === MOVEMENT_BACKWARDS_ROUTE) {
             action = this.routeStepBackward();
         }
         else if (this.collisionAhead(this.currentDirection)) {
             action = this.generateRouteToNextAvailableSpot();
         }
         else if (this.endOfMap()) {
-            action = this.swtichDirection();
+            action = this.switchDirection();
         }
         else if (this.movementStatus === MOVEMENT_MOVING) {
             action = this.move();
@@ -76,6 +77,22 @@ class Agent {
     }
 
     /********************* STATE HANDLERS *********************/
+
+    refuel() {
+        this.fuelLevel += 10;
+        this.updateFuelDisplay();
+
+        
+        if (this.fuelLevel >= 100) {
+            this.fuelLevel = 100;
+            this.updateFuelDisplay();
+            this.movementStatus = MOVEMENT_BACKWARDS_ROUTE;
+
+            return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_BACKWARDS_ROUTE);
+        } 
+
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_REFUELING);
+    }
 
     clean() {
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_SPOT_CLEARED);
@@ -91,21 +108,23 @@ class Agent {
         let actionStatus = STATUS_FOWARD_ROUTE;
 
         if (this.routeStep === this.route.length) {
-            if (!this.mustGoBack) {
+            if (this.onRefuelRoute) {
+                this.onRefuelRoute = false;
+                actionStatus = STATUS_REFUELING;
+                this.movementStatus = MOVEMENT_REFUELING;
+                this.routeStep--;
+            } else {
                 this.currentDirection = this.previousDirection;
                 this.movementStatus = MOVEMENT_MOVING;
-            } else {
-                this.movementStatus = MOVEMENT_BACKWARDS_ROUTE;
+                actionStatus = STATUS_DESTINATION_REACHED;
+                this.routeStep = 0;
             }
-
-            this.routeStep = 0;
-            actionStatus = STATUS_DESTINATION_REACHED;
         } else {
             const nextSpot = this.route[this.routeStep];
             const neighbours = this.getNeighbours(this.currentSpot);
             this.currentDirection = Object.keys(neighbours).find(key => {
                 if (neighbours[key]) {
-                    return neighbours[key].x === nextSpot.x && neighbours[key].y === nextSpot.y
+                    return neighbours[key].x === nextSpot.x && neighbours[key].y === nextSpot.y;
                 }
 
                 return false;
@@ -117,7 +136,28 @@ class Agent {
     }
 
     routeStepBackward() {
-        // TODO
+        let actionStatus = STATUS_BACKWARDS_ROUTE;
+        this.routeStep--;
+
+        if (this.routeStep === 0) {
+            this.currentDirection = this.previousDirection;
+            this.movementStatus = MOVEMENT_MOVING;
+            actionStatus = STATUS_DESTINATION_REACHED;
+        } else {
+            const nextSpot = this.route[this.routeStep];
+            const neighbours = this.getNeighbours(this.currentSpot);
+            this.currentDirection = Object.keys(neighbours).find(key => {
+                if (neighbours[key]) {
+                    return neighbours[key].x === nextSpot.x && neighbours[key].y === nextSpot.y;
+                }
+    
+                return false;
+            });
+    
+            this.moveOneSpot();
+        }
+
+        return new Action(this.currentSpot.x, this.currentSpot.y, actionStatus);
     }
 
     generateRouteToNextAvailableSpot() {
@@ -196,10 +236,61 @@ class Agent {
     }
 
     generateRouteToClosestFuelStation() {
-        // TODO - find the closest fuel station on map, get its neighbours and select a free spot to park and refuel
+        this.previousDirection = this.currentDirection;
+
+        // finds the closest fuel station on map
+        let fuelStation;
+        for (let x = 0; x < this.worldSize; x++) {
+            for (let y = 0; y < this.worldSize; y++) {
+                let spot = this.map[x][y];
+                if (spot.content === FUEL_STATION) {
+                    let distance = this.distance(this.currentSpot, spot);
+                    if (!fuelStation || distance < closestFuelStation) {
+                        fuelStation = spot;
+                    }
+                }
+            }
+        }
+        
+        const neighbours = this.getNeighbours(fuelStation);
+        const directions = Object.keys(neighbours);
+
+        // check if already in a neighbour spot
+        let closestParkingSpace = this.currentSpot;
+        const alreadyInParkingSpace = directions.find(direction => {
+            if (neighbours[direction]) {
+                return neighbours[direction].x === this.currentSpot.x && neighbours[direction].y === this.currentSpot.y; 
+            }
+
+            return false;
+        });
+
+        // refuel immediately else get its neighbours and create a route to a spot to park and refuel
+        if (alreadyInParkingSpace) {
+            this.movementStatus = MOVEMENT_REFUELING;
+            return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_REFUELING);
+        } else {
+            closestParkingSpace = directions.reduce((closestNeighbour, direction) => {
+                const neighbour = neighbours[direction];
+                if (neighbour && neighbour.content === GRASS) {
+                    const bestDistance = this.distance(this.currentSpot, closestNeighbour);
+                    const candidateDistance = this.distance(this.currentSpot, neighbour);
+
+                    return bestDistance < candidateDistance ? closestNeighbour : neighbour;
+                }
+
+                return closestNeighbour;
+            }, neighbours[EAST]);
+
+            this.onRefuelRoute = true;
+
+            this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], closestParkingSpace);
+            this.movementStatus = MOVEMENT_FOWARD_ROUTE;
+            return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
+        }        
     }
 
-    swtichDirection() {
+    switchDirection() {
         if (this.toCurve) {
             this.previousDirection = this.currentDirection;
             this.currentDirection = EAST;
@@ -350,6 +441,11 @@ class Agent {
         }
     }
 
+    // euclidean
+    distance(initial, final) {
+        return Math.max(Math.abs(initial.x - final.x), Math.abs(initial.y - final.y));
+    }
+
     // A*
     findPath(initialPosition, finalPosition) {
         this.clearParentsFromMap();
@@ -357,7 +453,7 @@ class Agent {
         let openList = [];
         let closedList = [];
 
-        initialPosition.h = distance(initialPosition, finalPosition);
+        initialPosition.h = this.distance(initialPosition, finalPosition);
         initialPosition.g = 0;
         initialPosition.f = initialPosition.g + initialPosition.h;
 
@@ -405,8 +501,8 @@ class Agent {
                     openList.push(neighbour);
                 }
 
-                let g = current.g + distance(current, neighbour);
-                let h = distance(neighbour, finalPosition);
+                let g = current.g + this.distance(current, neighbour);
+                let h = this.distance(neighbour, finalPosition);
                 let f = g + h;
                 if (f >= neighbour.f) {
                     return;
@@ -420,12 +516,7 @@ class Agent {
             });
         }
 
-        return [];
-
-        // euclidean
-        function distance(initial, final) {
-            return Math.max(Math.abs(initial.x - final.x), Math.abs(initial.y - final.y));
-        }
+        return []; 
 
         // returns the final route (initial position as first)
         function reconstructPath(current) {
@@ -440,8 +531,6 @@ class Agent {
 
             return totalPath;
         }
-
-        
 
         function clearCalculations() {
             openList.forEach(spot => {
