@@ -1,4 +1,4 @@
-# A React/Redux implementation for the DeepX Front-End Challenge
+# Github Favorite Issues
 
 This application enables the user to search for GitHub issues and mark them as favorites. It's implemented with React/Redux -- the following diagram illustrates the data flow when a user searches for a repository issues:
 
