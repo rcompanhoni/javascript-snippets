@@ -53,6 +53,14 @@ class StatusDisplay {
             case STATUS_REFUELING:
                 message = "Agente recarregando...";
                 break;
+
+            case STATUS_GARBAGE_TO_DISPOSE:
+                message = "Capacidade de lixo esgotada";
+                break;
+
+            case STATUS_DISPOSING_GARBAGE:
+                message = "Despejando o lixo";
+                break;
         }
 
         this.displayStatus.value += message + '\n';

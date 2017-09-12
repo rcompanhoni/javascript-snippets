@@ -10,6 +10,8 @@ const STATUS_BACKWARDS_ROUTE        = 'status backwards route';
 const STATUS_DESTINATION_REACHED    = 'status destination reached';
 const STATUS_REFUELING              = 'status refueling';
 const STATUS_OUT_OF_FUEL            = 'status out of fuel';
+const STATUS_GARBAGE_TO_DISPOSE     = 'status garbage to dispose';
+const STATUS_DISPOSING_GARBAGE      = 'status disposing garbage';
 
 class Action {
     constructor(x, y, status) {

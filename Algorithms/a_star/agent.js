@@ -5,6 +5,7 @@ const MOVEMENT_MOVING = 'movement moving';
 const MOVEMENT_FOWARD_ROUTE = 'movement foward route';
 const MOVEMENT_BACKWARDS_ROUTE = 'movement backwards route';
 const MOVEMENT_REFUELING = 'movement refueling';
+const MOVEMENT_DISPOSING_GARBAGE = 'movement disposing garbage';
 
 const SOUTH = 'south';
 const SOUTHWEST = 'southWest';
@@ -22,12 +23,13 @@ class Agent {
         this.fuelLevel = 100;
         this.onRefuelRoute = false;
 
-        this.garbageCapacity = 100;
+        this.garbageCapacity = 10;
+        this.onGarbageDisposalRoute = false;
 
         this.currentDirection = SOUTH;
         this.movementStatus = MOVEMENT_STOPPED;
         this.previousDirection = null;
-        
+
         this.mustGoBack = false;
         this.toCurve = true;
 
@@ -44,33 +46,60 @@ class Agent {
         this.currentSpot.content = state;
         let action = new Action(this.currentSpot.x, this.currentSpot.y, STATUS_NO_CHANGES);
 
+        // FUEL IS OVER
         if (this.fuelLevel === 0) {
             action = new Action(this.currentSpot.x, this.currentSpot.y, STATUS_OUT_OF_FUEL);
         }
-        else if (this.movementStatus === MOVEMENT_REFUELING) {
-            action = this.refuel();
-        }
-        else if (this.currentSpot.content === GARBAGE) {
-            action = this.clean();
-        }
+
+        // ON ROUTE -- MOVING FOWARD
         else if (this.movementStatus === MOVEMENT_FOWARD_ROUTE) {
             action = this.routeStepFoward();
         }
-        else if (this.fuelLevel <= 30) {
-            action = this.generateRouteToClosestFuelStation();
-        }
+
+        // ON ROUTE -- MOVING BACKWARDS
         else if (this.movementStatus === MOVEMENT_BACKWARDS_ROUTE) {
             action = this.routeStepBackward();
         }
+
+        // REFUEL
+        else if (this.movementStatus === MOVEMENT_REFUELING) {
+            action = this.refuel();
+        }
+
+         // DISPOSING GARBAGE
+         else if (this.movementStatus === MOVEMENT_DISPOSING_GARBAGE) {
+            action = this.disposeGarbage();
+        }
+
+        // LOW FUEL
+        else if (this.fuelLevel <= 30) {
+            action = this.generateRouteToClosestFuelStation();
+        }
+
+        // GARBAGE CAPACITY OVER
+        else if (this.garbageCapacity === 0) {
+            action = this.generateRouteToClosestGarbageCan();
+        }
+        
+        // DIRTY SPOT FOUND
+        else if (this.currentSpot.content === GARBAGE && this.garbageCapacity > 0 && this.fuelLevel >= 30) {
+            action = this.clean();
+        }
+
+        // OBSTACLE
         else if (this.collisionAhead(this.currentDirection)) {
             action = this.generateRouteToNextAvailableSpot();
         }
+
+        // MAP BORDER REACHED
         else if (this.endOfMap()) {
             action = this.switchDirection();
         }
+
+        // SIMPLE MOVEMENT
         else if (this.movementStatus === MOVEMENT_MOVING) {
             action = this.move();
-        }       
+        }
 
         if (this.isWholeWorldVisited()) {
             action.status = STATUS_WORLD_CLEARED;
@@ -85,19 +114,36 @@ class Agent {
         this.fuelLevel += 10;
         this.updateFuelDisplay();
 
-        
         if (this.fuelLevel >= 100) {
             this.fuelLevel = 100;
             this.updateFuelDisplay();
             this.movementStatus = MOVEMENT_BACKWARDS_ROUTE;
 
             return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_BACKWARDS_ROUTE);
-        } 
+        }
 
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_REFUELING);
     }
 
+    disposeGarbage() {
+        this.garbageCapacity += 2;
+        this.updateGarbageDisplay();
+
+        if (this.garbageCapacity >= 10) {
+            this.garbageCapacity = 10;
+            this.updateGarbageDisplay();
+            this.movementStatus = MOVEMENT_BACKWARDS_ROUTE;
+
+            return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_BACKWARDS_ROUTE);
+        }
+
+        return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_DISPOSING_GARBAGE);
+    }
+
     clean() {
+        this.garbageCapacity--;
+        this.updateGarbageDisplay();
+
         return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_SPOT_CLEARED);
     }
 
@@ -110,13 +156,20 @@ class Agent {
         this.routeStep++;
         let actionStatus = STATUS_FOWARD_ROUTE;
 
-        if (this.routeStep === this.route.length) {
+        if (this.routeStep >= this.route.length) {
             if (this.onRefuelRoute) {
                 this.onRefuelRoute = false;
                 actionStatus = STATUS_REFUELING;
                 this.movementStatus = MOVEMENT_REFUELING;
                 this.routeStep--;
-            } else {
+            } 
+            else if (this.onGarbageDisposalRoute) {
+                this.onGarbageDisposalRoute = false;
+                actionStatus = STATUS_DISPOSING_GARBAGE;
+                this.movementStatus = MOVEMENT_DISPOSING_GARBAGE;
+                this.routeStep--;
+            }
+            else {
                 this.currentDirection = this.previousDirection;
                 this.movementStatus = MOVEMENT_MOVING;
                 actionStatus = STATUS_DESTINATION_REACHED;
@@ -142,7 +195,7 @@ class Agent {
         let actionStatus = STATUS_BACKWARDS_ROUTE;
         this.routeStep--;
 
-        if (this.routeStep === -1) {
+        if (this.routeStep < 0) {
             this.currentDirection = this.previousDirection;
             this.movementStatus = MOVEMENT_MOVING;
             actionStatus = STATUS_DESTINATION_REACHED;
@@ -153,10 +206,10 @@ class Agent {
                 if (neighbours[key]) {
                     return neighbours[key].x === nextSpot.x && neighbours[key].y === nextSpot.y;
                 }
-    
+
                 return false;
             });
-    
+
             this.moveOneSpot();
         }
 
@@ -252,7 +305,7 @@ class Agent {
                     } else {
                         let closestDistance = this.distance(this.currentSpot, closestFuelStation);
                         let candidateDistance = this.distance(this.currentSpot, spot);
-    
+
                         if (candidateDistance < closestDistance) {
                             closestFuelStation = spot;
                         }
@@ -260,7 +313,7 @@ class Agent {
                 }
             }
         }
-        
+
         const neighbours = this.getNeighbours(closestFuelStation);
         const directions = Object.keys(neighbours);
 
@@ -268,7 +321,7 @@ class Agent {
         let closestParkingSpace = this.currentSpot;
         const alreadyInParkingSpace = directions.find(direction => {
             if (neighbours[direction]) {
-                return neighbours[direction].x === this.currentSpot.x && neighbours[direction].y === this.currentSpot.y; 
+                return neighbours[direction].x === this.currentSpot.x && neighbours[direction].y === this.currentSpot.y;
             }
 
             return false;
@@ -301,7 +354,73 @@ class Agent {
             this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], closestParkingSpace);
             this.movementStatus = MOVEMENT_FOWARD_ROUTE;
             return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
-        }        
+        }
+    }
+
+    generateRouteToClosestGarbageCan() {
+        this.previousDirection = this.currentDirection;
+
+        // finds the closest garbage can on the map
+        let closestGarbageCan;
+        for (let x = 0; x < this.worldSize; x++) {
+            for (let y = 0; y < this.worldSize; y++) {
+                let spot = this.map[x][y];
+                if (spot.content === GARBAGE_CAN) {
+                    if (!closestGarbageCan) {
+                        closestGarbageCan = spot;
+                    } else {
+                        let closestDistance = this.distance(this.currentSpot, closestGarbageCan);
+                        let candidateDistance = this.distance(this.currentSpot, spot);
+
+                        if (candidateDistance < closestDistance) {
+                            closestGarbageCan = spot;
+                        }
+                    }
+                }
+            }
+        }
+
+        const neighbours = this.getNeighbours(closestGarbageCan);
+        const directions = Object.keys(neighbours);
+
+        // check if already in a neighbour spot
+        let closestParkingSpace = this.currentSpot;
+        const alreadyInParkingSpace = directions.find(direction => {
+            if (neighbours[direction]) {
+                return neighbours[direction].x === this.currentSpot.x && neighbours[direction].y === this.currentSpot.y;
+            }
+
+            return false;
+        });
+
+        // refuel immediately else get its neighbours and create a route to a spot to park and refuel
+        if (alreadyInParkingSpace) {
+            this.movementStatus = MOVEMENT_DISPOSING_GARBAGE;
+            return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_DISPOSING_GARBAGE);
+        } else {
+            closestParkingSpace = directions.reduce((closestNeighbour, direction) => {
+                const neighbour = neighbours[direction];
+
+                if (!closestNeighbour) {
+                    return neighbour;
+                }
+
+                if (neighbour && neighbour.content === GRASS) {
+                    const bestDistance = this.distance(this.currentSpot, closestNeighbour);
+                    const candidateDistance = this.distance(this.currentSpot, neighbour);
+
+                    return bestDistance < candidateDistance ? closestNeighbour : neighbour;
+                }
+
+                return closestNeighbour;
+            }, neighbours[EAST]);
+
+            this.onGarbageDisposalRoute = true;
+
+            this.route = this.findPath(this.map[this.currentSpot.x][this.currentSpot.y], closestParkingSpace);
+            this.movementStatus = MOVEMENT_FOWARD_ROUTE;
+            return new Action(this.currentSpot.x, this.currentSpot.y, STATUS_ROUTE_DEFINED);
+        }
     }
 
     switchDirection() {
@@ -313,9 +432,9 @@ class Agent {
             this.toCurve = true;
         }
 
-        if (this.previousDirection === SOUTH) {    
+        if (this.previousDirection === SOUTH) {
             this.currentDirection = NORTH;
-        } else if (this.previousDirection === NORTH) {    
+        } else if (this.previousDirection === NORTH) {
             this.currentDirection = SOUTH;
         }
 
@@ -323,6 +442,14 @@ class Agent {
     }
 
     /********************* HELPERS *********************/
+
+    updateFuelDisplay() {
+        document.getElementById('fuel-capacity').innerText = this.fuelLevel;
+    }
+
+    updateGarbageDisplay() {
+        document.getElementById('garbage-capacity').innerText = this.garbageCapacity;
+    }
 
     startMoving() {
         this.movementStatus = MOVEMENT_MOVING;
@@ -376,15 +503,11 @@ class Agent {
             case SOUTHWEST:
                 this.currentSpot.x--;
                 this.currentSpot.y++;
-                break;   
-            }
+                break;
+        }
 
         this.fuelLevel--;
         this.updateFuelDisplay();
-    }
-
-    updateFuelDisplay() {
-        document.getElementById('fuel-capacity').innerText = this.fuelLevel;
     }
 
     isWholeWorldVisited() {
@@ -421,7 +544,6 @@ class Agent {
         };
     }
 
-    // Returns boolean if next spot is an obstacle 
     collisionAhead(direction) {
         this.previousDirection = this.currentDirection;
         this.mustGoBack = false;
@@ -530,7 +652,7 @@ class Agent {
             });
         }
 
-        return []; 
+        return [];
 
         // returns the final route (initial position as first)
         function reconstructPath(current) {
@@ -538,7 +660,7 @@ class Agent {
 
             while (current.parent) {
                 const parent = current.parent;
-                delete current.parent; 
+                delete current.parent;
                 current = parent;
                 totalPath.unshift(current);
             }
@@ -551,14 +673,14 @@ class Agent {
                 delete spot.f;
                 delete spot.g;
                 delete spot.h;
-                
+
                 if (spot.parent) {
                     delete spot.parent.f;
                     delete spot.parent.g;
                     delete spot.parent.h;
                 }
             });
-            
+
             closedList.forEach(spot => {
                 delete spot.f;
                 delete spot.g;
