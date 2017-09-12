@@ -9,6 +9,7 @@ let statusDisplay;
 let environment;
 let agent;
 let simulationId;
+let paused = false;
 
 function runSimulation() {
     clearInterval(simulationId);
@@ -16,12 +17,17 @@ function runSimulation() {
         statusDisplay.clear();
     }
 
+    // world parameters
     const worldCanvas = document.getElementById('world-canvas');
     const agentCanvas = document.getElementById('agent-canvas');
     const worldSize = Number(document.getElementById('world-size').value);
     const garbagePercentage = Number(document.getElementById('garbage-percentage').value);
     const fuelStationQuantity = Number(document.getElementById('fuel-station-quantity').value);
     const garbageCanQuantity = Number(document.getElementById('garbage-can-quantity').value);
+
+    // agent parameters
+    const agentGarbageCapacity = Number(document.getElementById('agent-garbage-capacity').value);
+    const agentFuelCapacity = Number(document.getElementById('agent-fuel-capacity').value)
 
     // display status textarea
     statusDisplay = new StatusDisplay(worldSize);
@@ -31,7 +37,7 @@ function runSimulation() {
     spritesheet.src = './img/spritesheet.png';
     spritesheet.onload = function() {
         environment = new Environment(this, worldCanvas, agentCanvas, worldSize, garbagePercentage, fuelStationQuantity, garbageCanQuantity);
-        agent = new Agent(environment.getMap());
+        agent = new Agent(environment.getMap(), agentGarbageCapacity, agentFuelCapacity);
 
         statusDisplay.print("SIMULAÇÃO INICIADA\n");
         
@@ -42,18 +48,20 @@ function runSimulation() {
 
         // simulation loop
         simulationId = setInterval(function () {
-            actionResult = agentEnvironmentInteraction();
-            statusDisplay.printStatus(actionResult.status)
-
-            if (actionResult.status === STATUS_OUT_OF_FUEL) {
-                clearInterval(simulationId);
-                statusDisplay.print("\nSIMULAÇÃO TERMINADA -- SEM COMBUSTÍVEL")
-            }
-
-            if (actionResult.status === STATUS_WORLD_CLEARED) {
-                clearInterval(simulationId);
-                statusDisplay.print("\nSIMULAÇÃO TERMINADA.")
-            }
+            if (!paused) {
+                actionResult = agentEnvironmentInteraction();
+                statusDisplay.printStatus(actionResult.status)
+    
+                if (actionResult.status === STATUS_OUT_OF_FUEL) {
+                    clearInterval(simulationId);
+                    statusDisplay.print("\nSIMULAÇÃO TERMINADA -- SEM COMBUSTÍVEL")
+                }
+    
+                if (actionResult.status === STATUS_WORLD_CLEARED) {
+                    clearInterval(simulationId);
+                    statusDisplay.print("\nSIMULAÇÃO TERMINADA.")
+                }
+            } 
         }, SIMULATION_SPEED);
     } 
 }
@@ -66,3 +74,11 @@ function agentEnvironmentInteraction() {
     return actionResult;
 }
 
+function togglePauseSimulation() {
+    if (paused) {
+        paused = false;
+    } else {
+        paused = true;
+        statusDisplay.print("\n SIMULAÇÃO PAUSADA");
+    }
+}

@@ -17,13 +17,15 @@ const EAST = 'east';
 const SOUTHEAST = 'southEast';
 
 class Agent {
-    constructor(worldMap) {
+    constructor(worldMap, garbageCapacityLimit, fuelCapacity) {
         this.currentSpot = new Spot(0, 0);
 
-        this.fuelLevel = 100;
+        this.fuelCapacity = fuelCapacity;
+        this.fuelLevel = fuelCapacity;
         this.onRefuelRoute = false;
 
-        this.garbageCapacity = 10;
+        this.garbageCapacityLimit = garbageCapacityLimit;
+        this.garbageCapacity = garbageCapacityLimit;
         this.onGarbageDisposalRoute = false;
 
         this.currentDirection = SOUTH;
@@ -114,8 +116,8 @@ class Agent {
         this.fuelLevel += 10;
         this.updateFuelDisplay();
 
-        if (this.fuelLevel >= 100) {
-            this.fuelLevel = 100;
+        if (this.fuelLevel >= this.fuelCapacity) {
+            this.fuelLevel = this.fuelCapacity;
             this.updateFuelDisplay();
             this.movementStatus = MOVEMENT_BACKWARDS_ROUTE;
 
@@ -129,8 +131,8 @@ class Agent {
         this.garbageCapacity += 2;
         this.updateGarbageDisplay();
 
-        if (this.garbageCapacity >= 10) {
-            this.garbageCapacity = 10;
+        if (this.garbageCapacity >= this.garbageCapacityLimit) {
+            this.garbageCapacity = this.garbageCapacityLimit;
             this.updateGarbageDisplay();
             this.movementStatus = MOVEMENT_BACKWARDS_ROUTE;
 

@@ -34,7 +34,16 @@
         #agent-canvas {
             z-index: 1;
         }
+
+        .panel {
+            width: 100%;
+            margin: 10px auto;
+            padding: 1em;
+            border: 1px solid #CCC;
+            border-radius: 1em;
+        }
     </style>
+
     <script type='text/javascript' src='util/action.js'></script>
     <script type='text/javascript' src='util/spot.js'></script>
     <script type='text/javascript' src='status-display.js'></script>
@@ -46,26 +55,43 @@
 
 <body>
     <div id="container">
-        <div id="menu">
+        <h4>Parâmetros do Mapa</h4>
+
+        <div class="panel">
             <input id="world-size" type="text" class="form-control" placeholder="Tamanho do mapa">
             <input id="garbage-percentage" type="text" class="form-control" placeholder="Porcentagem de sujeiras">
             <input id="fuel-station-quantity" type="text" class="form-control" placeholder="Qtde de postos">
             <input id="garbage-can-quantity" type="text" class="form-control" placeholder="Qtde de lixeiras">
+        </div>
+
+        <h4>Parâmetros do Agente</h4>
+
+        <div class="panel">
+            <input id="agent-garbage-capacity" type="text" class="form-control" placeholder="Capacidade de armazenamento de lixo">
+            <input id="agent-fuel-capacity" type="text" class="form-control" placeholder="Combustível máximo">
+        </div>
+        
+        <h4>Controles de Execução</h4>
+
+        <div class="panel">
             <input type='button' onClick='runSimulation()' value='Executar'>
+            <input type='button' onClick='togglePauseSimulation()' value='Pause'>
         </div>
 
         <div id="canvas-container">
             <textarea id="status-display"></textarea>
             <canvas id="world-canvas"></canvas>
-            <canvas id="agent-canvas"></canvas>    
+            <canvas id="agent-canvas"></canvas>
 
-            <span>Combustível:</span>
-            <span id="fuel-capacity">100</span>
-            
-            <br />
-            
-            <span>Capacidade de Lixo:</span>
-            <span id="garbage-capacity">10</span>
+            <div class="panel">
+                <span>Combustível:</span>
+                <span id="fuel-capacity">100</span>
+
+                <br />
+
+                <span>Capacidade de Lixo:</span>
+                <span id="garbage-capacity">10</span>
+            </div>
         </div>
     </div>
 </body>
