@@ -1,4 +1,4 @@
-## My Cafe
+## MyCafe - Mocha Version
 
 From the book "Learning BDD with JS" by Enrique Amodeo. Uses Mocha, Chai and Sinon to implement the tests using the BDD methodology. The actual implementation is an exercise proposed in the book.
 
@@ -9,4 +9,3 @@ MODULES/PACKAGES USED
 * *sinon*: standalone test spies, stubs and mocks for JavaScript. Works with any unit testing framework.
 * *chai-as-promised*: it adds to Chai the capability to handle promises directly. It basically adds the eventually chain, the fulfilled, rejected properties, and the rejectedWith() assertion
 * *q*: creates promises (used to create fake responses in test stubs and mocks)
-

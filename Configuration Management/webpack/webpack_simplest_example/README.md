@@ -1,7 +1,6 @@
-# Webpack simplest example
+# Webpack simple example
 
-From Stephen Grider's Webpack 2: The Complete Developer's Guider. This example shows how to configure a simple webpack.config.js file specifying an entry point and
-configuring the resulting file's name and path.
+From Stephen Grider's Webpack 2: The Complete Developer's Guider. This example shows how to configure a simple webpack.config.js file specifying an entry point and configuring the resulting file's name and path.
 
 ```javascript
 const path = require('path');

@@ -1,4 +1,4 @@
-# EXPRESS APPLICATION WITH WEBPACK MIDDLEWARE
+# Webpack with Express
 
 From Stephen Grider's Webpack 2: The Complete Developer's Guider. This example demonstrates how to use webpack-dev-middleware in an Express application.
 

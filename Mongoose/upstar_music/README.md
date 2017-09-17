@@ -1,4 +1,4 @@
-# UpStarMusic
+# Electron app
 
 From https://github.com/StephenGrider/UpStarMusic.git
 

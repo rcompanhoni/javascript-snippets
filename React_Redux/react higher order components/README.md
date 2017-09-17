@@ -1,6 +1,6 @@
 ## React Higher Order Components
 
-Tutorial from Udemy's 'Advanced React and Redux' by Stephen Grider.
+A higher order component adds additional behavior to an pre-existing component. Tutorial from Udemy's 'Advanced React and Redux' by Stephen Grider.
 
 MODULES/PACKAGES USED
 

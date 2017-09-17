@@ -1,4 +1,4 @@
-# Supertest
+## Supertest
 
 From the book "Express in Action" by Evan M Hahn. 
 
@@ -14,5 +14,3 @@ This application uses the 'supertest' module to make integration tests on an Exp
 * **supertest**: provide a high-level abstraction for testing HTTP, while still allowing you to drop down to the lower-level API provided by superagent
     * **superagent**: is a small progressive client-side HTTP request library, and Node.js module with the same API, sporting many high-level HTTP client features
 * **cheerio**: Fast, flexible & lean implementation of core jQuery designed specifically for the server -- useful for manipulating HTML DOM elements used to verify HTML responses, in tests
-
-
