@@ -1,6 +1,6 @@
 # JavaScript Snippets
 
-A collection of code snippets that demonstrates basic concepts on various aspects related to JavaScript development.
+A collection of code snippets on several concepts related to JavaScript development.
 
 ## Table of Contents
   - [Algorithms](#algorithms)
