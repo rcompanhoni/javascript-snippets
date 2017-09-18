@@ -6,3 +6,4 @@ An Electron app for display a catalog of artists and albums. THe mongoose querie
 
 * start script: "start electron . && webpack-dev-server"
 * changed both ocurrences of 'localhost' for '127.0.0.1' in src/main.js
+* **faker**: generate massive amounts of fake data in the browser and node.js
