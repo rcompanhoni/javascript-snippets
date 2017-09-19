@@ -42,7 +42,6 @@ A collection of code snippets for demonstrating various concepts related to Java
     - [React/Redux Middleware](#reactredux-middleware)
     - [React/Redux Weather App](#reactredux-weather-app)
   - [Tests](#tests)
-    - [Github Favorite Issues](#github-favorite-issues-1)
     - [MyCafe - Cucumber Version](#mycafe---cucumber-version)
     - [MyCafe - Mocha Version](#mycafe---mocha-version)
     - [Supertest](#supertest)
@@ -235,11 +234,7 @@ A React app that where the user can search for weather data for a particular loc
 
 ## Tests
 
-*React is a JavaScript library[2] for building user interfaces. Redux is an open-source JavaScript library designed for managing application state.*
-
-#### Github Favorite Issues
-
-*Snippets for demonstrating several tools testing JavaScript applications."
+*Snippets demonstrating several tools used for testing JavaScript applications.*
 
 #### MyCafe - Cucumber Version
 
