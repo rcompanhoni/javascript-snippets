@@ -22,6 +22,7 @@ A collection of code snippets for demonstrating various concepts related to Java
     - [Promises click game](#promises-click-game)
   - [Games](#games)
     - [Multiplayer Node.js Game Tutorial](#multiplayer-nodejs-game-tutorial)
+    - [Phaser Express Basic](#phaser-express-basic)
   - [Mongoose](#mongoose)
     - [Simple Blog](#simple-blog)
     - [Electron app](#electron-app)
@@ -146,6 +147,10 @@ Click 6 times before the 2 second time limit. A simple example to demonstrate th
 #### Multiplayer Node.js Game Tutorial
 
 Tutorial from https://rainingchain.com/tutorial/nodejs by Samuel Magnan-Levesque. It uses Socket.io.
+
+#### Phaser Express Basic
+
+Tutorial from 'An Introduction to HTML5 Game Development with PhaserJS' by Travis Faas. It's a simple express application that serves a PhaserJS game. Move the character around to capture the cat and increment the score.
 
 ## Mongoose
 
