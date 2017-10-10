@@ -5,6 +5,7 @@ A collection of code snippets for demonstrating various concepts related to Java
 ## Table of Contents
   - [Algorithms](#algorithms)
     - [A* Pathfinding Example](#a-pathfinding-example)
+    - [Arrays Left Rotation](#arrays-left-rotation)
   - [Chrome Extensions](#chrome-extensions)
     - [Google Custom Search Chrome Extension](#google-custom-search-chrome-extension)
   - [Configuration Management](#configuration-management)
@@ -46,7 +47,7 @@ A collection of code snippets for demonstrating various concepts related to Java
   - [Tests](#tests)
     - [MyCafe - Cucumber Version](#mycafe---cucumber-version)
     - [MyCafe - Mocha Version](#mycafe---mocha-version)
-    - [Supertest](#supertest)
+    - [Supertest](#supertest)    
 
 ## Algorithms
 *Code snippets that demonstrates basic concepts of algorithms, data structures, design techniques and advanced topics:*
@@ -54,6 +55,10 @@ A collection of code snippets for demonstrating various concepts related to Java
 #### A* Pathfinding Example
 
 This application demonstrates how to use the A* algorithm to find the best path within a graph (a matrix in this example). The agent (A) walks the map vertically cleaning all the dirt spots (s) that it finds. If its fuel level goes too low (below 30) then it uses the A* to find the nearest fuel station \(R\). After refueling it returns to the original spot and continues its linear map cleansing. If at any moment the garbage capacity reaches 0 then the agent uses A* again to find the nearest garbage can to dispose of the garbage.
+
+#### Arrays Left Rotation
+
+Given an array of  integers and a number, , perform  left rotations on the array. Then print the updated array as a single line of space-separated integers.
 
 ## Chrome Extensions
 
@@ -257,3 +262,5 @@ From the book "Learning BDD with JS" by Enrique Amodeo. Uses Mocha, Chai and Sin
 #### Supertest
 
 From the book "Express in Action" by Evan M Hahn. This application uses the 'supertest' module to make integration tests on an Express API. 
+
+
