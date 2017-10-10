@@ -10,6 +10,7 @@ A collection of code snippets for demonstrating various concepts related to Java
     - [Codility](#codility)
       - [Lesson 1 - Binary Gap](#lesson-1---binary-gap)
       - [Lesson 2 - Odd Occurrences in Array](#lesson-2---odd-occurrences-in-array)
+      - [Lesson 2 - Cyclic Rotation](#lesson-2---cyclic-rotation)
   - [Chrome Extensions](#chrome-extensions)
     - [Google Custom Search Chrome Extension](#google-custom-search-chrome-extension)
   - [Configuration Management](#configuration-management)
@@ -79,6 +80,10 @@ Write a function that given a positive integer N, returns the length of its long
 #### Lesson 2 - Odd Occurrences in Array
 
 Write a function that, given an array A consisting of N integers fulfilling the above conditions, returns the value of the unpaired element.
+
+#### Lesson 2 - Cyclic Rotation
+
+Write a function that, given a zero-indexed array A consisting of N integers and an integer K, returns the array A rotated K times.
 
 ## Chrome Extensions
 
