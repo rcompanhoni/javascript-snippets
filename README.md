@@ -8,7 +8,8 @@ A collection of code snippets for demonstrating various concepts related to Java
     - [Hacker Rank](#hacker-rank)
       - [Arrays Left Rotation](#arrays-left-rotation)
     - [Codility](#codility)
-      - [Lesson 1 Binary Gap](#lesson-1-binary-gap)
+      - [Lesson 1 - Binary Gap](#lesson-1---binary-gap)
+      - [Lesson 2 - Odd Occurrences in Array](#lesson-2---odd-occurrences-in-array)
   - [Chrome Extensions](#chrome-extensions)
     - [Google Custom Search Chrome Extension](#google-custom-search-chrome-extension)
   - [Configuration Management](#configuration-management)
@@ -74,6 +75,10 @@ Given an array of  integers and a number, perform  left rotations on the array. 
 #### Lesson 1 - Binary Gap
 
 Write a function that given a positive integer N, returns the length of its longest binary gap. The function should return 0 if N doesn't contain a binary gap.
+
+#### Lesson 2 - Odd Occurrences in Array
+
+Write a function that, given an array A consisting of N integers fulfilling the above conditions, returns the value of the unpaired element.
 
 ## Chrome Extensions
 
