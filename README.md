@@ -5,7 +5,10 @@ A collection of code snippets for demonstrating various concepts related to Java
 ## Table of Contents
   - [Algorithms](#algorithms)
     - [A* Pathfinding Example](#a-pathfinding-example)
-    - [Arrays Left Rotation](#arrays-left-rotation)
+    - [Hacker Rank](#hacker-rank)
+      - [Arrays Left Rotation](#arrays-left-rotation)
+    - [Codility](#codility)
+      - [Lesson 1 Binary Gap](#lesson-1-binary-gap)
   - [Chrome Extensions](#chrome-extensions)
     - [Google Custom Search Chrome Extension](#google-custom-search-chrome-extension)
   - [Configuration Management](#configuration-management)
@@ -56,9 +59,21 @@ A collection of code snippets for demonstrating various concepts related to Java
 
 This application demonstrates how to use the A* algorithm to find the best path within a graph (a matrix in this example). The agent (A) walks the map vertically cleaning all the dirt spots (s) that it finds. If its fuel level goes too low (below 30) then it uses the A* to find the nearest fuel station \(R\). After refueling it returns to the original spot and continues its linear map cleansing. If at any moment the garbage capacity reaches 0 then the agent uses A* again to find the nearest garbage can to dispose of the garbage.
 
+### Hacker Rank
+
+*Exercises from Hacker Rank*
+
 #### Arrays Left Rotation
 
-Given an array of  integers and a number, , perform  left rotations on the array. Then print the updated array as a single line of space-separated integers.
+Given an array of  integers and a number, perform  left rotations on the array. Then print the updated array as a single line of space-separated integers.
+
+### Codility
+
+*Exercises from Codility*
+
+#### Lesson 1 - Binary Gap
+
+Write a function that given a positive integer N, returns the length of its longest binary gap. The function should return 0 if N doesn't contain a binary gap.
 
 ## Chrome Extensions
 
