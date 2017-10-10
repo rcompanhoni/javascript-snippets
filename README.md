@@ -29,6 +29,7 @@ A collection of code snippets for demonstrating various concepts related to Java
   - [Node.js](#nodejs)
     - [Network simulator](#network-simulator)
     - [TCP and UDP client/server examples](#tcp-and-udp-clientserver-examples)
+    - [Read text file](#read-text-file)
   - [OAuth 2.0](#oauth-20)
     - [OAuth2orize example](#oauth2orize-example)
     - [Express App OAuth 2.0 Social Login](#express-app-oauth-20-social-login)
@@ -175,6 +176,10 @@ Simulates a network of routers/machines -- run one program-router and a set of p
 #### TCP and UDP client/server examples
 
 A simple pair of client/server programs using both TCP and UDP protocols.
+
+#### Read text file
+
+A simple example on how to read a txt file in Node.js
 
 ## OAuth 2.0
 
