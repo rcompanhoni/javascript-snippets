@@ -13,8 +13,3 @@ npm-debug.log
 # Application specific
 client_files/*
 server_files/*
-
-/node_modules
-bundle.js
-npm-debug.log
-.DS_Store
