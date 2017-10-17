@@ -49,6 +49,7 @@ A collection of code snippets for demonstrating various concepts related to Java
     - [React/Redux Book List](#reactredux-book-list)
     - [React/Redux Middleware](#reactredux-middleware)
     - [React/Redux Weather App](#reactredux-weather-app)
+    - [Webpack/React Bootstrapper](#webpackreact-bootstrapper)
   - [Tests](#tests)
     - [MyCafe - Cucumber Version](#mycafe---cucumber-version)
     - [MyCafe - Mocha Version](#mycafe---mocha-version)
@@ -271,6 +272,10 @@ Tutorial from Udemy's 'Advanced React and Redux' by Stephen Grider. Fetches a li
 #### React/Redux Weather App
 
 A React app that where the user can search for weather data for a particular location.
+
+#### Webpack/React Bootstrapper
+
+A bootstrapper project with a composed webpack configuration and a minimum React setup.
 
 ## Tests
 
