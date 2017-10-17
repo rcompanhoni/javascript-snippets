@@ -1,16 +1,19 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {selectBook } from '../actions/index';
+import {selectBook, createToast } from '../actions/index';
 import { bindActionCreators } from 'redux';
 
 class BookList extends Component {
     renderList() {
-        console.log(this.props.books);
-
         return this.props.books.map((book) => {
             return <li 
                 key={book.title}
-                onClick = {() => this.props.selectBook(book)} 
+                onClick = {() => {
+                        this.props.selectBook(book);
+                        this.props.createToast('A new book was selected!');
+
+                    }   
+                }
                 className="list-group-item">{book.title}</li>
         });
     }
@@ -35,7 +38,11 @@ function mapStateToProps(state) {
 
 // binds the result of the action creators (i.e. the action) to reducers -- in this case selectBook will be available as props in this React container
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ selectBook: selectBook }, dispatch);
+    return bindActionCreators({ 
+        selectBook: selectBook,
+        createToast: createToast
+    }, 
+    dispatch);
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BookList);

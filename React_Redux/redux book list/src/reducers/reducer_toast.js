@@ -1,8 +1,8 @@
-import { BOOK_SELECTED } from '../actions';
+import { TOAST } from '../actions';
 
 export default function (state = null, action) {
     switch(action.type) {
-        case BOOK_SELECTED:
+        case TOAST:
             return action.payload;
     }
 
