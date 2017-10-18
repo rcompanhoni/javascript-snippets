@@ -1,7 +1,7 @@
 {
-  "name": "webpack-react-bootstrapper",
+  "name": "react-bootstrap-notifications",
   "version": "1.0.0",
-  "description": "A bootstrapper project for React apps using webpack.",
+  "description": "Demonstrates how to use React-Bootstrap and React Bootstrap Notifier",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./config/webpack.development.js",
