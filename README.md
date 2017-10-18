@@ -42,13 +42,14 @@ A collection of code snippets for demonstrating various concepts related to Java
   - [React/Redux](#reactredux)
     - [Github Favorite Issues](#github-favorite-issues)
     - [React Higher Order Components](#react-higher-order-components)
-    - [React Youtube](#react-youtube)
+    - [React Bootstrap Notifications](#react-bootstrap-notifications)
     - [React Hello World](#react-hello-world)
     - [React + Express - Authentication](#react--express---authentication)
     - [React/Redux Blog Comment](#reactredux-blog-comment)
     - [React/Redux Book List](#reactredux-book-list)
     - [React/Redux Middleware](#reactredux-middleware)
     - [React/Redux Weather App](#reactredux-weather-app)
+    - [React Youtube](#react-youtube)
     - [Webpack/React Bootstrapper](#webpackreact-bootstrapper)
   - [Tests](#tests)
     - [MyCafe - Cucumber Version](#mycafe---cucumber-version)
@@ -245,9 +246,9 @@ This application enables the user to search for GitHub issues and mark them as f
 
 A higher order component adds additional behavior to an pre-existing component
 
-#### React Youtube
+#### React Bootstrap Notifications
 
-An youtube-like app that demonstrates basic concepts of React.
+Demonstrates how to use React-Bootstrap and React Bootstrap Notifier
 
 #### React Hello World
 
@@ -272,6 +273,10 @@ Tutorial from Udemy's 'Advanced React and Redux' by Stephen Grider. Fetches a li
 #### React/Redux Weather App
 
 A React app that where the user can search for weather data for a particular location.
+
+#### React Youtube
+
+An youtube-like app that demonstrates basic concepts of React.
 
 #### Webpack/React Bootstrapper
 

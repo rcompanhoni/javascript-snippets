@@ -1,7 +1,7 @@
 {
-  "name": "bossa",
+  "name": "learning-react-examples",
   "version": "1.0.0",
-  "description": "A super simple flat file CMS built with Node and React.",
+  "description": "Examples from the book Learning React, by Alex Banks and Eve Procello",
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./config/webpack.development.js",
