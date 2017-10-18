@@ -3,13 +3,14 @@ import CSSModules from 'react-css-modules';
 import styles from './styles.scss';
 
 import HeaderNavigation from '../header_navigation';
-
-// import Body from './Body';
-// import Footer from './Footer';
+import Body from '../body';
+import Footer from '../footer';
 
 const App = () => (
   <div>
     <HeaderNavigation />
+    <Body />
+    <Footer />
   </div>
 );
 
