@@ -17,26 +17,27 @@ class Toast extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let { alerts } = nextProps;
+    const { alert } = nextProps;
 
-    if (alerts.length > 0) {
-      // TODO - filter here, keeping in upcoming 'alerts' only the ones that are not already present in this.state.alerts
-
-      alerts = alerts.map((alert) => {
-        const newAlert = {
-          id: v4(),
-          type: alert.type,
-          headline: alert.headline,
-          message: alert.message,
-        };
-
-        return newAlert;
-      });
+    if (!alert) {
+      return null;
     }
 
-    this.setState({
-      alerts: [...this.state.alerts, ...alerts],
-    });
+    if (alert.id) {
+      const idx = this.state.alerts.indexOf(alert);
+
+      if (idx >= 0) {
+        this.setState({
+          alerts: [...this.state.alerts.slice(0, idx), ...this.state.alerts.slice(idx + 1)],
+        });
+      }
+    } else {
+      alert.id = v4();
+
+      this.setState({
+        alerts: [...this.state.alerts, alert],
+      });
+    }
 
     return null;
   }
@@ -47,29 +48,29 @@ class Toast extends Component {
         position="top-right"
         alerts={this.state.alerts}
         dismissTitle="Begone!"
-        onDismiss={(alert) => { this.props.closeAlert(alert.message); }}
+        onDismiss={(alert) => { this.props.closeAlert(alert); }}
       />
     );
   }
 }
 
 Toast.defaultProps = {
-  alerts: null,
+  alert: null,
   closeAlert: null,
 };
 
 Toast.propTypes = {
-  alerts: PropTypes.arrayOf(PropTypes.shape({
+  alert: PropTypes.shape({
     type: PropTypes.string,
     headline: PropTypes.string,
     message: PropTypes.string,
-  })),
+  }),
   closeAlert: PropTypes.func,
 };
 
 function mapStateToProps(state) {
   return {
-    alerts: state.alerts,
+    alert: state.alert,
   };
 }
 

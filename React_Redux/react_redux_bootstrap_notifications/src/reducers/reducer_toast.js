@@ -1,12 +1,12 @@
 import { CREATE_ALERT, CLOSE_ALERT } from '../actions';
 
-export default function (state = [], action) {
+export default function (state = null, action) {
   switch (action.type) {
     case CREATE_ALERT:
-      return [...state, action.payload];
+      return action.payload;
 
     case CLOSE_ALERT:
-      return state.filter(({ message }) => message !== action.payload);
+      return action.payload;
 
     default:
       return state;
