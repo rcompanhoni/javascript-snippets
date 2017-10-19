@@ -17,14 +17,14 @@ class Toast extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { alert } = nextProps;
+    const { display, alert } = nextProps.alert;
 
     if (!alert) {
       return null;
     }
 
-    if (alert.id) {
-      const idx = this.state.alerts.indexOf(alert);
+    if (!display && alert.id) {
+      const idx = this.state.alerts.map(a => a.id).indexOf(alert.id);
 
       if (idx >= 0) {
         this.setState({
@@ -47,7 +47,8 @@ class Toast extends Component {
       <AlertList
         position="top-right"
         alerts={this.state.alerts}
-        dismissTitle="Begone!"
+        timeout={3000}
+        dismissTitle="Dismiss"
         onDismiss={(alert) => { this.props.closeAlert(alert); }}
       />
     );
