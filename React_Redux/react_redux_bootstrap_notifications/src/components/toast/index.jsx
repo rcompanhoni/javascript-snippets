@@ -13,6 +13,7 @@ class Toast extends Component {
 
     this.state = {
       alerts: [],
+      timeout: 3000,
     };
   }
 
@@ -35,6 +36,7 @@ class Toast extends Component {
       alert.id = v4();
 
       this.setState({
+        timeout: 3000,
         alerts: [...this.state.alerts, alert],
       });
     }
@@ -42,14 +44,22 @@ class Toast extends Component {
     return null;
   }
 
+  closeAlert(alert) {
+    this.setState({
+      timeout: 0,
+    });
+
+    this.props.closeAlert(alert);
+  }
+
   render() {
     return (
       <AlertList
         position="top-right"
         alerts={this.state.alerts}
-        timeout={3000}
+        timeout={this.state.timeout}
         dismissTitle="Dismiss"
-        onDismiss={(alert) => { this.props.closeAlert(alert); }}
+        onDismiss={(alert) => { this.closeAlert(alert); }}
       />
     );
   }
