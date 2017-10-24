@@ -1,0 +1,10 @@
+.dropzone {
+  border-style: dashed;
+  border-width: 5px;
+  padding: 25px;
+
+  /* center text on dropzone div */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
