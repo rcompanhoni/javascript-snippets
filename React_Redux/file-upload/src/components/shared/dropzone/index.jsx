@@ -17,15 +17,27 @@ class Dropzone extends Component {
     };
   }
 
-  onDrop(files) {
-    this.props.createAlert({ type: 'success', headline: 'File Uploaded', message: 'A file was uploaded.' });
-    this.setState({ files });
+  onDrop(acceptedFiles, rejectedFiles) {
+    if (rejectedFiles.length > 0) {
+      this.props.createAlert({ type: 'danger', headline: 'Error', message: 'The provided file is not valid.' });
+    } else {
+      this.props.createAlert({ type: 'success', headline: 'File Uploaded', message: 'A file was uploaded successfully.' });
+    }
+
+    this.setState({ files: acceptedFiles });
   }
 
   render() {
     return (
       <section>
-        <ReactDropzone styleName="dropzone" onDrop={this.onDrop}>
+        <ReactDropzone
+          accept="image/png, image/jpeg"
+          className={styles.dropzone}
+          activeClassName={styles.active}
+          acceptClassName={styles.accept}
+          rejectClassName={styles.reject}
+          onDrop={this.onDrop}
+        >
           <h4>Drop your files here or double click to select</h4>
         </ReactDropzone>
 

@@ -1,3 +1,4 @@
+/* overall dimensions and text positioning */
 .dropzone {
   border-style: dashed;
   border-width: 5px;
@@ -8,3 +9,22 @@
   justify-content: center;
   align-items: center;
 }
+
+/* style for active state */
+.active {
+  background-color:#EEEEEE;
+}
+
+/* style for accepted file types */
+.accept {
+  color: green;
+  border-color: green;
+}
+
+/* style for rejected file types */
+.reject {
+  color: red;
+  border-color: red;
+}
+
+
