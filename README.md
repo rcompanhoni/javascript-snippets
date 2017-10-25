@@ -51,6 +51,7 @@ A collection of code snippets for demonstrating various concepts related to Java
     - [React/Redux Weather App](#reactredux-weather-app)
     - [React Youtube](#react-youtube)
     - [Webpack/React Bootstrapper](#webpackreact-bootstrapper)
+    - [React File Upload](#react-file-upload)
   - [Tests](#tests)
     - [MyCafe - Cucumber Version](#mycafe---cucumber-version)
     - [MyCafe - Mocha Version](#mycafe---mocha-version)
@@ -281,6 +282,10 @@ An youtube-like app that demonstrates basic concepts of React.
 #### Webpack/React Bootstrapper
 
 A bootstrapper project with a composed webpack configuration and a minimum React setup.
+
+#### React File Upload
+
+A react-boostrap project including file upload component
 
 ## Tests
 
