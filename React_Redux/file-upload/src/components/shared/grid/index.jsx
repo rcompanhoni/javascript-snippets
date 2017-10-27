@@ -4,39 +4,21 @@ import CSSModules from 'react-css-modules';
 import { Grid, applyGridConfig } from 'react-redux-grid';
 import styles from './styles.scss';
 
-const data = [
-  {
-    category: 'Teste 01',
-    categoryCode: 1,
-    editable: true,
-  },
-  {
-    category: 'Teste 02',
-    categoryCode: 2,
-    editable: true,
-  },
-  {
-    category: 'Teste 03',
-    categoryCode: 3,
-    editable: true,
-  },
-];
-
 const config = {
   stateKey: 'grid',
   plugins: {},
   columns: [
     {
-      dataIndex: 'category',
-      name: 'Category',
+      dataIndex: 'name',
+      name: 'Name',
     },
     {
-      dataIndex: 'categoryCode',
-      name: 'Category Code',
+      dataIndex: 'email',
+      name: 'Email',
     },
     {
-      dataIndex: 'editable',
-      name: 'Editable',
+      dataIndex: 'gender',
+      name: 'Gender',
     },
   ],
 };
@@ -56,7 +38,7 @@ class ReactGrid extends Component {
       CSS_PREFIX: '',
     });
 
-    return <Grid data={data} {...config} />;
+    return <Grid data={this.props.data} {...config} />;
   }
 }
 

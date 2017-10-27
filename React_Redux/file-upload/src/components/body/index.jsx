@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
+import axios from 'axios';
 import { Button, Grid, Jumbotron, Row, Col } from 'react-bootstrap/lib/';
 import * as actions from '../../actions';
 import LearnMore from './learn_more';
@@ -13,6 +14,29 @@ class Body extends Component {
     super(props);
 
     this.context = context;
+    this.state = {
+      gridData: [],
+    };
+  }
+
+  componentWillMount() {
+    const url = 'https://randomuser.me/api/?results=10';
+    axios.get(url)
+      .then((response) => {
+        const data = response.data.results.map(user => (
+          {
+            name: `${user.name.first} ${user.name.last}`,
+            email: user.email,
+            gender: user.gender,
+          }));
+
+        this.setState({
+          gridData: data,
+        });
+      })
+      .catch((error) => {
+        this.props.createAlert({ type: 'danger', headline: 'DANGER', message: error });
+      });
   }
 
   render() {
@@ -95,7 +119,7 @@ class Body extends Component {
           </Row>
 
           <Row>
-            <ReactGrid store={this.context.store} />
+            <ReactGrid data={this.state.gridData} store={this.context.store} />
           </Row>
         </Grid>
       </div>
