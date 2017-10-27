@@ -46,17 +46,9 @@ class ReactGrid extends Component {
     applyGridConfig({
       CLASS_NAMES: {
         TABLE: 'table table-bordered table-striped',
-        TABLE_CONTAINER: 'table-responsive',
-        HEADER_FIXED_CONTAINER: 'header-fixed',
-        HEADER: 'header-bs',
-        HEADER_HIDDEN: 'hidden-override',
+        THEADER: 'hidden',
+        HEADER: 'header',
         ROW: 'row-bs',
-        CELL: 'text-left',
-        COLUMN: 'column-bs',
-        PAGERTOOLBAR: 'text-right bootstrap-description',
-        BUTTONS: {
-          PAGER: 'btn pull-left negative-margin',
-        },
         ERROR_HANDLER: {
           CONTAINER: 'hidden',
         },
