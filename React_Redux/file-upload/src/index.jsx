@@ -8,9 +8,10 @@ import App from './components/app';
 import reducers from './reducers';
 
 const createStoreWithMiddleware = applyMiddleware(logger)(createStore);
+const store = createStoreWithMiddleware(reducers);
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
+  <Provider store={store}>
     <App />
   </Provider>
   , document.getElementById('root'),

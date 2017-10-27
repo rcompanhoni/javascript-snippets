@@ -7,7 +7,6 @@ import InlineLogin from './inline_login';
 
 import styles from './styles.scss';
 
-
 const HeaderNavigation = () => {
   const brand = <a href="http://www.google.com">Project Name</a>;
 

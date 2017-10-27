@@ -5,15 +5,17 @@ import CSSModules from 'react-css-modules';
 import axios from 'axios';
 import { Button, Grid, Jumbotron, Row, Col } from 'react-bootstrap/lib/';
 import * as actions from '../../actions';
+
 import LearnMore from './learn_more';
 import ReactGrid from '../shared/grid';
+
 import styles from './styles.scss';
 
 class Body extends Component {
   constructor(props, context) {
-    super(props);
+    super(props, context);
 
-    this.context = context;
+    this.store = context.store;
     this.state = {
       gridData: [],
     };
@@ -119,7 +121,7 @@ class Body extends Component {
           </Row>
 
           <Row>
-            <ReactGrid data={this.state.gridData} store={this.context.store} />
+            <ReactGrid data={this.state.gridData} store={this.store} />
           </Row>
         </Grid>
       </div>
