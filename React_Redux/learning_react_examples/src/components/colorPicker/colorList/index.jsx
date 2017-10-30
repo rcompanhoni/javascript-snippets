@@ -5,12 +5,9 @@ import styles from './styles.scss';
 
 import Color from './color';
 
-const ColorList = ({ colors }) => {
+const ColorList = ({ colors, onRemoveColor }) => {
   const items = colors.map(color => (
-    <Color
-      key={color.id}
-      {...color}
-    />
+    <Color key={color.id} {...color} onRemove={() => onRemoveColor(color.id)} />
   ));
 
   return (
@@ -26,10 +23,12 @@ const ColorList = ({ colors }) => {
 
 ColorList.defaultProps = {
   colors: [],
+  onRemoveColor: f => f,
 };
 
 ColorList.propTypes = {
   colors: PropTypes.arrayOf(PropTypes.object),
+  onRemoveColor: PropTypes.func,
 };
 
 export default CSSModules(ColorList, styles);

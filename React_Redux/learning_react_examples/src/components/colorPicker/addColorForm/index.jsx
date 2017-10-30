@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import CSSModules from 'react-css-modules';
 import styles from './styles.scss';
 
-const AddColorForm = ({ onNewColor = f => f }) => {
+const AddColorForm = ({ onNewColor }) => {
   let title;
   let color;
 

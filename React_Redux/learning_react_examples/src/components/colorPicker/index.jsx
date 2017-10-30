@@ -16,6 +16,7 @@ class ColorPicker extends Component {
     };
 
     this.addColor = this.addColor.bind(this);
+    this.removeColor = this.removeColor.bind(this);
   }
 
   addColor(title, color) {
@@ -32,13 +33,18 @@ class ColorPicker extends Component {
     this.setState({ colors });
   }
 
+  removeColor(id) {
+    const colors = this.state.colors.filter(color => color.id !== id);
+    this.setState({ colors });
+  }
+
   render() {
     const { colors } = this.state;
 
     return (
       <div className="app">
         <AddColorForm onNewColor={this.addColor} />
-        <ColorList colors={colors} />
+        <ColorList colors={colors} onRemoveColor={this.removeColor} />
       </div>
     );
   }
