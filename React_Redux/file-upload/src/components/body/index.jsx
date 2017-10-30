@@ -8,6 +8,7 @@ import * as actions from '../../actions';
 
 import LearnMore from './learn_more';
 import ReactGrid from '../shared/grid';
+import Dropzone from '../shared/dropzone';
 
 import styles from './styles.scss';
 
@@ -16,6 +17,9 @@ class Body extends Component {
     super(props, context);
 
     this.store = context.store;
+
+    this.onDrop = this.onDrop.bind(this);
+
     this.state = {
       gridData: [],
     };
@@ -39,6 +43,14 @@ class Body extends Component {
       .catch((error) => {
         this.props.createAlert({ type: 'danger', headline: 'DANGER', message: error });
       });
+  }
+
+  onDrop(acceptedFiles, rejectedFiles) {
+    if (rejectedFiles.length > 0) {
+      this.props.createAlert({ type: 'danger', headline: 'Error', message: 'The provided file is not valid.' });
+    } else {
+      this.props.createAlert({ type: 'success', headline: 'File Uploaded', message: 'A file was uploaded successfully.' });
+    }
   }
 
   render() {
@@ -121,7 +133,9 @@ class Body extends Component {
           </Row>
 
           <Row>
-            <ReactGrid data={this.state.gridData} store={this.store} />
+            <Dropzone onDrop={this.onDrop}>
+              <ReactGrid data={this.state.gridData} store={this.store} />
+            </Dropzone>
           </Row>
         </Grid>
       </div>

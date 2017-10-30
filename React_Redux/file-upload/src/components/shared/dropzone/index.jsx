@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import CSSModules from 'react-css-modules';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
@@ -6,22 +6,8 @@ import ReactDropzone from 'react-dropzone';
 import * as actions from '../../../actions';
 import styles from './styles.scss';
 
-class Dropzone extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onDrop = this.onDrop.bind(this);
-  }
-
-  onDrop(acceptedFiles, rejectedFiles) {
-    if (rejectedFiles.length > 0) {
-      this.props.createAlert({ type: 'danger', headline: 'Error', message: 'The provided file is not valid.' });
-    } else {
-      this.props.createAlert({ type: 'success', headline: 'File Uploaded', message: 'A file was uploaded successfully.' });
-    }
-  }
-
-  render() {
+const Dropzone = ({ children, onDrop }) => {
+  if (!children) {
     return (
       <ReactDropzone
         accept="image/png, image/jpeg"
@@ -29,20 +15,38 @@ class Dropzone extends Component {
         activeClassName={styles.active}
         acceptClassName={styles.accept}
         rejectClassName={styles.reject}
-        onDrop={this.onDrop}
+        onDrop={onDrop}
       >
         <h4>Drop your files here or click to select</h4>
       </ReactDropzone>
     );
   }
-}
+
+  return (
+    <ReactDropzone
+      className={styles.dropzoneAsWrapper}
+      activeClassName={styles.active}
+      onDrop={onDrop}
+      acceptClassName={styles.accept}
+      rejectClassName={styles.reject}
+      disableClick
+    >
+      {children}
+    </ReactDropzone>
+  );
+};
 
 Dropzone.defaultProps = {
-  createAlert: null,
+  children: null,
+  onDrop: null,
 };
 
 Dropzone.propTypes = {
-  createAlert: PropTypes.func,
+  children: PropTypes.oneOfType([
+    PropTypes.arrayOf(PropTypes.node),
+    PropTypes.node,
+  ]),
+  onDrop: PropTypes.func,
 };
 
 const styledComponent = CSSModules(Dropzone, styles);

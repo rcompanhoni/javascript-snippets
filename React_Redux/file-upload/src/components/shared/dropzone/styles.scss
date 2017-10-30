@@ -1,5 +1,12 @@
+.dropzoneAsWrapper {
+  width: 100%;
+  height: 100%;
+  border: none;
+}
+
 /* overall dimensions and text positioning */
 .dropzone {
+  z-index: 999999;
   border-style: dashed;
   border-width: 5px;
   padding: 25px;
