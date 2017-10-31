@@ -9,6 +9,7 @@ import * as actions from '../../actions';
 import LearnMore from './learn_more';
 import ReactGrid from '../shared/grid';
 import Dropzone from '../shared/dropzone';
+import UploadButton from '../shared/upload_button';
 
 import styles from './styles.scss';
 
@@ -132,8 +133,21 @@ class Body extends Component {
             </Col>
           </Row>
 
+          <hr />
+
           <Row>
-            <Dropzone onDrop={this.onDrop}>
+            <UploadButton
+              text="Select files..."
+              bsStyle="success"
+              onDrop={this.onDrop}
+              mimeTypes="image/png, image/jpeg, application/pdf"
+            />
+
+            <Dropzone
+              onDrop={this.onDrop}
+              mimeTypes="image/png, image/jpeg, application/pdf"
+              disableClick
+            >
               <ReactGrid data={this.state.gridData} store={this.store} />
             </Dropzone>
           </Row>
