@@ -42,7 +42,6 @@ A collection of code snippets for demonstrating various concepts related to Java
   - [React/Redux](#reactredux)
     - [Github Favorite Issues](#github-favorite-issues)
     - [React Higher Order Components](#react-higher-order-components)
-    - [React Bootstrap Notifications](#react-bootstrap-notifications)
     - [React Hello World](#react-hello-world)
     - [React + Express - Authentication](#react--express---authentication)
     - [React/Redux Blog Comment](#reactredux-blog-comment)
@@ -51,7 +50,7 @@ A collection of code snippets for demonstrating various concepts related to Java
     - [React/Redux Weather App](#reactredux-weather-app)
     - [React Youtube](#react-youtube)
     - [Webpack/React Bootstrapper](#webpackreact-bootstrapper)
-    - [React File Upload](#react-file-upload)
+    - [Bootstrap](#bootstrap)
   - [Tests](#tests)
     - [MyCafe - Cucumber Version](#mycafe---cucumber-version)
     - [MyCafe - Mocha Version](#mycafe---mocha-version)
@@ -247,9 +246,6 @@ This application enables the user to search for GitHub issues and mark them as f
 
 A higher order component adds additional behavior to an pre-existing component
 
-#### React Bootstrap Notifications
-
-Demonstrates how to use React-Bootstrap and React Bootstrap Notifier
 
 #### React Hello World
 
@@ -283,9 +279,9 @@ An youtube-like app that demonstrates basic concepts of React.
 
 A bootstrapper project with a composed webpack configuration and a minimum React setup.
 
-#### React File Upload
+#### Bootstrap
 
-A react-boostrap project including file upload component
+A react-boostrap project.
 
 ## Tests
 
