@@ -26,7 +26,7 @@ class Body extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     const url = 'https://randomuser.me/api/?results=10';
     axios.get(url)
       .then((response) => {

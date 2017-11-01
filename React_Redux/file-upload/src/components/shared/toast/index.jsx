@@ -4,12 +4,13 @@ import PropTypes from 'prop-types';
 import { v4 } from 'uuid';
 import { connect } from 'react-redux';
 import { AlertList } from 'react-bs-notifier';
-import * as actions from '../../../actions';
 import styles from './styles.scss';
 
 class Toast extends Component {
   constructor(props) {
     super(props);
+
+    this.closeAlert = this.closeAlert.bind(this);
 
     this.state = {
       alerts: [],
@@ -18,38 +19,25 @@ class Toast extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    const { display, alert } = nextProps.alert;
+    const { alert } = nextProps;
 
-    if (!alert) {
-      return null;
-    }
-
-    if (!display && alert.id) {
-      const idx = this.state.alerts.map(a => a.id).indexOf(alert.id);
-
-      if (idx >= 0) {
-        this.setState({
-          alerts: [...this.state.alerts.slice(0, idx), ...this.state.alerts.slice(idx + 1)],
-        });
-      }
-    } else {
+    if (alert) {
       alert.id = v4();
-
       this.setState({
-        timeout: 3000,
         alerts: [...this.state.alerts, alert],
       });
     }
-
-    return null;
   }
 
   closeAlert(alert) {
-    this.setState({
-      timeout: 0,
-    });
+    const { alerts } = this.state;
+    const idx = alerts.indexOf(alert);
 
-    this.props.closeAlert(alert);
+    if (idx >= 0) {
+      this.setState({
+        alerts: [...alerts.slice(0, idx), ...alerts.slice(idx + 1)],
+      });
+    }
   }
 
   render() {
@@ -67,16 +55,15 @@ class Toast extends Component {
 
 Toast.defaultProps = {
   alert: null,
-  closeAlert: null,
 };
 
 Toast.propTypes = {
   alert: PropTypes.shape({
+    display: PropTypes.bool,
     type: PropTypes.string,
     headline: PropTypes.string,
     message: PropTypes.string,
   }),
-  closeAlert: PropTypes.func,
 };
 
 function mapStateToProps(state) {
@@ -86,4 +73,4 @@ function mapStateToProps(state) {
 }
 
 const styledComponent = CSSModules(Toast, styles);
-export default connect(mapStateToProps, actions)(styledComponent);
+export default connect(mapStateToProps)(styledComponent);
