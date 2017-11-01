@@ -11,10 +11,15 @@ class StarRating extends Component {
     super(props);
 
     this.state = {
-      starsSelected: props.starsSelected || 0,
+      starsSelected: props.starsSelected,
     };
 
     this.change = this.change.bind(this);
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const status = (this.state.starsSelected > prevState.starsSelected) ? 'better' : 'worse';
+    console.log(`This color is getting ${status}`); //eslint-disable-line
   }
 
   change(starsSelected) {
