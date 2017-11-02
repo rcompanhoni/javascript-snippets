@@ -2,11 +2,11 @@ import React from 'react';
 import CSSModules from 'react-css-modules';
 import styles from './styles.scss';
 
-import ColorPicker from '../colorPicker';
+import HiddenMessages from '../hiddenMessages/hiddenMessages';
 
 const App = () => (
   <div>
-    <ColorPicker />
+    <HiddenMessages />
   </div>
 );
 
