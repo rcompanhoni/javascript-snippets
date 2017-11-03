@@ -10,6 +10,7 @@ import LearnMore from './learn_more';
 import ReactGrid from '../shared/grid';
 import Dropzone from '../shared/dropzone';
 import UploadButton from '../shared/upload_button';
+import Overlay from '../shared/overlay/overlay';
 
 import styles from './styles.scss';
 
@@ -23,27 +24,31 @@ class Body extends Component {
 
     this.state = {
       gridData: [],
+      loading: true,
     };
   }
 
   componentDidMount() {
-    const url = 'https://randomuser.me/api/?results=10';
-    axios.get(url)
-      .then((response) => {
-        const data = response.data.results.map(user => (
-          {
-            name: `${user.name.first} ${user.name.last}`,
-            email: user.email,
-            gender: user.gender,
-          }));
+    setTimeout(() => {
+      const url = 'https://randomuser.me/api/?results=10';
+      axios.get(url)
+        .then((response) => {
+          const data = response.data.results.map(user => (
+            {
+              name: `${user.name.first} ${user.name.last}`,
+              email: user.email,
+              gender: user.gender,
+            }));
 
-        this.setState({
-          gridData: data,
+          this.setState({
+            gridData: data,
+            loading: false,
+          });
+        })
+        .catch((error) => {
+          this.props.createAlert({ type: 'danger', headline: 'DANGER', message: error });
         });
-      })
-      .catch((error) => {
-        this.props.createAlert({ type: 'danger', headline: 'DANGER', message: error });
-      });
+    }, 2000);
   }
 
   onDrop(acceptedFiles, rejectedFiles) {
@@ -59,6 +64,7 @@ class Body extends Component {
 
     return (
       <div>
+        {this.state.loading && <Overlay />}
         <Jumbotron>
           <Grid>
             <h1>Hello, world!</h1>
