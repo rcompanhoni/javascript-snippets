@@ -10,7 +10,6 @@ import LearnMore from './learn_more';
 import ReactGrid from '../shared/grid';
 import Dropzone from '../shared/dropzone';
 import UploadButton from '../shared/upload_button';
-import Overlay from '../shared/overlay/overlay';
 
 import styles from './styles.scss';
 
@@ -24,11 +23,12 @@ class Body extends Component {
 
     this.state = {
       gridData: [],
-      loading: true,
     };
   }
 
   componentDidMount() {
+    this.props.setOverlay(true);
+
     setTimeout(() => {
       const url = 'https://randomuser.me/api/?results=10';
       axios.get(url)
@@ -42,12 +42,12 @@ class Body extends Component {
 
           this.setState({
             gridData: data,
-            loading: false,
           });
         })
         .catch((error) => {
           this.props.createAlert({ type: 'danger', headline: 'DANGER', message: error });
-        });
+        })
+        .then(() => this.props.setOverlay(false));
     }, 2000);
   }
 
@@ -64,7 +64,6 @@ class Body extends Component {
 
     return (
       <div>
-        {this.state.loading && <Overlay />}
         <Jumbotron>
           <Grid>
             <h1>Hello, world!</h1>
@@ -165,10 +164,12 @@ class Body extends Component {
 
 Body.defaultProps = {
   createAlert: f => f,
+  setOverlay: f => f,
 };
 
 Body.propTypes = {
   createAlert: PropTypes.func,
+  setOverlay: PropTypes.func,
 };
 
 const styledComponent = CSSModules(Body, styles);
