@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.4",
     "prop-types": "^15.6.0",
