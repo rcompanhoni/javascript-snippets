@@ -1,0 +1,54 @@
+[Comentários deste arquivo: Amostra com 95 textos do Diário Gaúcho On-line publicados
+em meses variados de 2013, assunto ESPORTES com foco em Futebol]
+
+TEXTO 1
+<head> <edic><Diário Gaúcho 17/05/2013 | 07h32</edic>
+<autor>Kenny Braga, kenny.braga@diariogaucho.com.br</autor>
+</head>
+<body>
+<subtítulo>Paixão colorada</subtítulo>
+<título>Capitão e exemplo</título>
+Kenny Braga
+kenny.braga@diariogaucho.com.br
+O time do Inter vai disputar a terceira etapa da Copa do Brasil depois de ter eliminado dois adversários tecnicamente mais fracos, o Rio Branco e o Santa Cruz. Fez o que a torcida colorada desejava, mas ainda não empolgou na competição.
+Em compensação, o time tem mostrado muita disposição para superar adversidades circunstanciais, como no jogo de quarta-feira à noite, no Estádio Centenário, contra o Santa Cruz, após a merecida expulsão do lateral-esquerdo Fabrício. E, só por isso, a expulsão ocorrida aos 39 minutos do primeiro tempo não criou um problema insolúvel para o time no confronto decisivo com o Santa Cruz.
+<subtítulo>Vontade</subtítulo>
+No segundo tempo, a torcida colorada viu, mais uma vez, uma atuação extraordinária do D'Alessandro, que abriu a contagem para o Inter, marcando o seu sexto gol na temporada.
+A atuação do craque argentino resultou de uma vontade superior de jogar por ele e até por Fabrício, energizando seus companheiros para impedir que o Santa Cruz reagisse no tempo em que teve um jogador a mais.
+O gol de Caio, que substituiu Rafael Moura, de atuação apagada, confirmou a vitória do Inter. D'Alessandro joga muito e ainda serve como referência positiva para todos os seus colegas. É, sem dúvida alguma, o grande aliado do técnico Dunga na temporada, com rendimento superior ao do ano passado.
+</body>
+
+TEXTO 2
+
+<head> <edic><Diário Gaúcho 18/05/2013 | 11h06
+<autor>Cacalo Silveira Martins,cacalo@diariogaucho.com.br</autor>
+</head>
+<body>
+<subtítulo>Paixão Tricolor</subtítulo>
+<título>Volta à planície</título>
+Cacalo Silveira Martins
+cacalo@diariogaucho.com.br
+Já estávamos ?cando mal acostumados, novamente, com tanto jogo para ver, secar e participar em mais uma Libertadores. É verdade que não precisávamos ter caído fora da forma que caímos, mas, de qualquer sorte, foi mais uma participação, entre tantas, na maior competição sul-americana. Comparem com os demais clubes brasileiros e vejam quem é um dos maiores frequentadores dessa competição.
+A altitude estava nos prejudicando. Tanto que, por falta de força, retornamos à planície ao encontro dos demais, dos comuns que raramente saem dela. E voltamos já pensando em Copa do Brasil, competição em que o Grêmio é o maior papão de títulos,o clube mais vitorioso da história desse torneio, com quatro taças, ao lado do Cruzeiro. Não estou emitindo opinião, estou referindo fatos. E ponto.
+<subtítulo>Luxemburgo</subtítulo>
+As críticas que são feitas ao técnico Vanderlei Luxemburgo têm alguma razão de ser, mas penso que a simples saída dele seria uma solução muito simplista, para não dizer simplória. Pode ter faltado trabalho coletivo, pode ter faltado entrosamento e jogadas ensaiadas.
+Penso, modestamente, que os erros começam no modelo de gestão de futebol e nada têm a ver com os nomes que dirigem o departamento de futebol, especialmente Rui Costa, que é competente e trabalhador. Mas, percebe-se a distância entre ele e o verdadeiro comando  do vestiário, o que não é bom para o clube, para os atletas e, principalmente, para os resultados.
+</body>
+
+TEXTO 3
+<head> <edic><Diário Gaúcho 18/05/2013 | 11h08</edic>
+<autor>Kenny Braga, kenny.braga@diariogaucho.com.br</autor>
+</head>
+<body>
+<subtítulo>Paixão colorada</subtítulo>
+<título>Minha santa fé</título>
+Kenny Braga
+kenny.braga@diariogaucho.com.br
+Queiram ou não os pessimistas de carteirinha, eu acredito que o Inter, comandado pelo Dunga, ainda tem reservado grandes momentos para os seus torcedores em 2013.
+Até porque se trata de um grupo de trabalho unido, que tem no seu técnico um líder
+nato, sem vaidade, que não deseja parecer maior do que é. Campeão estadual com números expressivos, o Inter é o único time gaúcho que todos os anos propicia aos seus  torcedores a alegria de títulos. É também o único que jamais menospreza adversários. Tenho fé, muita fé, que o Inter ainda nos fará mais felizes do que já somos. Não me separo da minha fé colorada, da minha santa fé, que remove montanhas e me ajuda desmascarar os ídolos com os pés de barro.
+<subtítulo>Colaboração</subtítulo>
+Os jogadores do Inter sabem que nenhum esforço para proporcionar alegria aos torcedores é demasiado. Por isso, devem fazer cada vez mais dentro do campo, principalmente no próximo compromisso da Copa do Brasil, contra o América-MG, que eliminou o Avaí, quinta-feira.
+Mas confio no Inter. Minha fé, minha santa fé colorada, me diz que grandes alegrias  estão reservadas para todos nós nos próximos meses. E que os torcedores dos outros times gaúchos não se sintam inibidos para também aplaudir o Inter quando festejar suas vitórias. Será pelo menos um momento alegre e descontraído em suas vidas sem títulos.
+</body>
+
