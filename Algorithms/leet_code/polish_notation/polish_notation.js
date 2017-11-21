@@ -2,7 +2,7 @@
 // const resultA = evaluatePolishNotation(inputA);
 
 //× ÷ 15 − 7 + 1 1 3 + 2 + 1 1
-const inputB = ['*', '/', '15', '-', '7', '+', '1', '1', '3', '+', '2', '+', '1', '1'];
+const inputB = ['-', '*', '/', '15', '-', '7', '+', '1', '1', '3', '+', '2', '+', '1', '1'];
 const resultB = evaluatePolishNotation(inputB);
 
 //console.log(resultA);
@@ -51,23 +51,21 @@ function isOperation(token) {
     − 5 × 6 7
     [7] --> [6, 7] --> [42] --> [5 42] --> [-37]
 
-    × ÷ 15 − 7 + 1 1 3 + 2 + 1 1
-    [1]
-    [1 1]
+    - × ÷ 15 − 7 + 1 1 3 + 2 + 1 1
 */
 function evaluatePolishNotation(tokens) {
   var stack = [];
 
-  for (var i = tokens.length - 1; i >= 0; i--) {
+  for (var i = tokens.length - 1; i >= 0 ; i = i - 1) {
     var token = tokens[i];
 
     if (isOperation(token)) {
       var number1 = stack.pop();
       var number2 = stack.pop();
-      var result = performOperation(token, number2, number1);
-      stack.unshift(result);
+      var result = performOperation(token, number1, number2);
+      stack.push(result);
     } else {
-      stack.unshift(parseInt(token, 10));
+      stack.push(parseInt(token, 10));
     }
   }
 
