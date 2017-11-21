@@ -7,11 +7,12 @@ Valid operators are +, -, *, /. Each operand may be an integer or another expres
 Some examples:
 
 ```
-
-    5 − (6 × 7) can be written in Polish notation as 
-    
-    − 5 × 6 7 --> -37
+    − × ÷ 15 − 7 + 1 1 3 + 2 + 1 1 =
+    − × ÷ 15 − 7 + 1 1 3 + 2 2     =
+    − × ÷ 15 − 7 + 1 1 3 4         =
+    − × ÷ 15 − 7 2     3 4         =
+    − × ÷ 15 5         3 4         =
+    − × 3              3 4         =
+    − 9                  4         =
+    5
 ```
-
-− 5 × 6 7
-[7] --> [6, 7] --> [42] --> [5 42] --> [-37]

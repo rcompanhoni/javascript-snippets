@@ -1,8 +1,8 @@
 const inputA = ['2', '1', '+', '3', '*'];
-const resultA = evaluatePolishNotation(inputA);
+const resultA = evaluateReversePolishNotation(inputA);
 
 const inputB = ['4', '13', '5', '/', '+'];
-const resultB = evaluatePolishNotation(inputB);
+const resultB = evaluateReversePolishNotation(inputB);
 
 console.log(resultA);
 console.log(resultB);
@@ -53,7 +53,7 @@ function isOperation(token) {
     4, 13, 5, /, +
     [4] --> [4, 13] --> [4,13,5] --> [4,2] --> 6
 */
-function evaluatePolishNotation(tokens) {
+function evaluateReversePolishNotation(tokens) {
   var stack = [];
 
   for (var i = 0; i < tokens.length; i++) {
