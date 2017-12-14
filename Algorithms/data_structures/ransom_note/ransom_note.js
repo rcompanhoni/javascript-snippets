@@ -25,12 +25,17 @@ function main(contents) {
 
 function ransomNote(m, n, magazine, ransom) {
     let dictionary = {};
+
+    // dictionary of words: quantity
     ransom.split(' ').map(word => {
         dictionary[word] = ((dictionary[word] || 0) + 1);
     });
 
+    // evaluates which words were 'satisfied'
     magazine.split(' ').map(word => {
-        dictionary[word] = ((dictionary[word] || 0) - 1);
+        if (dictionary[word]) {
+            dictionary[word]--;
+        }
     });
 
     return Object.keys(dictionary).some(key => dictionary[key] > 0) ? 'NO' : 'YES'; 
