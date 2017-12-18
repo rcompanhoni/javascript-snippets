@@ -14,9 +14,9 @@ import "./semantic-dist/semantic.css";
 import './index-complete';
 
 // [STEP 2] Un-comment these lines:
-// ReactDOM.render(
-//   <Router>
-//     <App />
-//   </Router>,
-//   document.getElementById("root")
-// );
+ReactDOM.render(
+  <Router>
+    <App />
+  </Router>,
+  document.getElementById("root")
+);
