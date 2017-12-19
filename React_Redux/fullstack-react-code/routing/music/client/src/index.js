@@ -11,7 +11,7 @@ import "./styles/index.css";
 import "./semantic-dist/semantic.css";
 
 // [STEP 1] Comment out this line:
-import './index-complete';
+// import './index-complete';
 
 // [STEP 2] Un-comment these lines:
 ReactDOM.render(
