@@ -8,6 +8,16 @@
 //   anagrams('RAIL! SAFETY!', 'fairy tales') --> True
 //   anagrams('Hi there', 'Bye there') --> False
 
-function anagrams(stringA, stringB) {}
+function anagrams(stringA, stringB) {
+    const parsedA = stringA.replace(/[^\w]/g, "").toLowerCase();
+    const parsedB = stringB.replace(/[^\w]/g, "").toLowerCase();
+
+    let freqs = {};
+    parsedA.split('').forEach(char => freqs[char] = (freqs[char] || 0) + 1); // increment
+    parsedB.split('').forEach(char => freqs[char] = (freqs[char] || 0) - 1); // decrement
+    const result = Object.keys(freqs).reduce((sum, key) => sum + Math.abs(freqs[key]), 0);    
+
+    return result === 0;
+}
 
 module.exports = anagrams;
