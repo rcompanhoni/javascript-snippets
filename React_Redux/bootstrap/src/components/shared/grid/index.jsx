@@ -40,8 +40,26 @@ class ReactGrid extends Component {
     this.config = {
       stateKey: STATE_KEY,
       plugins: {
+        ROW: {
+          enabled: true,
+          renderer: ({ rowProps, cells, row }) => {
+            const isFirstRow = row.get('_key') === 'row-0';
+            if (isFirstRow) {
+              return (
+                <tr {...rowProps} style={{ color: 'red' }}>
+                  {cells}
+                </tr>
+              );
+            }
+
+            return (
+              <tr {...rowProps}>
+                {cells}
+              </tr>
+            );
+          },
+        },
         GRID_ACTIONS: {
-          // iconCls: 'glyphicon glyphicon-th',
           menu: [
             {
               text: 'Open File Upload',
