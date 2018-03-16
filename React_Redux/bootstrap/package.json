@@ -4,7 +4,7 @@
   "description": "Demonstrates how to create a notification component using React-Bootstrap and React Bootstrap Notifier",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --config ./config/webpack.development.js",
+    "start": "webpack-dev-server --config ./config/webpack.development.js --open",
     "build": "npm run clean && webpack --config ./config/webpack.production.js",
     "clean": "rimraf build",
     "lint:js": "eslint src/ webpack.*.js --cache",

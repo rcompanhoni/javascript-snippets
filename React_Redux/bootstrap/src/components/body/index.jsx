@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
@@ -11,6 +12,8 @@ import ReactGrid from '../shared/grid';
 import Dropzone from '../shared/dropzone';
 import UploadButton from '../shared/upload_button';
 
+import FilterInput from '../shared/filterInput';
+
 import styles from './styles.scss';
 
 class Body extends Component {
@@ -23,6 +26,7 @@ class Body extends Component {
 
     this.state = {
       gridData: [],
+      filteredData: [],
     };
   }
 
@@ -135,6 +139,45 @@ class Body extends Component {
                 >Generate danger alert »
                 </Button>
               </p>
+            </Col>
+          </Row>
+
+          <hr />
+
+          <Row>
+            <Col md={3}>
+              <FilterInput
+                filterName='Days'
+                filterOptions={[
+                  { Display: 'Monday', Id: 1 },
+                  { Display: 'Tuesday' },
+                  { Display: 'Wednesday' },
+                  { Display: 'Thursday' },
+                  { Display: 'Friday' },
+                  { Display: 'Saturday' },
+                  { Display: 'Sunday' },
+                ]}
+              />
+            </Col>
+
+            <Col md={3}>
+            <FilterInput
+              filterName='Program'
+              filterOptions={[
+                { Display: 'TMZ Live' },
+                { Display: 'Inside Edition' },
+                { Display: 'Jimmy Fallon' },
+                { Display: 'Stephen Colbert' },
+              ]}
+            />
+            </Col>
+
+            <Col md={3}>
+              <FilterInput />
+            </Col>
+
+            <Col md={3}>
+              <FilterInput />
             </Col>
           </Row>
 
