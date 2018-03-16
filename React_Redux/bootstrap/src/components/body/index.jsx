@@ -26,7 +26,7 @@ class Body extends Component {
 
     this.state = {
       gridData: [],
-      filteredData: [],
+      filterOptions: {},
     };
   }
 
@@ -150,34 +150,37 @@ class Body extends Component {
                 filterName='Days'
                 filterOptions={[
                   { Display: 'Monday', Id: 1 },
-                  { Display: 'Tuesday' },
-                  { Display: 'Wednesday' },
-                  { Display: 'Thursday' },
-                  { Display: 'Friday' },
-                  { Display: 'Saturday' },
-                  { Display: 'Sunday' },
+                  { Display: 'Tuesday', Id: 2 },
+                  { Display: 'Wednesday', Id: 3 },
+                  { Display: 'Thursday', Id: 4 },
+                  { Display: 'Friday', Id: 5 },
+                  { Display: 'Saturday', Id: 6 },
+                  { Display: 'Sunday', Id: 7 },
                 ]}
+                selection={this.filterOptions}
               />
             </Col>
 
             <Col md={3}>
-            <FilterInput
-              filterName='Program'
-              filterOptions={[
-                { Display: 'TMZ Live' },
-                { Display: 'Inside Edition' },
-                { Display: 'Jimmy Fallon' },
-                { Display: 'Stephen Colbert' },
-              ]}
-            />
+              <FilterInput
+                filterName='Program'
+                filterOptions={[
+                  { Display: 'TMZ Live', Id: 1 },
+                  { Display: 'Inside Edition', Id: 2 },
+                  { Display: 'Jimmy Fallon', Id: 3 },
+                  { Display: 'Stephen Colbert', Id: 4 },
+                ]}
+                textSearch={false}
+                selection={this.filterOptions}
+              />
             </Col>
 
             <Col md={3}>
-              <FilterInput />
+              TODO
             </Col>
 
             <Col md={3}>
-              <FilterInput />
+              TODO
             </Col>
           </Row>
 

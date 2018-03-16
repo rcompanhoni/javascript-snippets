@@ -17,7 +17,7 @@ class CustomToggle extends Component {
 
   render() {
     return (
-      <FormGroup>
+      <FormGroup style={{ marginBottom: 0 }}>
         <FormControl type="text" onClick={this.handleClick}/>
       </FormGroup>
     );

@@ -16,7 +16,7 @@ class CustomMenu extends React.Component {
     const { value } = this.state;
 
     return (
-      <div className="dropdown-menu" style={{ padding: '' }}>
+      <div className="dropdown-menu" style={{ padding: '15px' }}>
         <ul className="list-unstyled">
           {React.Children.toArray(children).filter(
             child => !value.trim() || child.props.children.indexOf(value) !== -1
