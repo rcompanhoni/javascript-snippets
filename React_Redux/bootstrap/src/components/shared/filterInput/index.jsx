@@ -12,7 +12,7 @@ class FilterInput extends Component {
   constructor(props) {
     super(props);
 
-    this.textSearch = this.textSearch.bind(this);
+    this.applyCheckToAll = this.applyCheckToAll.bind(this);
     this.handleOptionChecked = this.handleOptionChecked.bind(this);
     this.apply = this.apply.bind(this);
 
@@ -23,28 +23,28 @@ class FilterInput extends Component {
     };
   }
 
-  // populate filterOptions state with filter options prop
+  // populates the filterOptions state with filter options prop
   componentWillMount() {
-    const filterOptions = this.props.filterOptions.map(option => {
-      return {...option, selected: true }
-    });
+    const filterOptions = this.props.filterOptions.map(option => ({...option, selected: true }));
     this.setState({ filterOptions });
   }
 
-  // applies text filter on the filter options prop
-  textSearch(e) {
-    const filterText = e.target.value;
-    const filteredOptions = this.props.filterOptions.filter((option) => !filterText || option.Display.toLowerCase().indexOf(filterText.toLowerCase()) !== -1);
+  // applies the 'selectAll' parameter as the selected property of each filter option
+  applyCheckToAll(selectAll) {
+    const filterOptions = this.state.filterOptions.map((option) => {
+      option.selected = selectAll
+      return option;
+    });
+
     this.setState({
-      filterText,
-      filterOptions: filteredOptions
+      selectAll,
+      filterOptions
     });
   }
 
-  // update property of the checked option
   handleOptionChecked(changedOption) {
     const filterOptions = this.state.filterOptions.map(option => {
-      if (option.Id === changedOption.Id) {
+      if (option.Value === changedOption.Value) {
         return {...option, selected: !option.selected }
       }
 
@@ -53,47 +53,60 @@ class FilterInput extends Component {
     this.setState({ filterOptions });
   }
 
-  // updates selection prop with unselected options
   apply() {
-    // TODO
-    console.log(this.state.filterOptions);
+    const unselectedOptions = this.state.filterOptions.reduce((result, option) => {
+      if(!option.selected) {
+        result.push({
+          Display: option.Display,
+          Value: option.Value,
+        });
+      }
+
+      return result;
+    }, []);
+
+    this.props.applySelection(this.props.filterName, unselectedOptions);
   }
 
   render() {
-    if (!this.state.filterOptions) {
+    const { filterOptions, filterText } = this.state;
+
+    if (!filterOptions) {
       return null;
     }
 
-    const checkboxes = this.state.filterOptions.map((option) => {
-      return (
-        <Checkbox
-          key={v4()}
-          defaultChecked={option.selected}
-          onChange={() => this.handleOptionChecked(option)}
-        >
-          {option.Display}
-        </Checkbox>
-      );
-    });
+    // create the checkbox array considering the current text filter
+    const checkboxes = filterOptions.reduce((result, option) => {
+      if (!filterText || option.Display.toLowerCase().startsWith(filterText.toLowerCase())) {
+        result.push(
+          <Checkbox
+            key={v4()}
+            defaultChecked={option.selected}
+            onChange={() => this.handleOptionChecked(option)}
+          >
+            {option.Display}
+          </Checkbox>)
+      }
+      return result;
+    }, []);
 
     return (
       <Dropdown id="dropdown-custom-menu">
         <CustomToggle bsRole="toggle" />
 
         <CustomMenu bsRole="menu">
-          {this.props.textSearch &&
-            <FormControl
-              type="text"
-              placeholder="Search..."
-              onChange={e => this.textSearch(e)}
-              value={this.state.filterText}
-            />
-          }
+          <FormControl
+            type="text"
+            placeholder="Search..."
+            style={!this.props.textSearch ? { visibility: 'hidden', position: 'relative', marginBottom: '-35px'} : {}}
+            onChange={e => this.setState({ filterText: e.target.value })}
+            value={this.state.filterText}
+          />
 
           <Checkbox
             key={v4()}
             defaultChecked={this.state.selectAll}
-            onClick={() => this.setState({ selectAll: !this.state.selectAll })}
+            onClick={() => this.applyCheckToAll(!this.state.selectAll)}
           >
             <strong>Select All</strong>
           </Checkbox>
@@ -104,7 +117,7 @@ class FilterInput extends Component {
           <ButtonToolbar style={{ minWidth: '90%', margin: '0px auto' }}>
             <Button
               bsStyle="success"
-              onClick={() => this.setState({ selectAll: false })}
+              onClick={() => this.applyCheckToAll(false)}
             >
               Clear
             </Button>
@@ -118,7 +131,6 @@ class FilterInput extends Component {
             </Button>
           </ButtonToolbar>
         </CustomMenu>
-
       </Dropdown>
     );
   }

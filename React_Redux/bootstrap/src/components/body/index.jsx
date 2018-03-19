@@ -23,6 +23,7 @@ class Body extends Component {
     this.store = context.store;
 
     this.onDrop = this.onDrop.bind(this);
+    this.addToFilter = this.addToFilter.bind(this);
 
     this.state = {
       gridData: [],
@@ -61,6 +62,13 @@ class Body extends Component {
     } else {
       this.props.createAlert({ type: 'success', headline: 'File Uploaded', message: 'A file was uploaded successfully.' });
     }
+  }
+
+  addToFilter(filterKey, options) {
+    const filterOptions = {...this.state.filterOptions};
+    filterOptions[filterKey] = options;
+
+    this.setState({ filterOptions });
   }
 
   render() {
@@ -149,34 +157,39 @@ class Body extends Component {
               <FilterInput
                 filterName='Days'
                 filterOptions={[
-                  { Display: 'Monday', Id: 1 },
-                  { Display: 'Tuesday', Id: 2 },
-                  { Display: 'Wednesday', Id: 3 },
-                  { Display: 'Thursday', Id: 4 },
-                  { Display: 'Friday', Id: 5 },
-                  { Display: 'Saturday', Id: 6 },
-                  { Display: 'Sunday', Id: 7 },
+                  { Display: 'Monday', Value: 1 },
+                  { Display: 'Tuesday', Value: 2 },
+                  { Display: 'Wednesday', Value: 3 },
+                  { Display: 'Thursday', Value: 4 },
+                  { Display: 'Friday', Value: 5 },
+                  { Display: 'Saturday', Value: 6 },
+                  { Display: 'Sunday', Value: 7 },
                 ]}
-                selection={this.filterOptions}
+                applySelection={this.addToFilter}
               />
             </Col>
 
             <Col md={3}>
               <FilterInput
-                filterName='Program'
+                filterName='Programs'
                 filterOptions={[
-                  { Display: 'TMZ Live', Id: 1 },
-                  { Display: 'Inside Edition', Id: 2 },
-                  { Display: 'Jimmy Fallon', Id: 3 },
-                  { Display: 'Stephen Colbert', Id: 4 },
+                  { Display: 'TMZ Live', Value: 1 },
+                  { Display: 'Inside Edition', Value: 2 },
+                  { Display: 'Jimmy Fallon', Value: 3 },
+                  { Display: 'Stephen Colbert', Value: 4 },
                 ]}
                 textSearch={false}
-                selection={this.filterOptions}
+                applySelection={this.addToFilter}
               />
             </Col>
 
             <Col md={3}>
-              TODO
+              <Button
+                bsStyle="info"
+                onClick={() => console.log(this.state.filterOptions)}
+              >
+                Log filter
+              </Button>
             </Col>
 
             <Col md={3}>
