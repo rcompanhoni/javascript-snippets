@@ -1,18 +1,21 @@
 var pdfreader = require('pdfreader');
-var rows = {}; // indexed by y-position
+var fs = require('fs');
 
-function printRows() {
-  Object.keys(rows) // => array of y-positions (type: float)
-    .sort((y1, y2) => parseFloat(y1) - parseFloat(y2)) // sort float positions
-    .forEach((y) => console.log((rows[y] || []).join('')));
+var rows = {};
+
+function writeRowToFile() {
+  Object.keys(rows) 
+    .sort((y1, y2) => parseFloat(y1) - parseFloat(y2))
+    .forEach((y) => { 
+      var content = (rows[y] || []).join('');
+      fs.appendFileSync('message.txt', `${content}\n`);
+    });
 }
 
-new pdfreader.PdfReader().parseFileItems('calendar.pdf', function(err, item){
+new pdfreader.PdfReader().parseFileItems('pdf-test.pdf', function(err, item) {
   if (!item || item.page) {
-    // end of file, or page
-    printRows();
-    console.log('PAGE:', item.page);
-    rows = {}; // clear rows for next page
+    writeRowToFile();
+    rows = {};
   }
   else if (item.text) {
     // accumulate text items into rows object, per line
