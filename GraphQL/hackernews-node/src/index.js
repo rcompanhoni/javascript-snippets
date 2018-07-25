@@ -1,20 +1,4 @@
-const {
-    GraphQLServer
-} = require('graphql-yoga');
-
-// GraphQL schema
-const typeDefs = `
-type Query {
-    info: String!,
-    feed: [Link]!
-}
-
-type Link {
-    id: ID!
-    description: String!
-    url: String!
-}
-`
+const { GraphQLServer } = require('graphql-yoga');
 
 // fake data
 let links = [{
@@ -22,6 +6,7 @@ let links = [{
     url: 'www.howtographql.com',
     description: 'Fullstack tutorial for GraphQL'
 }]
+let idCount = links.length
 
 // resolvers: the actual implementation of the GraphQL schema
 const resolvers = {
@@ -29,17 +14,39 @@ const resolvers = {
         info: () => `This is the API of a Hackernews Clone`,
         feed: () => links
     },
+    Mutation: {
+        post: (root, args) => {
+            const link = {
+                id: `link-${idCount++}`,
+                description: args.description,
+                url: args.url
+            }
+            links.push(link);
+            return link;
+        },
+        update: (root, args) => {
+            const postIndex = links.findIndex(post => post.id === args.id);
+            
+            links[postIndex].description = args.description;
+            links[postIndex].url = args.url;
 
-    Link: {
-        id: (root) => root.id,
-        description: (root) => root.description,
-        url: (root) => root.url
+            return links[postIndex];           
+        },
+
+        delete: (root, args) => {
+            const postIndex = links.findIndex(post => post.id === args.id);
+            const removedPost = links[postIndex];
+
+            links.splice(postIndex, 1);
+            
+            return removedPost;
+        }
     }
 }
 
 // the serve knows what API operations are accepted and how they should be resolved
 const server = new GraphQLServer({
-    typeDefs,
+    typeDefs: './src/schema.graphql',
     resolvers,
 })
 
