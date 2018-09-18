@@ -1,0 +1,29 @@
+query GetAll {
+  feed {
+    id
+    description
+    url
+  }
+}
+
+mutation CreatePost {
+  post(url: "www.prisma.io" description: "Prisma turns your database into a GraphQL API") {
+    id
+  }
+}
+
+mutation UpdatePost {
+  update(id: "link-1" description: "This post was edited", url: "www.primsma.io") {
+    id
+    description
+    url
+  }
+}
+
+mutation DeletePost {
+  delete(id: "link-1") {
+    id
+    description
+    url
+  }
+}

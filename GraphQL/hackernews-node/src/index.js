@@ -1,28 +1,21 @@
 const { GraphQLServer } = require('graphql-yoga');
 
-// fake data
-let links = [{
-    id: 'link-0',
-    url: 'www.howtographql.com',
-    description: 'Fullstack tutorial for GraphQL'
-}]
-let idCount = links.length
-
 // resolvers: the actual implementation of the GraphQL schema
 const resolvers = {
     Query: {
         info: () => `This is the API of a Hackernews Clone`,
-        feed: () => links
+        feed: (root, args, context, info) => {
+            return context.db.query.links({}, info)
+        }
     },
     Mutation: {
-        post: (root, args) => {
-            const link = {
-                id: `link-${idCount++}`,
-                description: args.description,
-                url: args.url
-            }
-            links.push(link);
-            return link;
+        post: (root, args, context, info) => {
+            return context.db.mutation.createLink({
+                data: {
+                    url: args.url,
+                    description: args.description
+                }
+            }, info)
         },
         update: (root, args) => {
             const postIndex = links.findIndex(post => post.id === args.id);
@@ -32,7 +25,6 @@ const resolvers = {
 
             return links[postIndex];           
         },
-
         delete: (root, args) => {
             const postIndex = links.findIndex(post => post.id === args.id);
             const removedPost = links[postIndex];
