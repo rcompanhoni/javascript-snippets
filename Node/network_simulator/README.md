@@ -1,6 +1,6 @@
 # Network simulator
 
-This is and client-server application which consists of two main elements:
+This is a client-server application which consists of two main elements:
 
 * **program-router**
 * **program-machine**
