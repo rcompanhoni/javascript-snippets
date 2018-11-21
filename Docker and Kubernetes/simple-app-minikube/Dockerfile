@@ -1,3 +1,3 @@
 FROM node:7
-ADD app.js /app.js
-ENTRYPOINT ["node", "app.js"]
+ADD app.unhealthy.js /app.unhealthy.js
+ENTRYPOINT ["node", "app.unhealthy.js"]
