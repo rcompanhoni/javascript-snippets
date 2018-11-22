@@ -1,4 +1,4 @@
-/* after the fifth request it returns a 500 error -- used to demonstrate the pod HTTP liveness probe */
+/* after the fifth request it returns a 500 error -- used to demonstrate the liveness probe HTTP pod */
 
 const http = require('http');
 const os = require('os');
