@@ -7,44 +7,41 @@ import { rhythm } from "../utils/typography"
 export default ({ children }) => (
     <StaticQuery
         query={graphql`
-      query {
-        site {
-          siteMetadata {
-            title
-          }
-        }
-      }
-    `
+            query {
+                site {
+                siteMetadata {
+                    title
+                }
+                }
+            }
+            `
         }
 
         render={data => (
             <div
                 css={css`
-            margin: 0 auto;
-            max-width: 700px;
-            padding: ${rhythm(2)};
-            padding-top: ${rhythm(1.5)};
-            `}
+                    margin: 0 auto;
+                    max-width: 700px;
+                    padding: ${rhythm(2)};
+                    padding-top: ${rhythm(1.5)};
+                `}
             >
                 <Link to={`/`}>
                     <h3
                         css={css`
-                margin-bottom: ${rhythm(2)};
-                display: inline-block;
-                font-style: normal;
-                `}
+                            margin-bottom: ${rhythm(2)};
+                            display: inline-block;
+                            font-style: normal;
+                        `}
                     >
                         {data.site.siteMetadata.title}
-            </h3>
+                    </h3>
                 </Link>
-                <Link
-                    to={`/about/`}
-                    css={css`
-                float: right;
-            `}
-                >
+
+                <Link to={`/about/`} css={css`float: right;`}>
                     About
-            </Link>
+                </Link>
+                
                 {children}
             </div>
         )}
