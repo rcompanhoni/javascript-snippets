@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+    <title>Simulador de Filas</title>
+
+    <style>
+      table, th, td {
+        border: 1px solid black;
+      }
+
+      table {
+          float: left;
+          margin-left: 25px;
+      }
+    </style>
+
+    <script type="text/javascript" src="event.js"></script>
+    <script type="text/javascript" src="queue.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+  </head>
+
+  <body>
+    <div id="container">
+      <h4>Parâmetros</h4>
+
+      <div class="panel">
+        <input
+          id="server-amount"
+          type="text"
+          class="form-control"
+          placeholder="Quantidade de servidores"
+        />
+        <input
+          id="capacity"
+          type="text"
+          class="form-control"
+          placeholder="Capacidade"
+        />
+        <input
+          id="lambda-min"
+          type="text"
+          class="form-control"
+          placeholder="Lambda min"
+        />
+        <input
+          id="lambda-max"
+          type="text"
+          class="form-control"
+          placeholder="Lambda max"
+        />
+      </div>
+
+      <h4>Controles de Execução</h4>
+
+      <div class="panel">
+        <input type='button' onClick='runSimulation()' value='Executar'>
+        <input type="button" onClick="function pause() { alert('Pausar') }; pause()" value="Pausar" />
+      </div>
+
+      <h4>Estado da Simulação</h4>
+
+      <table id="state-table"></table>
+      <table id="results-table"></table>
+    </div>
+  </body>
+</html>
