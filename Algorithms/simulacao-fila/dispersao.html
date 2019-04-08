@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <script>
+        // used 'Numerical Recipes' parameters (https://en.wikipedia.org/wiki/Linear_congruential_generator)
+        function createRand(seed) {
+            var m = Math.pow(2, 32);
+            var a = 1664525;
+            var c = 1013904223;
+            var z = seed || 0;
+
+            return function() {
+                z = (a * z + c) % m;
+                return z/m;
+            };
+        }
+
+        function generatePoints(amount) {
+            var points = [];
+            const random = createRand();
+
+            for (var i = 0; i < amount; i++) {
+                points.push({ x: i, y: random(i) });
+            }
+
+            return points;
+        }
+
+        window.onload = function () {
+            const points = generatePoints(1000);
+
+            var chart = new CanvasJS.Chart("chartContainer", {
+                animationEnabled: true,
+                zoomEnabled: true,
+                title: {
+                    text: "Disperção"
+                },
+                axisX: {
+                    title: "Eventos",
+                    minimum: 0,
+                    maximum: 1000
+                },
+                axisY: {
+                    title: "Tempo",
+                    minimum: 0,
+                    maximum: 1
+                },
+                data: [{
+                    type: "scatter",
+                    toolTipContent: "<b>Evento: </b>{x}<br/><b>Tempo: </b>{y}",
+                    dataPoints: points
+                }]
+            });
+            chart.render();
+
+        }
+    </script>
+</head>
+
+<body>
+    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+</body>
+
+</html>
