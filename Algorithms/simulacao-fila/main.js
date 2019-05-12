@@ -12,15 +12,26 @@ function runSimulation() {
 
   // stop condition
   let eventCount = 1;
-  const eventLimit = 20;
+  const eventLimit = 3;
+
+  const queue2 = new Queue(1, 3, 2, 5, 3, 5);
 
   // queue configuration and initial event
-  const queue1 = new Queue(serverQuantity, capacity, lambdaMin, lambdaMax, miMin, miMax);
+  const queue1 = new Queue(
+    serverQuantity,
+    capacity,
+    lambdaMin,
+    lambdaMax,
+    miMin,
+    miMax,
+    { queue: queue2, probability: 1 }
+  );
   const initialEvent = new Event(ARRIVAL, `${ARRIVAL} 1`, null, 2.5000000000000000);
   queue1.scheduleEvent(initialEvent);
 
   do {
     queue1.runEvent();
+    queue2.runEvent();
     eventCount++;
   } while (eventCount <= eventLimit)
 

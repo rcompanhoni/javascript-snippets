@@ -1,5 +1,5 @@
 class Queue {
-  constructor(serverQuantity, capacity, lambdaMin, lambdaMax, miMin, miMax) {
+  constructor(serverQuantity, capacity, lambdaMin, lambdaMax, miMin, miMax, connectsTo) {
     this.schedule = [];
 
     // parameters
@@ -9,6 +9,7 @@ class Queue {
     this.lambdaMax = lambdaMax;
     this.miMin = miMin;
     this.miMax = miMax;
+    this.connectsTo = connectsTo;
 
     // state
     this.currentEvent = null;
@@ -24,7 +25,10 @@ class Queue {
     this.generateHeader();
 
     // example from class 1/3
-    this.fakeTimes = [0.1195, 0.3491, 0.9832, 0.7731, 0.8935, 0.2103, 0.0392, 0.1782];
+    // this.fakeTimes = [0.1195, 0.3491, 0.9832, 0.7731, 0.8935, 0.2103, 0.0392, 0.1782];
+
+    // example from 2 queue, no rotation class
+    this.fakeTimes = [0.9921, 0.0004, 0.5534, 0.2761, 0.3398, 0.8963, 0.9023, 0.0132, 0.4569, 0.5121, 0.9208, 0.0171, 0.2299, 0.8545, 0.6001, 0.2921];
   }
 
   // execute iteration (generates )
@@ -53,12 +57,14 @@ class Queue {
           this.evaluateProbabilities();
           this.occupancy--;
 
-          if (this.occupancy >= this.serverQuantity) {
+          // TODO: uses rotation probabilities here
+          if (this.connectsTo) {
+            this.scheduleArrival();
+          } else {
             this.scheduleDeparture();
           }
           break;
       }
-      
      
       this.updateStateTable();
     }
@@ -90,14 +96,14 @@ class Queue {
 
   // helper: uses linear congruential method -- with variables from 'Numerical Recipes' -- adjusted for values between min and max
   conversion(min, max) {
-    // const randomNumber = this.fakeTimes.shift();
+    const randomNumber = this.fakeTimes.shift();
 
-    let m = Math.pow(2, 32);
-    let a = 1664525;
-    let c = 1013904223;
-    let z = Date.now();
-    let randomNumber = (a * z + c) % m;
-    randomNumber = randomNumber/m;
+    // let m = Math.pow(2, 32);
+    // let a = 1664525;
+    // let c = 1013904223;
+    // let z = Date.now();
+    // let randomNumber = (a * z + c) % m;
+    // randomNumber = randomNumber/m;
 
     return ((max - min) * randomNumber) + min;
   }
@@ -117,7 +123,12 @@ class Queue {
     const raffledTime =  this.conversion(this.lambdaMin, this.lambdaMax);
     const realTime = this.currentEvent.realTime + raffledTime;
     const arrivalEvent = new Event(ARRIVAL, name, raffledTime, realTime);
-    this.scheduleEvent(arrivalEvent);
+
+    if (this.connectsTo) {
+      this.connectsTo.queue.scheduleEvent(arrivalEvent)
+    } else {
+      this.scheduleEvent(arrivalEvent);
+    }
   }
 
   /************* RESULTS OUTUPUT RELATED *************/
