@@ -13,6 +13,41 @@
           float: left;
           margin-left: 25px;
       }
+
+      /* Style the tab */
+      .tab {
+        overflow: hidden;
+        border: 1px solid #ccc;
+        background-color: #f1f1f1;
+      }
+
+      /* Style the buttons that are used to open the tab content */
+      .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+      }
+
+      /* Change background color of buttons on hover */
+      .tab button:hover {
+        background-color: #ddd;
+      }
+
+      /* Create an active/current tablink class */
+      .tab button.active {
+        background-color: #ccc;
+      }
+
+      /* Style the tab content */
+      .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border-top: none;
+      }
     </style>
 
     <script type="text/javascript" src="event.js"></script>
@@ -55,13 +90,49 @@
 
       <div class="panel">
         <input type='button' onClick='runSimulation()' value='Executar'>
-        <input type="button" onClick="function pause() { alert('Pausar') }; pause()" value="Pausar" />
       </div>
 
-      <h4>Estado da Simulação</h4>
+      <br />
 
-      <table id="state-table"></table>
-      <table id="results-table"></table>
+      <!-- Tab links -->
+      <div class="tab">
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 1')">Fila 1</button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 2')">Fila 2</button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 3')">Fila 3</button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 4')">Fila 4</button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 5')">Fila 5</button>
+      </div>
+
+      <!-- Tab content -->
+      <div id="Fila 1" class="tabcontent">
+        <h3>ESTADOS E PROBABILIDADES</h3>
+        <table id="state-table-1"></table>
+        <table id="results-table-1"></table>
+      </div>
+
+      <div id="Fila 2" class="tabcontent">
+        <h3>ESTADOS E PROBABILIDADES</h3>
+        <table id="state-table-2"></table>
+        <table id="results-table-2"></table>
+      </div>
+
+      <div id="Fila 3" class="tabcontent">
+        <h3>ESTADOS E PROBABILIDADES</h3>
+        <table id="state-table-3"></table>
+        <table id="results-table-3"></table>
+      </div>
+
+      <div id="Fila 4" class="tabcontent">
+        <h3>ESTADOS E PROBABILIDADES</h3>
+        <table id="state-table-4"></table>
+        <table id="results-table-4"></table>
+      </div>
+
+      <div id="Fila 5" class="tabcontent">
+        <h3>ESTADOS E PROBABILIDADES</h3>
+        <table id="state-table-5"></table>
+        <table id="results-table-5"></table>
+      </div>
     </div>
   </body>
 </html>
