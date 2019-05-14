@@ -5,13 +5,19 @@
     <title>Simulador de Filas</title>
 
     <style>
-      table, th, td {
+      table,
+      th,
+      td {
         border: 1px solid black;
       }
 
       table {
-          float: left;
-          margin-left: 25px;
+        float: left;
+        margin-left: 25px;
+      }
+
+      .queue-parameters {
+        margin-bottom: 10px;
       }
 
       /* Style the tab */
@@ -57,50 +63,293 @@
 
   <body>
     <div id="container">
-      <h4>Parâmetros</h4>
+      <h4>Instruções</h4>
+      <ol>
+        <li>Defina as parâmetros de cada fila</li>
+        <li>Clique em 'Executar'</li>
+        <li>Clique nas abas para ver a tabela de estados e resultados
+        </li>
+      </ol>
 
-      <div class="panel">
+      <h4>Parâmetros (Quantidade de servidores, capacidade, lambda min, lambda max, mi min, mi max) </h4>
+
+      <div class="queue-parameters">
+        <span>FILA 1:</span>
         <input
-          id="server-amount"
+          id="server-quantity-01"
           type="text"
           class="form-control"
           placeholder="Quantidade de servidores"
+          value=2
         />
         <input
-          id="capacity"
+          id="capacity-01"
           type="text"
           class="form-control"
           placeholder="Capacidade"
+          value=3
         />
         <input
-          id="lambda-min"
+          id="lambda-min-01"
           type="text"
           class="form-control"
           placeholder="Lambda min"
+          value=2
         />
         <input
-          id="lambda-max"
+          id="lambda-max-01"
           type="text"
           class="form-control"
           placeholder="Lambda max"
+          value=3
+        />
+        <input
+          id="mi-min-01"
+          type="text"
+          class="form-control"
+          placeholder="Mi min"
+          value=2
+        />
+        <input
+          id="mi-max-01"
+          type="text"
+          class="form-control"
+          placeholder="Mi max"
+          value=5
+        />
+      </div>
+
+      <div class="queue-parameters">
+        <span>FILA 2:</span>
+        <input
+          id="server-quantity-02"
+          type="text"
+          class="form-control"
+          placeholder="Quantidade de servidores"
+          value=1
+        />
+        <input
+          id="capacity-02"
+          type="text"
+          class="form-control"
+          placeholder="Capacidade"
+          value=3
+        />
+        <input
+          id="lambda-min-02"
+          type="text"
+          class="form-control"
+          placeholder="Lambda min"
+          value=2
+        />
+        <input
+          id="lambda-max-02"
+          type="text"
+          class="form-control"
+          placeholder="Lambda max"
+          value=5
+        />
+        <input
+          id="mi-min-02"
+          type="text"
+          class="form-control"
+          placeholder="Mi min"
+          value=3
+        />
+        <input
+          id="mi-max-02"
+          type="text"
+          class="form-control"
+          placeholder="Mi max"
+          value=5
+        />
+      </div>
+
+      <div class="queue-parameters">
+        <span>FILA 3:</span>
+        <input
+          id="server-quantity-03"
+          type="text"
+          class="form-control"
+          placeholder="Quantidade de servidores"
+          value=1
+        />
+        <input
+          id="capacity-03"
+          type="text"
+          class="form-control"
+          placeholder="Capacidade"
+          value=3
+        />
+        <input
+          id="lambda-min-03"
+          type="text"
+          class="form-control"
+          placeholder="Lambda min"
+          value=2
+        />
+        <input
+          id="lambda-max-03"
+          type="text"
+          class="form-control"
+          placeholder="Lambda max"
+          value=5
+        />
+        <input
+          id="mi-min-03"
+          type="text"
+          class="form-control"
+          placeholder="Mi min"
+          value=3
+        />
+        <input
+          id="mi-max-03"
+          type="text"
+          class="form-control"
+          placeholder="Mi max"
+          value=5
+        />
+      </div>
+
+      <div class="queue-parameters">
+        <span>FILA 4:</span>
+        <input
+          id="server-quantity-04"
+          type="text"
+          class="form-control"
+          placeholder="Quantidade de servidores"
+          value=1
+        />
+        <input
+          id="capacity-04"
+          type="text"
+          class="form-control"
+          placeholder="Capacidade"
+          value=3
+        />
+        <input
+          id="lambda-min-04"
+          type="text"
+          class="form-control"
+          placeholder="Lambda min"
+          value=2
+        />
+        <input
+          id="lambda-max-04"
+          type="text"
+          class="form-control"
+          placeholder="Lambda max"
+          value=5
+        />
+        <input
+          id="mi-min-04"
+          type="text"
+          class="form-control"
+          placeholder="Mi min"
+          value=3
+        />
+        <input
+          id="mi-max-04"
+          type="text"
+          class="form-control"
+          placeholder="Mi max"
+          value=5
+        />
+      </div>
+
+      <div class="queue-parameters">
+        <span>FILA 5:</span>
+        <input
+          id="server-quantity-05"
+          type="text"
+          class="form-control"
+          placeholder="Quantidade de servidores"
+          value=1
+        />
+        <input
+          id="capacity-05"
+          type="text"
+          class="form-control"
+          placeholder="Capacidade"
+          value=3
+        />
+        <input
+          id="lambda-min-05"
+          type="text"
+          class="form-control"
+          placeholder="Lambda min"
+          value=2
+        />
+        <input
+          id="lambda-max-05"
+          type="text"
+          class="form-control"
+          placeholder="Lambda max"
+          value=5
+        />
+        <input
+          id="mi-min-05"
+          type="text"
+          class="form-control"
+          placeholder="Mi min"
+          value=3
+        />
+        <input
+          id="mi-max-05"
+          type="text"
+          class="form-control"
+          placeholder="Mi max"
+          value=5
+        />
+      </div>
+
+      <br />
+
+      <div class="queue-parameters">
+        <span>X0 (tempo do primeiro evento):</span>
+        <input
+          id="x0"
+          type="text"
+          class="form-control"
+          value="3.5"
+        />
+      </div>
+
+      <div class="queue-parameters">
+        <span>Quantidade de eventos (condição de parada):</span>
+        <input
+          id="events-amount"
+          type="text"
+          class="form-control"
+          value=30
         />
       </div>
 
       <h4>Controles de Execução</h4>
 
       <div class="panel">
-        <input type='button' onClick='runSimulation()' value='Executar'>
+        <input type="button" onClick="runSimulation()" value="Executar" />
       </div>
 
       <br />
 
       <!-- Tab links -->
       <div class="tab">
-        <button class="tablinks" onclick="openQueueStats(event, 'Fila 1')">Fila 1</button>
-        <button class="tablinks" onclick="openQueueStats(event, 'Fila 2')">Fila 2</button>
-        <button class="tablinks" onclick="openQueueStats(event, 'Fila 3')">Fila 3</button>
-        <button class="tablinks" onclick="openQueueStats(event, 'Fila 4')">Fila 4</button>
-        <button class="tablinks" onclick="openQueueStats(event, 'Fila 5')">Fila 5</button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 1')">
+          Fila 1
+        </button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 2')">
+          Fila 2
+        </button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 3')">
+          Fila 3
+        </button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 4')">
+          Fila 4
+        </button>
+        <button class="tablinks" onclick="openQueueStats(event, 'Fila 5')">
+          Fila 5
+        </button>
       </div>
 
       <!-- Tab content -->
