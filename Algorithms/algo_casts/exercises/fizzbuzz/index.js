@@ -12,40 +12,6 @@
 //   4
 //   buzz
 
-function myFizzBuzz(n) {
-    for (let i = 1; i <= n; i++) {
-        const multipleOf3 = (i % 3) === 0;
-        const multipleOf5 = (i % 5) === 0
+function fizzBuzz(n) {}
 
-        if (multipleOf3 && multipleOf5) {
-            console.log('fizzbuzz')
-        } else if (multipleOf3) {
-            console.log('fizz')
-        } else if (multipleOf5) {
-            console.log('buzz')
-        } else {
-            console.log(i)
-        }
-    }
-}
-
-// classic implementation with some comments
-function fizzBuzz(n) {
-    for (let i = 1; i <= n; i++) {
-      // Is the number a multiple of 3 and 5?
-      if (i % 3 === 0 && i % 5 === 0) {
-        console.log('fizzbuzz');
-      } else if (i % 3 === 0) {
-        // Is the number a multiple of 3?
-        console.log('fizz');
-      } else if (i % 5 === 0) {
-        console.log('buzz');
-      } else {
-        console.log(i);
-      }
-    }
-  }
-
-const bestSolution = fizzBuzz;
-module.exports = bestSolution;
-
+module.exports = fizzBuzz;

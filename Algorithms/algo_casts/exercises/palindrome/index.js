@@ -7,23 +7,6 @@
 //   palindrome("abba") === true
 //   palindrome("abcdefg") === false
 
-function myPalindrome(str) {
-    const reversed = str.split('').reduce((rev, char) => char + rev, '');
-    return str === reversed;
-}
+function palindrome(str) {}
 
-// uses the 'Array.prototype.reverse()'
-function palindrome1(str) {
-    const reversed = str.split('').reverse().join('');
-    return str === reversed;
-}
-
-// not ideal: demonstrates 'every' which returns true if the cb evaluates true for each array element. In this case, compare the current char with its 'antipode'
-function palindrome2(str) {
-    return str.split('').every((char, i) => {
-        return char === str[str.length - i - 1];
-    });
-}
-
-const bestSolution = palindrome1;
-module.exports = bestSolution;
+module.exports = palindrome;
