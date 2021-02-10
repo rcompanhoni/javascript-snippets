@@ -7,6 +7,17 @@
 //   palindrome("abba") === true
 //   palindrome("abcdefg") === false
 
-function palindrome(str) {}
+function palindrome(str) {
+  return str === str.split('').reverse().join('');
+}
+
+// compares first char and n, second char and n-1 and so on to determine if it's a palindrome
+function palindrome(str) {
+  const lastCharIndex = str.length - 1;
+
+  return str.split('').every((char, i) => {
+    return char === str[lastCharIndex - i];
+  });
+}
 
 module.exports = palindrome;
