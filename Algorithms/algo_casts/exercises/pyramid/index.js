@@ -22,6 +22,7 @@ function pyramid(n) {
     let level = '';
 
     for (let column = 0; column < totalColumns; column++) {
+      // check if current column is within the range where a # should be written
       if (column >= midpoint - row && column <= midpoint + row) {
         level += '#';
       } else {
