@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "1.0.14"
+    "react-scripts": "5.0.1"
   },
   "dependencies": {
     "babel-plugin-transform-class-properties": "6.22.0",
