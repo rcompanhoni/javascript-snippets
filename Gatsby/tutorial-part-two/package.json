@@ -9,7 +9,7 @@
     "serve": "gatsby serve"
   },
   "dependencies": {
-    "gatsby": "^2.0.33",
+    "gatsby": "^2.32.13",
     "gatsby-plugin-sass": "^2.0.7",
     "gatsby-plugin-typography": "^2.2.2",
     "node-sass": "^4.11.0",
