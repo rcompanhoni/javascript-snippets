@@ -11,7 +11,7 @@
   },
   "devDependencies": {
     "concurrently": "3.4.0",
-    "react-scripts": "1.0.14"
+    "react-scripts": "5.0.1"
   },
   "scripts": {
     "start": "react-scripts start",
